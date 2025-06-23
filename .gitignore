@@ -1,0 +1,6 @@
+lib
+node_modules
+package-lock.json
+*.lock
+tsconfig.tsbuildinfo
+.DS_Store

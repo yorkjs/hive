@@ -1,0 +1,46 @@
+{
+  "name": "@yorkjs/hive",
+  "version": "0.0.1",
+  "description": "util",
+  "main": "dist/hive.js",
+  "module": "dist/hive.esm.js",
+  "jsnext:main": "dist/hive.esm.js",
+  "types": "types/index.d.ts",
+  "keywords": [
+    "hive"
+  ],
+  "scripts": {
+    "test": "jest",
+    "source": "cross-env NODE_ENV=development NODE_FORMAT=es node_modules/.bin/rollup -c ./rollup.config.js && cross-env NODE_ENV=development node_modules/.bin/rollup -c ./rollup.config.js",
+    "min": "cross-env NODE_ENV=production NODE_MINIFY=true NODE_FORMAT=es node_modules/.bin/rollup -c ./rollup.config.js && cross-env NODE_ENV=production NODE_MINIFY=true node_modules/.bin/rollup -c ./rollup.config.js",
+    "build": "npm run source && npm run min"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yorkjs/hive.git"
+  },
+  "author": "yorkjs team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yorkjs/hive/issues"
+  },
+  "homepage": "https://github.com/yorkjs/hive#readme",
+  "devDependencies": {
+    "@babel/core": "^7.27.4",
+    "@babel/preset-env": "^7.27.2",
+    "@babel/preset-typescript": "^7.27.1",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-replace": "^6.0.2",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.0.3",
+    "cross-env": "^7.0.3",
+    "jest": "^30.0.2",
+    "jest-environment-jsdom": "^30.0.2",
+    "rollup": "^4.44.0",
+    "rollup-plugin-filesize": "^10.0.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "ts-jest": "^29.4.0",
+    "typescript": "^5.8.3"
+  }
+}
