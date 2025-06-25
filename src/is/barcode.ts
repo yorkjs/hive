@@ -2,7 +2,7 @@
  * value 是否是标准商品条形码
  *
  * @param value 条形码文本
- * @return
+ * @returns
  */
 export function isStandardBarcode(value: string) {
   // EAN 码：通常是69开头，13位数字
@@ -18,7 +18,7 @@ export function isStandardBarcode(value: string) {
  * value 是否是自定义商品条形码
  *
  * @param value 条形码文本
- * @return
+ * @returns
  */
 export function isCustomBarcode(value: string) {
   // 自定义条码，规则为 大写字母开头跟 10-12 个数字
