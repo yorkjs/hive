@@ -42,5 +42,8 @@
     "rollup-plugin-typescript2": "^0.36.0",
     "ts-jest": "^29.4.0",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "number-precision": "^1.6.0"
   }
 }
