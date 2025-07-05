@@ -1,5 +1,5 @@
 /**
- * hive.js v0.0.2
+ * hive.js v0.0.3
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -51,7 +51,7 @@
     };
   }
   /**
-  * 精确加法，比如 plus(3, 1) === 4
+  * 精确加法，比如 plusNumber(3, 1) === 4
   *
   * @param value1 第一个值
   * @param value2 第二个值
@@ -70,7 +70,7 @@
     return Number(adjustedV1 + adjustedV2) / Number(commonMultiple);
   }
   /**
-  * 精确减法，比如 minus(3, 1) === 2
+  * 精确减法，比如 minusNumber(3, 1) === 2
   *
   * @param value1 被减数
   * @param value2 减数
@@ -89,7 +89,7 @@
     return Number(adjustedV1 - adjustedV2) / Number(commonMultiple);
   }
   /**
-   * 精确乘法，比如 times(3, 2) === 6
+   * 精确乘法，比如 timesNumber(3, 2) === 6
    *
    * @param value1 第一个值
    * @param value2 第二个值
@@ -107,7 +107,7 @@
     return Number(product) / Number(divisor);
   }
   /**
-  * 精确除法，比如 divide(6, 2) === 3
+  * 精确除法，比如 divideNumber(6, 2) === 3
   *
   * @param value1 被除数
   * @param value2 除数
@@ -123,11 +123,21 @@
     var _convertToInteger8 = convertToInteger(value2),
       v2 = _convertToInteger8.value,
       m2 = _convertToInteger8.multiple;
-    // 增加足够的倍数以确保足够的精度
-    var commonMultiple = BigInt(1e18); // 足够大的倍数
-    var dividend = v1 * commonMultiple * m2;
+    // 计算 (v1 * m2) / (v2 * m1)，避免过大数值
+    var dividend = v1 * m2;
     var divisor = v2 * m1;
-    return Number(dividend) / Number(divisor) / Number(commonMultiple);
+    // 先进行 BigInt 除法，再调整精度
+    var quotient = dividend / divisor;
+    var remainder = dividend % divisor;
+    // 如果余数为 0，直接返回整数部分
+    if (remainder === 0n) {
+      return Number(quotient);
+    }
+    // 否则，计算小数部分（使用额外倍数）
+    var precision = 1e12; // 足够大的倍数，但避免溢出
+    var scaledRemainder = remainder * BigInt(precision);
+    var decimalPart = Number(scaledRemainder / divisor) / precision;
+    return Number(quotient) + decimalPart;
   }
 
   /**

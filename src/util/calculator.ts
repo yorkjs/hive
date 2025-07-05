@@ -29,7 +29,7 @@ function convertToInteger(num: number): { value: bigint; multiple: bigint } {
 }
 
 /**
-* 精确加法，比如 plus(3, 1) === 4
+* 精确加法，比如 plusNumber(3, 1) === 4
 *
 * @param value1 第一个值
 * @param value2 第二个值
@@ -47,7 +47,7 @@ export function plusNumber(value1: number, value2: number): number {
 }
 
   /**
-  * 精确减法，比如 minus(3, 1) === 2
+  * 精确减法，比如 minusNumber(3, 1) === 2
   *
   * @param value1 被减数
   * @param value2 减数
@@ -65,7 +65,7 @@ export function minusNumber(value1: number, value2: number): number {
 }
 
 /**
- * 精确乘法，比如 times(3, 2) === 6
+ * 精确乘法，比如 timesNumber(3, 2) === 6
  *
  * @param value1 第一个值
  * @param value2 第二个值
@@ -82,7 +82,7 @@ export function timesNumber(value1: number, value2: number): number {
 }
 
 /**
-* 精确除法，比如 divide(6, 2) === 3
+* 精确除法，比如 divideNumber(6, 2) === 3
 *
 * @param value1 被除数
 * @param value2 除数
@@ -90,16 +90,29 @@ export function timesNumber(value1: number, value2: number): number {
 */
 export function divideNumber(value1: number, value2: number): number {
   if (value2 === 0) {
-      throw new Error('Division by zero')
+    throw new Error('Division by zero')
   }
 
   const { value: v1, multiple: m1 } = convertToInteger(value1)
   const { value: v2, multiple: m2 } = convertToInteger(value2)
 
-  // 增加足够的倍数以确保足够的精度
-  const commonMultiple = BigInt(1e18) // 足够大的倍数
-  const dividend = v1 * commonMultiple * m2
+  // 计算 (v1 * m2) / (v2 * m1)，避免过大数值
+  const dividend = v1 * m2
   const divisor = v2 * m1
 
-  return Number(dividend) / Number(divisor) / Number(commonMultiple)
+  // 先进行 BigInt 除法，再调整精度
+  const quotient = dividend / divisor
+  const remainder = dividend % divisor
+
+  // 如果余数为 0，直接返回整数部分
+  if (remainder === 0n) {
+    return Number(quotient)
+  }
+
+  // 否则，计算小数部分（使用额外倍数）
+  const precision = 1e12 // 足够大的倍数，但避免溢出
+  const scaledRemainder = remainder * BigInt(precision)
+  const decimalPart = Number(scaledRemainder / divisor) / precision
+
+  return Number(quotient) + decimalPart
 }
