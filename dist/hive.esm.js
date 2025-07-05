@@ -1,5 +1,5 @@
 /**
- * hive.js v0.0.1
+ * hive.js v0.0.2
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -14,6 +14,8 @@ const MS_HOUR = 60 * MS_MINUTE;
 const MS_DAY = 24 * MS_HOUR;
 // 毫秒数：周
 const MS_WEEK = 7 * MS_DAY;
+// 毫秒数：年
+const MS_YEAR = 365 * MS_DAY;
 
 /**
  * 此模块用于整数和浮点数的精确计算，避免浮点数的计算精度问题
@@ -100,10 +102,10 @@ function divideNumber(value1, value2) {
     const { value: v1, multiple: m1 } = convertToInteger(value1);
     const { value: v2, multiple: m2 } = convertToInteger(value2);
     // 增加足够的倍数以确保足够的精度
-    const additionalMultiple = BigInt(10 ** (getDecimalDigits(value1) + getDecimalDigits(value2) + 1));
-    const dividend = v1 * m2 * additionalMultiple;
+    const commonMultiple = BigInt(1e18); // 足够大的倍数
+    const dividend = v1 * commonMultiple * m2;
     const divisor = v2 * m1;
-    return Number(dividend) / Number(divisor) / Number(additionalMultiple);
+    return Number(dividend) / Number(divisor) / Number(commonMultiple);
 }
 
 /**
@@ -193,5 +195,5 @@ function normalizeVersion(version) {
     return '000000000000';
 }
 
-export { MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, divideNumber, isCustomBarcode, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeVersion, plusNumber, rateToBackend, rateToDisplay, timesNumber };
+export { MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, divideNumber, isCustomBarcode, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeVersion, plusNumber, rateToBackend, rateToDisplay, timesNumber };
 //# sourceMappingURL=hive.esm.js.map

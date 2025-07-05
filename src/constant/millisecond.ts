@@ -9,3 +9,5 @@ export const MS_HOUR = 60 * MS_MINUTE
 export const MS_DAY = 24 * MS_HOUR
 // 毫秒数：周
 export const MS_WEEK = 7 * MS_DAY
+// 毫秒数：年
+export const MS_YEAR = 365 * MS_DAY

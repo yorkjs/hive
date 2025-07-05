@@ -1,5 +1,5 @@
 /**
- * hive.js v0.0.1
+ * hive.js v0.0.2
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -20,6 +20,8 @@
   var MS_DAY = 24 * MS_HOUR;
   // 毫秒数：周
   var MS_WEEK = 7 * MS_DAY;
+  // 毫秒数：年
+  var MS_YEAR = 365 * MS_DAY;
 
   /**
    * 此模块用于整数和浮点数的精确计算，避免浮点数的计算精度问题
@@ -122,10 +124,10 @@
       v2 = _convertToInteger8.value,
       m2 = _convertToInteger8.multiple;
     // 增加足够的倍数以确保足够的精度
-    var additionalMultiple = BigInt(Math.pow(10, getDecimalDigits(value1) + getDecimalDigits(value2) + 1));
-    var dividend = v1 * m2 * additionalMultiple;
+    var commonMultiple = BigInt(1e18); // 足够大的倍数
+    var dividend = v1 * commonMultiple * m2;
     var divisor = v2 * m1;
-    return Number(dividend) / Number(divisor) / Number(additionalMultiple);
+    return Number(dividend) / Number(divisor) / Number(commonMultiple);
   }
 
   /**
@@ -220,6 +222,7 @@
   exports.MS_MINUTE = MS_MINUTE;
   exports.MS_SECOND = MS_SECOND;
   exports.MS_WEEK = MS_WEEK;
+  exports.MS_YEAR = MS_YEAR;
   exports.divideNumber = divideNumber;
   exports.isCustomBarcode = isCustomBarcode;
   exports.isStandardBarcode = isStandardBarcode;

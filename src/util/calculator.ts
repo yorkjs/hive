@@ -97,9 +97,9 @@ export function divideNumber(value1: number, value2: number): number {
   const { value: v2, multiple: m2 } = convertToInteger(value2)
 
   // 增加足够的倍数以确保足够的精度
-  const additionalMultiple = BigInt(10 ** (getDecimalDigits(value1) + getDecimalDigits(value2) + 1))
-  const dividend = v1 * m2 * additionalMultiple
+  const commonMultiple = BigInt(1e18) // 足够大的倍数
+  const dividend = v1 * commonMultiple * m2
   const divisor = v2 * m1
 
-  return Number(dividend) / Number(divisor) / Number(additionalMultiple)
+  return Number(dividend) / Number(divisor) / Number(commonMultiple)
 }
