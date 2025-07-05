@@ -1,4 +1,4 @@
-import calculator from '../util/calculator'
+import { timesNumber, divideNumber } from '../util/calculator'
 
 /**
  * 比例转换为前端显示所用的格式
@@ -7,7 +7,7 @@ import calculator from '../util/calculator'
  * @returns
  */
 export function rateToDisplay(value: number) {
-  return calculator.divide(value, 100)
+  return divideNumber(value, 100)
 }
 
 /**
@@ -17,5 +17,5 @@ export function rateToDisplay(value: number) {
  * @returns
  */
 export function rateToBackend(value: number) {
-  return calculator.times(value, 100)
+  return timesNumber(value, 100)
 }

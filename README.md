@@ -18,7 +18,29 @@ npm install @yorkjs/hive
 ```
 
 ```js
-import { Hive } from '@yorkjs/hive'
+import {
+  MS_DAY,
+  MS_HOUR,
+  MS_MINUTE,
+  MS_SECOND,
+  MS_WEEK,
+
+  isCustomBarcode,
+  isStandardBarcode,
+
+  normalizeVersion,
+
+  moneyToBackend,
+  moneyToDisplay,
+
+  rateToBackend,
+  rateToDisplay,
+
+  plusNumber,
+  minusNumber,
+  timesNumber,
+  divideNumber,
+} from '@yorkjs/hive'
 ```
 
 YARN
@@ -28,5 +50,27 @@ yarn add @yorkjs/hive
 ```
 
 ```js
-import { Hive } from '@yorkjs/hive'
+import {
+  MS_DAY,
+  MS_HOUR,
+  MS_MINUTE,
+  MS_SECOND,
+  MS_WEEK,
+
+  isCustomBarcode,
+  isStandardBarcode,
+
+  normalizeVersion,
+
+  moneyToBackend,
+  moneyToDisplay,
+
+  rateToBackend,
+  rateToDisplay,
+
+  plusNumber,
+  minusNumber,
+  timesNumber,
+  divideNumber,
+} from '@yorkjs/hive'
 ```

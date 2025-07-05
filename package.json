@@ -1,7 +1,7 @@
 {
   "name": "@yorkjs/hive",
   "version": "0.0.1",
-  "description": "util",
+  "description": "util function",
   "main": "dist/hive.js",
   "module": "dist/hive.esm.js",
   "jsnext:main": "dist/hive.esm.js",

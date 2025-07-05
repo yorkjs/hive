@@ -28,24 +28,23 @@ function convertToInteger(num: number): { value: bigint; multiple: bigint } {
   }
 }
 
-export default {
-  /**
-  * 精确加法，比如 plus(3, 1) === 4
-  *
-  * @param value1 第一个值
-  * @param value2 第二个值
-  * @returns 和
-  */
-  plus(value1: number, value2: number): number {
-    const { value: v1, multiple: m1 } = convertToInteger(value1)
-    const { value: v2, multiple: m2 } = convertToInteger(value2)
+/**
+* 精确加法，比如 plus(3, 1) === 4
+*
+* @param value1 第一个值
+* @param value2 第二个值
+* @returns 和
+*/
+export function plusNumber(value1: number, value2: number): number {
+  const { value: v1, multiple: m1 } = convertToInteger(value1)
+  const { value: v2, multiple: m2 } = convertToInteger(value2)
 
-    const commonMultiple = m1 > m2 ? m1 : m2
-    const adjustedV1 = v1 * (commonMultiple / m1)
-    const adjustedV2 = v2 * (commonMultiple / m2)
+  const commonMultiple = m1 > m2 ? m1 : m2
+  const adjustedV1 = v1 * (commonMultiple / m1)
+  const adjustedV2 = v2 * (commonMultiple / m2)
 
-    return Number(adjustedV1 + adjustedV2) / Number(commonMultiple)
-  },
+  return Number(adjustedV1 + adjustedV2) / Number(commonMultiple)
+}
 
   /**
   * 精确减法，比如 minus(3, 1) === 2
@@ -54,54 +53,53 @@ export default {
   * @param value2 减数
   * @returns 差
   */
-  minus(value1: number, value2: number): number {
-    const { value: v1, multiple: m1 } = convertToInteger(value1)
-    const { value: v2, multiple: m2 } = convertToInteger(value2)
+export function minusNumber(value1: number, value2: number): number {
+  const { value: v1, multiple: m1 } = convertToInteger(value1)
+  const { value: v2, multiple: m2 } = convertToInteger(value2)
 
-    const commonMultiple = m1 > m2 ? m1 : m2
-    const adjustedV1 = v1 * (commonMultiple / m1)
-    const adjustedV2 = v2 * (commonMultiple / m2)
+  const commonMultiple = m1 > m2 ? m1 : m2
+  const adjustedV1 = v1 * (commonMultiple / m1)
+  const adjustedV2 = v2 * (commonMultiple / m2)
 
-    return Number(adjustedV1 - adjustedV2) / Number(commonMultiple)
-  },
+  return Number(adjustedV1 - adjustedV2) / Number(commonMultiple)
+}
 
-  /**
-   * 精确乘法，比如 times(3, 2) === 6
-   *
-   * @param value1 第一个值
-   * @param value2 第二个值
-   * @returns 乘积结果
-   */
-  times(value1: number, value2: number): number {
-    const { value: v1, multiple: m1 } = convertToInteger(value1)
-    const { value: v2, multiple: m2 } = convertToInteger(value2)
+/**
+ * 精确乘法，比如 times(3, 2) === 6
+ *
+ * @param value1 第一个值
+ * @param value2 第二个值
+ * @returns 乘积结果
+ */
+export function timesNumber(value1: number, value2: number): number {
+  const { value: v1, multiple: m1 } = convertToInteger(value1)
+  const { value: v2, multiple: m2 } = convertToInteger(value2)
 
-    const product = v1 * v2
-    const divisor = m1 * m2
+  const product = v1 * v2
+  const divisor = m1 * m2
 
-    return Number(product) / Number(divisor)
-  },
+  return Number(product) / Number(divisor)
+}
 
-  /**
-  * 精确除法，比如 divide(6, 2) === 3
-  *
-  * @param value1 被除数
-  * @param value2 除数
-  * @returns 商
-  */
-  divide(value1: number, value2: number): number {
-    if (value2 === 0) {
-        throw new Error('Division by zero')
-    }
+/**
+* 精确除法，比如 divide(6, 2) === 3
+*
+* @param value1 被除数
+* @param value2 除数
+* @returns 商
+*/
+export function divideNumber(value1: number, value2: number): number {
+  if (value2 === 0) {
+      throw new Error('Division by zero')
+  }
 
-    const { value: v1, multiple: m1 } = convertToInteger(value1)
-    const { value: v2, multiple: m2 } = convertToInteger(value2)
+  const { value: v1, multiple: m1 } = convertToInteger(value1)
+  const { value: v2, multiple: m2 } = convertToInteger(value2)
 
-    // 增加足够的倍数以确保足够的精度
-    const additionalMultiple = BigInt(10 ** (getDecimalDigits(value1) + getDecimalDigits(value2) + 1))
-    const dividend = v1 * m2 * additionalMultiple
-    const divisor = v2 * m1
+  // 增加足够的倍数以确保足够的精度
+  const additionalMultiple = BigInt(10 ** (getDecimalDigits(value1) + getDecimalDigits(value2) + 1))
+  const dividend = v1 * m2 * additionalMultiple
+  const divisor = v2 * m1
 
-    return Number(dividend) / Number(divisor) / Number(additionalMultiple)
-  },
+  return Number(dividend) / Number(divisor) / Number(additionalMultiple)
 }
