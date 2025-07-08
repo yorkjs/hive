@@ -1,14 +1,28 @@
 /**
- * hive.js v0.0.3
+ * hive.js v0.0.4
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
 
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-  typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.Hive = {}));
-})(this, (function (exports) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('dayjs')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'dayjs'], factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.Hive = {}, global.dayjs));
+})(this, (function (exports, dayjs) { 'use strict';
+
+  function _interopDefault (e) { return e && e.__esModule ? e : { default: e }; }
+
+  var dayjs__default = /*#__PURE__*/_interopDefault(dayjs);
+
+  // 年月日：2020-10-01
+  var DATE_YEAR_MONTH_DATE = 'yyyy-MM-dd';
+  // 月日：10-01
+  var DATE_MONTH_DATE = 'MM-dd';
+
+  // 年月日 时分秒：2020-10-01 10:00:00
+  var DATE_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND = 'yyyy-MM-dd HH:mm:ss';
+  // 年月日 时分：2020-10-01 10:00
+  var DATE_YEAR_MONTH_DATE_HOUR_MINUTE = 'yyyy-MM-dd HH:mm';
 
   // 毫秒数：秒
   var MS_SECOND = 1000;
@@ -179,6 +193,80 @@
   }
 
   /**
+   * 把时间戳格式化为 2020-10-01 格式
+   *
+   * @param timestamp
+   * @returns
+   */
+  function formatDate(timestamp) {
+    return dayjs__default.default(timestamp).format(DATE_YEAR_MONTH_DATE);
+  }
+  /**
+   * 把同年份的时间戳格式化为 10-01 格式，不同年份的时间戳格式化成 2020-10-01 格式
+   *
+   * @param timestamp
+   * @returns
+   */
+  function formatDateShortly(timestamp) {
+    var t1 = dayjs__default.default(timestamp);
+    var t2 = dayjs__default.default(Date.now());
+    if (t1.year() === t2.year()) {
+      return t1.format(DATE_MONTH_DATE);
+    }
+    return dayjs__default.default(timestamp).format(DATE_YEAR_MONTH_DATE);
+  }
+
+  /**
+   * 把时间戳格式化为 2020-10-01 10:00:00 格式
+   *
+   * @param timestamp
+   * @param format 默认是 年月日 时分秒 格式
+   * @returns
+   */
+  function formatDateTime(timestamp) {
+    var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : DATE_YEAR_MONTH_DATE_HOUR_MINUTE;
+    return dayjs__default.default(timestamp).format(format);
+  }
+
+  /**
+   * 把单位为 分 的金额转成显示友好的格式
+   *
+   * @param value
+   * @param maxDecimals
+   * @returns
+   */
+  function formatMoney(value) {
+    var maxDecimals = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2;
+    // 转成 元 为单位
+    var newValue = divideNumber(value, 100);
+    var parts = ('' + newValue).split('.');
+    var list = [],
+      end = parts[0].length - 1;
+    for (var i = end; i >= 0; i--) {
+      if (i !== end && (end - i) % 3 === 0) {
+        list.push(',');
+      }
+      list.push(parts[0].charAt(i));
+    }
+    var money = list.reverse().join('');
+    var decimal = parts[1];
+    if (decimal) {
+      if (maxDecimals > 0) {
+        decimal = decimal.padEnd(maxDecimals, '0');
+        if (decimal.length > maxDecimals) {
+          decimal = decimal.slice(0, maxDecimals);
+        }
+      }
+    } else if (maxDecimals > 0) {
+      decimal = decimal.padEnd(maxDecimals, '0');
+    }
+    if (decimal) {
+      money += '.' + decimal;
+    }
+    return money;
+  }
+
+  /**
    * value 是否是标准商品条形码
    *
    * @param value 条形码文本
@@ -227,6 +315,10 @@
     return '000000000000';
   }
 
+  exports.DATE_MONTH_DATE = DATE_MONTH_DATE;
+  exports.DATE_YEAR_MONTH_DATE = DATE_YEAR_MONTH_DATE;
+  exports.DATE_YEAR_MONTH_DATE_HOUR_MINUTE = DATE_YEAR_MONTH_DATE_HOUR_MINUTE;
+  exports.DATE_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND = DATE_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND;
   exports.MS_DAY = MS_DAY;
   exports.MS_HOUR = MS_HOUR;
   exports.MS_MINUTE = MS_MINUTE;
@@ -234,6 +326,10 @@
   exports.MS_WEEK = MS_WEEK;
   exports.MS_YEAR = MS_YEAR;
   exports.divideNumber = divideNumber;
+  exports.formatDate = formatDate;
+  exports.formatDateShortly = formatDateShortly;
+  exports.formatDateTime = formatDateTime;
+  exports.formatMoney = formatMoney;
   exports.isCustomBarcode = isCustomBarcode;
   exports.isStandardBarcode = isStandardBarcode;
   exports.minusNumber = minusNumber;

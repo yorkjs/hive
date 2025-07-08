@@ -1,8 +1,20 @@
 /**
- * hive.js v0.0.3
+ * hive.js v0.0.4
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
+
+import dayjs from 'dayjs';
+
+// 年月日：2020-10-01
+const DATE_YEAR_MONTH_DATE = 'yyyy-MM-dd';
+// 月日：10-01
+const DATE_MONTH_DATE = 'MM-dd';
+
+// 年月日 时分秒：2020-10-01 10:00:00
+const DATE_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND = 'yyyy-MM-dd HH:mm:ss';
+// 年月日 时分：2020-10-01 10:00
+const DATE_YEAR_MONTH_DATE_HOUR_MINUTE = 'yyyy-MM-dd HH:mm';
 
 // 毫秒数：秒
 const MS_SECOND = 1000;
@@ -157,6 +169,78 @@ function rateToBackend(value) {
 }
 
 /**
+ * 把时间戳格式化为 2020-10-01 格式
+ *
+ * @param timestamp
+ * @returns
+ */
+function formatDate(timestamp) {
+    return dayjs(timestamp).format(DATE_YEAR_MONTH_DATE);
+}
+/**
+ * 把同年份的时间戳格式化为 10-01 格式，不同年份的时间戳格式化成 2020-10-01 格式
+ *
+ * @param timestamp
+ * @returns
+ */
+function formatDateShortly(timestamp) {
+    const t1 = dayjs(timestamp);
+    const t2 = dayjs(Date.now());
+    if (t1.year() === t2.year()) {
+        return t1.format(DATE_MONTH_DATE);
+    }
+    return dayjs(timestamp).format(DATE_YEAR_MONTH_DATE);
+}
+
+/**
+ * 把时间戳格式化为 2020-10-01 10:00:00 格式
+ *
+ * @param timestamp
+ * @param format 默认是 年月日 时分秒 格式
+ * @returns
+ */
+function formatDateTime(timestamp, format = DATE_YEAR_MONTH_DATE_HOUR_MINUTE) {
+    return dayjs(timestamp).format(format);
+}
+
+/**
+ * 把单位为 分 的金额转成显示友好的格式
+ *
+ * @param value
+ * @param maxDecimals
+ * @returns
+ */
+function formatMoney(value, maxDecimals = 2) {
+    // 转成 元 为单位
+    const newValue = divideNumber(value, 100);
+    const parts = ('' + newValue).split('.');
+    let list = [], end = parts[0].length - 1;
+    for (let i = end; i >= 0; i--) {
+        if (i !== end && (end - i) % 3 === 0) {
+            list.push(',');
+        }
+        list.push(parts[0].charAt(i));
+    }
+    let money = list.reverse().join('');
+    let decimal = parts[1];
+    if (decimal) {
+        if (maxDecimals > 0) {
+            decimal = decimal.padEnd(maxDecimals, '0');
+            if (decimal.length > maxDecimals) {
+                decimal = decimal.slice(0, maxDecimals);
+            }
+        }
+    }
+    else if (maxDecimals > 0) {
+        decimal = decimal.padEnd(maxDecimals, '0');
+    }
+    if (decimal) {
+        money += '.' + decimal;
+    }
+    return money;
+}
+
+/**
  * value 是否是标准商品条形码
  *
  * @param value 条形码文本
@@ -205,5 +289,5 @@ function normalizeVersion(version) {
     return '000000000000';
 }
 
-export { MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, divideNumber, isCustomBarcode, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeVersion, plusNumber, rateToBackend, rateToDisplay, timesNumber };
+export { DATE_MONTH_DATE, DATE_YEAR_MONTH_DATE, DATE_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, divideNumber, formatDate, formatDateShortly, formatDateTime, formatMoney, isCustomBarcode, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeVersion, plusNumber, rateToBackend, rateToDisplay, timesNumber };
 //# sourceMappingURL=hive.esm.js.map

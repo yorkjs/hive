@@ -62,9 +62,12 @@ if (process.env.NODE_FORMAT === 'es') {
   output.push({
     file: `dist/${moduleName}.esm${suffix}`,
     format: 'es',
-    interop: false,
+    interop: 'auto',
     banner,
     sourcemap,
+    globals: {
+      dayjs: 'dayjs'
+    }
   })
 }
 else {
@@ -86,9 +89,12 @@ else {
     file: `dist/${moduleName}${suffix}`,
     format: 'umd',
     name: 'Hive',
-    interop: false,
+    interop: 'auto',
     banner,
     sourcemap,
+    globals: {
+      dayjs: 'dayjs'
+    }
   })
 }
 
@@ -105,7 +111,7 @@ plugins.push(
 export default [
   {
     input: 'src/index.ts',
-    external: ['Hive'],
+    external: ['dayjs'],
     output,
     plugins
   }
