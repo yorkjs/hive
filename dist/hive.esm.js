@@ -1,5 +1,5 @@
 /**
- * hive.js v0.0.4
+ * hive.js v0.0.5
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -7,14 +7,14 @@
 import dayjs from 'dayjs';
 
 // 年月日：2020-10-01
-const DATE_YEAR_MONTH_DATE = 'yyyy-MM-dd';
+const DATE_YEAR_MONTH_DATE = 'YYYY-MM-DD';
 // 月日：10-01
-const DATE_MONTH_DATE = 'MM-dd';
+const DATE_MONTH_DATE = 'MM-DD';
 
 // 年月日 时分秒：2020-10-01 10:00:00
-const DATE_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND = 'yyyy-MM-dd HH:mm:ss';
+const DATE_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND = 'YYYY-MM-DD HH:mm:ss';
 // 年月日 时分：2020-10-01 10:00
-const DATE_YEAR_MONTH_DATE_HOUR_MINUTE = 'yyyy-MM-dd HH:mm';
+const DATE_YEAR_MONTH_DATE_HOUR_MINUTE = 'YYYY-MM-DD HH:mm';
 
 // 毫秒数：秒
 const MS_SECOND = 1000;
@@ -232,7 +232,7 @@ function formatMoney(value, maxDecimals = 2) {
         }
     }
     else if (maxDecimals > 0) {
-        decimal = decimal.padEnd(maxDecimals, '0');
+        decimal = ''.padEnd(maxDecimals, '0');
     }
     if (decimal) {
         money += '.' + decimal;

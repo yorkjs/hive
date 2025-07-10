@@ -1,5 +1,5 @@
 /**
- * hive.js v0.0.4
+ * hive.js v0.0.5
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -15,14 +15,14 @@
   var dayjs__default = /*#__PURE__*/_interopDefault(dayjs);
 
   // 年月日：2020-10-01
-  var DATE_YEAR_MONTH_DATE = 'yyyy-MM-dd';
+  var DATE_YEAR_MONTH_DATE = 'YYYY-MM-DD';
   // 月日：10-01
-  var DATE_MONTH_DATE = 'MM-dd';
+  var DATE_MONTH_DATE = 'MM-DD';
 
   // 年月日 时分秒：2020-10-01 10:00:00
-  var DATE_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND = 'yyyy-MM-dd HH:mm:ss';
+  var DATE_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND = 'YYYY-MM-DD HH:mm:ss';
   // 年月日 时分：2020-10-01 10:00
-  var DATE_YEAR_MONTH_DATE_HOUR_MINUTE = 'yyyy-MM-dd HH:mm';
+  var DATE_YEAR_MONTH_DATE_HOUR_MINUTE = 'YYYY-MM-DD HH:mm';
 
   // 毫秒数：秒
   var MS_SECOND = 1000;
@@ -258,7 +258,7 @@
         }
       }
     } else if (maxDecimals > 0) {
-      decimal = decimal.padEnd(maxDecimals, '0');
+      decimal = ''.padEnd(maxDecimals, '0');
     }
     if (decimal) {
       money += '.' + decimal;

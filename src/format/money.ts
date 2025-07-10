@@ -34,7 +34,7 @@ export function formatMoney(value: number, maxDecimals = 2) {
     }
   }
   else if (maxDecimals > 0) {
-    decimal = decimal.padEnd(maxDecimals, '0')
+    decimal = ''.padEnd(maxDecimals, '0')
   }
   if (decimal) {
     money += '.' + decimal
