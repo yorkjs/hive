@@ -57,6 +57,7 @@ test('calculator_divide', () => {
   expect(divideNumber(10, 0.5)).toBe(20)
   expect(divideNumber(10, 0.2)).toBe(50)
   expect(divideNumber(201, 100)).toBe(2.01)
+  expect(divideNumber(168, 100)).toBe(1.68)
   expect(divideNumber(5000000, 100)).toBe(50000)
   expect(divideNumber(3, -2)).toBe(-1.5)
   expect(divideNumber(-6, -3)).toBe(2)

@@ -1,6 +1,6 @@
 {
   "name": "@yorkjs/hive",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "util function",
   "main": "dist/hive.js",
   "module": "dist/hive.esm.js",
@@ -44,6 +44,7 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "dayjs": "^1.11.13"
+    "dayjs": "^1.11.13",
+    "number-precision": "^1.6.0"
   }
 }

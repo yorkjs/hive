@@ -93,7 +93,8 @@ else {
     banner,
     sourcemap,
     globals: {
-      dayjs: 'dayjs'
+      dayjs: 'Dayjs',
+      'number-precision': 'NP',
     }
   })
 }
@@ -111,7 +112,7 @@ plugins.push(
 export default [
   {
     input: 'src/index.ts',
-    external: ['dayjs'],
+    external: ['dayjs', 'number-precision'],
     output,
     plugins
   }

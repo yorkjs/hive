@@ -1,17 +1,36 @@
 /**
- * hive.js v0.0.5
+ * hive.js v0.0.6
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
 
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('dayjs')) :
-  typeof define === 'function' && define.amd ? define(['exports', 'dayjs'], factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.Hive = {}, global.dayjs));
-})(this, (function (exports, dayjs) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('number-precision'), require('dayjs')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'number-precision', 'dayjs'], factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.Hive = {}, global.NP, global.Dayjs));
+})(this, (function (exports, NP, dayjs) { 'use strict';
 
   function _interopDefault (e) { return e && e.__esModule ? e : { default: e }; }
 
+  function _interopNamespace(e) {
+    if (e && e.__esModule) return e;
+    var n = Object.create(null);
+    if (e) {
+      Object.keys(e).forEach(function (k) {
+        if (k !== 'default') {
+          var d = Object.getOwnPropertyDescriptor(e, k);
+          Object.defineProperty(n, k, d.get ? d : {
+            enumerable: true,
+            get: function () { return e[k]; }
+          });
+        }
+      });
+    }
+    n.default = e;
+    return Object.freeze(n);
+  }
+
+  var NP__namespace = /*#__PURE__*/_interopNamespace(NP);
   var dayjs__default = /*#__PURE__*/_interopDefault(dayjs);
 
   // 年月日：2020-10-01
@@ -41,30 +60,6 @@
    * 此模块用于整数和浮点数的精确计算，避免浮点数的计算精度问题
    */
   /**
-   * 获取数字的小数位数
-   *
-   * @param num 要检查的数字
-   * @returns 小数位数
-   */
-  function getDecimalDigits(num) {
-    var decimalStr = num.toString().split('.')[1];
-    return decimalStr ? decimalStr.length : 0;
-  }
-  /**
-   * 将数字转换为整数，消除小数部分
-   *
-   * @param num 要转换的数字
-   * @returns 包含整数和倍数的对象
-   */
-  function convertToInteger(num) {
-    var decimalDigits = getDecimalDigits(num);
-    var multiple = Math.pow(10, decimalDigits);
-    return {
-      value: BigInt(Math.round(num * multiple)),
-      multiple: BigInt(multiple)
-    };
-  }
-  /**
   * 精确加法，比如 plusNumber(3, 1) === 4
   *
   * @param value1 第一个值
@@ -72,16 +67,7 @@
   * @returns 和
   */
   function plusNumber(value1, value2) {
-    var _convertToInteger = convertToInteger(value1),
-      v1 = _convertToInteger.value,
-      m1 = _convertToInteger.multiple;
-    var _convertToInteger2 = convertToInteger(value2),
-      v2 = _convertToInteger2.value,
-      m2 = _convertToInteger2.multiple;
-    var commonMultiple = m1 > m2 ? m1 : m2;
-    var adjustedV1 = v1 * (commonMultiple / m1);
-    var adjustedV2 = v2 * (commonMultiple / m2);
-    return Number(adjustedV1 + adjustedV2) / Number(commonMultiple);
+    return NP__namespace.plus(value1, value2);
   }
   /**
   * 精确减法，比如 minusNumber(3, 1) === 2
@@ -91,16 +77,7 @@
   * @returns 差
   */
   function minusNumber(value1, value2) {
-    var _convertToInteger3 = convertToInteger(value1),
-      v1 = _convertToInteger3.value,
-      m1 = _convertToInteger3.multiple;
-    var _convertToInteger4 = convertToInteger(value2),
-      v2 = _convertToInteger4.value,
-      m2 = _convertToInteger4.multiple;
-    var commonMultiple = m1 > m2 ? m1 : m2;
-    var adjustedV1 = v1 * (commonMultiple / m1);
-    var adjustedV2 = v2 * (commonMultiple / m2);
-    return Number(adjustedV1 - adjustedV2) / Number(commonMultiple);
+    return NP__namespace.minus(value1, value2);
   }
   /**
    * 精确乘法，比如 timesNumber(3, 2) === 6
@@ -110,15 +87,7 @@
    * @returns 乘积结果
    */
   function timesNumber(value1, value2) {
-    var _convertToInteger5 = convertToInteger(value1),
-      v1 = _convertToInteger5.value,
-      m1 = _convertToInteger5.multiple;
-    var _convertToInteger6 = convertToInteger(value2),
-      v2 = _convertToInteger6.value,
-      m2 = _convertToInteger6.multiple;
-    var product = v1 * v2;
-    var divisor = m1 * m2;
-    return Number(product) / Number(divisor);
+    return NP__namespace.times(value1, value2);
   }
   /**
   * 精确除法，比如 divideNumber(6, 2) === 3
@@ -128,30 +97,7 @@
   * @returns 商
   */
   function divideNumber(value1, value2) {
-    if (value2 === 0) {
-      throw new Error('Division by zero');
-    }
-    var _convertToInteger7 = convertToInteger(value1),
-      v1 = _convertToInteger7.value,
-      m1 = _convertToInteger7.multiple;
-    var _convertToInteger8 = convertToInteger(value2),
-      v2 = _convertToInteger8.value,
-      m2 = _convertToInteger8.multiple;
-    // 计算 (v1 * m2) / (v2 * m1)，避免过大数值
-    var dividend = v1 * m2;
-    var divisor = v2 * m1;
-    // 先进行 BigInt 除法，再调整精度
-    var quotient = dividend / divisor;
-    var remainder = dividend % divisor;
-    // 如果余数为 0，直接返回整数部分
-    if (remainder === 0n) {
-      return Number(quotient);
-    }
-    // 否则，计算小数部分（使用额外倍数）
-    var precision = 1e12; // 足够大的倍数，但避免溢出
-    var scaledRemainder = remainder * BigInt(precision);
-    var decimalPart = Number(scaledRemainder / divisor) / precision;
-    return Number(quotient) + decimalPart;
+    return NP__namespace.divide(value1, value2);
   }
 
   /**
