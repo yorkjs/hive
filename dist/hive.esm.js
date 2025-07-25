@@ -1,5 +1,5 @@
 /**
- * hive.js v0.0.6
+ * hive.js v0.0.7
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -9,6 +9,8 @@ import dayjs from 'dayjs';
 
 // 年月日：2020-10-01
 const DATE_YEAR_MONTH_DATE = 'YYYY-MM-DD';
+// 年月：2020-10
+const DATE_YEAR_MONTH = 'YYYY-MM';
 // 月日：10-01
 const DATE_MONTH_DATE = 'MM-DD';
 
@@ -148,6 +150,29 @@ function formatDateTime(timestamp, format = DATE_YEAR_MONTH_DATE_HOUR_MINUTE) {
 }
 
 /**
+ * 把时间戳格式化为 周开始 ~ 周结束 格式
+ *
+ * @param timestamp
+ * @returns
+ */
+function formatWeek(timestamp) {
+    const date = new Date(timestamp);
+    const offset = -1 * date.getDay();
+    const startTimestamp = date.getTime() + offset * MS_DAY;
+    return formatDateShortly(startTimestamp) + ' ~ ' + formatDateShortly(startTimestamp + 6 * MS_DAY);
+}
+
+/**
+ * 把时间戳格式化为 2020-10 格式
+ *
+ * @param timestamp
+ * @returns
+ */
+function formatMonth(timestamp) {
+    return dayjs(timestamp).format(DATE_YEAR_MONTH);
+}
+
+/**
  * 把单位为 分 的金额转成显示友好的格式
  *
  * @param value
@@ -233,5 +258,5 @@ function normalizeVersion(version) {
     return '000000000000';
 }
 
-export { DATE_MONTH_DATE, DATE_YEAR_MONTH_DATE, DATE_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, divideNumber, formatDate, formatDateShortly, formatDateTime, formatMoney, isCustomBarcode, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeVersion, plusNumber, rateToBackend, rateToDisplay, timesNumber };
+export { DATE_MONTH_DATE, DATE_YEAR_MONTH, DATE_YEAR_MONTH_DATE, DATE_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, divideNumber, formatDate, formatDateShortly, formatDateTime, formatMoney, formatMonth, formatWeek, isCustomBarcode, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeVersion, plusNumber, rateToBackend, rateToDisplay, timesNumber };
 //# sourceMappingURL=hive.esm.js.map
