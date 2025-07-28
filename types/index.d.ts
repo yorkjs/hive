@@ -11,3 +11,4 @@ export * from './format/money';
 export * from './is/barcode';
 export * from './normalize/version';
 export * from './util/calculator';
+export * from './util/date';

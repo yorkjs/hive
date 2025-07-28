@@ -1,5 +1,5 @@
 /**
- * hive.js v0.0.7
+ * hive.js v0.0.8
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -41,9 +41,9 @@
   var DATE_MONTH_DATE = 'MM-DD';
 
   // 年月日 时分秒：2020-10-01 10:00:00
-  var DATE_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND = 'YYYY-MM-DD HH:mm:ss';
+  var DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND = 'YYYY-MM-DD HH:mm:ss';
   // 年月日 时分：2020-10-01 10:00
-  var DATE_YEAR_MONTH_DATE_HOUR_MINUTE = 'YYYY-MM-DD HH:mm';
+  var DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE = 'YYYY-MM-DD HH:mm';
 
   // 毫秒数：秒
   var MS_SECOND = 1000;
@@ -172,7 +172,7 @@
    * @returns
    */
   function formatDateTime(timestamp) {
-    var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : DATE_YEAR_MONTH_DATE_HOUR_MINUTE;
+    var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE;
     return dayjs__default.default(timestamp).format(format);
   }
 
@@ -286,11 +286,86 @@
     return '000000000000';
   }
 
+  /**
+  * 获取某天的开始时间
+  *
+  * @param timestamp 毫秒时间戳
+  * @returns
+  */
+  function startOfDay(timestamp) {
+    var date = new Date(timestamp);
+    date.setHours(0, 0, 0, 0);
+    return date.getTime();
+  }
+  /**
+  * 获取某天的结束时间
+  *
+  * @param timestamp 毫秒时间戳
+  * @returns
+  */
+  function endOfDay(timestamp) {
+    var date = new Date(timestamp);
+    date.setHours(23, 59, 59, 999);
+    return date.getTime();
+  }
+  /**
+  * 获取某周的开始时间
+  *
+  * @param timestamp 毫秒时间戳
+  * @returns
+  */
+  function startOfWeek(timestamp) {
+    var date = new Date(timestamp);
+    var day = date.getDay();
+    var offset = (day < 0 ? 7 : 0) + day;
+    date.setDate(date.getDate() - offset);
+    date.setHours(0, 0, 0, 0);
+    return date.getTime();
+  }
+  /**
+  * 获取某周的结束时间
+  *
+  * @param timestamp 毫秒时间戳
+  * @returns
+  */
+  function endOfWeek(timestamp) {
+    var date = new Date(timestamp);
+    var day = date.getDay();
+    var offset = (day < 0 ? -7 : 0) + 6 - day;
+    date.setDate(date.getDate() + offset);
+    date.setHours(23, 59, 59, 999);
+    return date.getTime();
+  }
+  /**
+  * 获取某月的开始时间
+  *
+  * @param timestamp 毫秒时间戳
+  * @returns
+  */
+  function startOfMonth(timestamp) {
+    var date = new Date(timestamp);
+    date.setDate(1);
+    date.setHours(0, 0, 0, 0);
+    return date.getTime();
+  }
+  /**
+  * 获取某月的结束时间
+  *
+  * @param timestamp 毫秒时间戳
+  * @returns
+  */
+  function endOfMonth(timestamp) {
+    var date = new Date(timestamp);
+    date.setMonth(date.getMonth() + 1, 0);
+    date.setHours(23, 59, 59, 999);
+    return date.getTime();
+  }
+
   exports.DATE_MONTH_DATE = DATE_MONTH_DATE;
+  exports.DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE = DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE;
+  exports.DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND = DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND;
   exports.DATE_YEAR_MONTH = DATE_YEAR_MONTH;
   exports.DATE_YEAR_MONTH_DATE = DATE_YEAR_MONTH_DATE;
-  exports.DATE_YEAR_MONTH_DATE_HOUR_MINUTE = DATE_YEAR_MONTH_DATE_HOUR_MINUTE;
-  exports.DATE_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND = DATE_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND;
   exports.MS_DAY = MS_DAY;
   exports.MS_HOUR = MS_HOUR;
   exports.MS_MINUTE = MS_MINUTE;
@@ -298,6 +373,9 @@
   exports.MS_WEEK = MS_WEEK;
   exports.MS_YEAR = MS_YEAR;
   exports.divideNumber = divideNumber;
+  exports.endOfDay = endOfDay;
+  exports.endOfMonth = endOfMonth;
+  exports.endOfWeek = endOfWeek;
   exports.formatDate = formatDate;
   exports.formatDateShortly = formatDateShortly;
   exports.formatDateTime = formatDateTime;
@@ -313,6 +391,9 @@
   exports.plusNumber = plusNumber;
   exports.rateToBackend = rateToBackend;
   exports.rateToDisplay = rateToDisplay;
+  exports.startOfDay = startOfDay;
+  exports.startOfMonth = startOfMonth;
+  exports.startOfWeek = startOfWeek;
   exports.timesNumber = timesNumber;
 
 }));

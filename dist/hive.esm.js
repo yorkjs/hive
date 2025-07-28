@@ -1,5 +1,5 @@
 /**
- * hive.js v0.0.7
+ * hive.js v0.0.8
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -15,9 +15,9 @@ const DATE_YEAR_MONTH = 'YYYY-MM';
 const DATE_MONTH_DATE = 'MM-DD';
 
 // 年月日 时分秒：2020-10-01 10:00:00
-const DATE_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND = 'YYYY-MM-DD HH:mm:ss';
+const DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND = 'YYYY-MM-DD HH:mm:ss';
 // 年月日 时分：2020-10-01 10:00
-const DATE_YEAR_MONTH_DATE_HOUR_MINUTE = 'YYYY-MM-DD HH:mm';
+const DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE = 'YYYY-MM-DD HH:mm';
 
 // 毫秒数：秒
 const MS_SECOND = 1000;
@@ -145,7 +145,7 @@ function formatDateShortly(timestamp) {
  * @param format 默认是 年月日 时分秒 格式
  * @returns
  */
-function formatDateTime(timestamp, format = DATE_YEAR_MONTH_DATE_HOUR_MINUTE) {
+function formatDateTime(timestamp, format = DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE) {
     return dayjs(timestamp).format(format);
 }
 
@@ -258,5 +258,80 @@ function normalizeVersion(version) {
     return '000000000000';
 }
 
-export { DATE_MONTH_DATE, DATE_YEAR_MONTH, DATE_YEAR_MONTH_DATE, DATE_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, divideNumber, formatDate, formatDateShortly, formatDateTime, formatMoney, formatMonth, formatWeek, isCustomBarcode, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeVersion, plusNumber, rateToBackend, rateToDisplay, timesNumber };
+/**
+* 获取某天的开始时间
+*
+* @param timestamp 毫秒时间戳
+* @returns
+*/
+function startOfDay(timestamp) {
+    const date = new Date(timestamp);
+    date.setHours(0, 0, 0, 0);
+    return date.getTime();
+}
+/**
+* 获取某天的结束时间
+*
+* @param timestamp 毫秒时间戳
+* @returns
+*/
+function endOfDay(timestamp) {
+    const date = new Date(timestamp);
+    date.setHours(23, 59, 59, 999);
+    return date.getTime();
+}
+/**
+* 获取某周的开始时间
+*
+* @param timestamp 毫秒时间戳
+* @returns
+*/
+function startOfWeek(timestamp) {
+    const date = new Date(timestamp);
+    const day = date.getDay();
+    const offset = (day < 0 ? 7 : 0) + day;
+    date.setDate(date.getDate() - offset);
+    date.setHours(0, 0, 0, 0);
+    return date.getTime();
+}
+/**
+* 获取某周的结束时间
+*
+* @param timestamp 毫秒时间戳
+* @returns
+*/
+function endOfWeek(timestamp) {
+    const date = new Date(timestamp);
+    const day = date.getDay();
+    const offset = (day < 0 ? -7 : 0) + 6 - day;
+    date.setDate(date.getDate() + offset);
+    date.setHours(23, 59, 59, 999);
+    return date.getTime();
+}
+/**
+* 获取某月的开始时间
+*
+* @param timestamp 毫秒时间戳
+* @returns
+*/
+function startOfMonth(timestamp) {
+    const date = new Date(timestamp);
+    date.setDate(1);
+    date.setHours(0, 0, 0, 0);
+    return date.getTime();
+}
+/**
+* 获取某月的结束时间
+*
+* @param timestamp 毫秒时间戳
+* @returns
+*/
+function endOfMonth(timestamp) {
+    const date = new Date(timestamp);
+    date.setMonth(date.getMonth() + 1, 0);
+    date.setHours(23, 59, 59, 999);
+    return date.getTime();
+}
+
+export { DATE_MONTH_DATE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_YEAR_MONTH, DATE_YEAR_MONTH_DATE, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, divideNumber, endOfDay, endOfMonth, endOfWeek, formatDate, formatDateShortly, formatDateTime, formatMoney, formatMonth, formatWeek, isCustomBarcode, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeVersion, plusNumber, rateToBackend, rateToDisplay, startOfDay, startOfMonth, startOfWeek, timesNumber };
 //# sourceMappingURL=hive.esm.js.map
