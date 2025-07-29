@@ -1,15 +1,28 @@
 /**
- * 重量转换为前端显示所用的格式
+ * 毫克 转换为 克
  *
  * @param value 后端的重量值，单位毫克
  * @returns
  */
 export declare function weightToG(value: number): number;
-export declare function weightToKG(value: number): number;
 /**
- * 重量转换为后端接口所用的格式
+ * 毫克 转换为 千克
  *
- * @param value 前端的重量值
+ * @param value 后端的重量值，单位毫克
  * @returns
  */
-export declare function weightToBackend(value: number): number;
+export declare function weightToKG(value: number): number;
+/**
+ * 克 转为后端使用的 毫克
+ *
+ * @param value 前端的重量值，单位是克
+ * @returns
+ */
+export declare function weightGToBackend(value: number): number;
+/**
+ * 千克 转为后端使用的 毫克
+ *
+ * @param value 前端的重量值，单位是千克
+ * @returns
+ */
+export declare function weightKGToBackend(value: number): number;

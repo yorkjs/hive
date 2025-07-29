@@ -1,5 +1,5 @@
 /**
- * hive.js v0.0.8
+ * hive.js v0.0.9
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -122,7 +122,7 @@
   }
 
   /**
-   * 比例转换为前端显示所用的格式
+   * 万分比 转换为 百分比
    *
    * @param value 后端的比例值
    * @returns
@@ -131,13 +131,63 @@
     return divideNumber(value, 100);
   }
   /**
-   * 比例转换为后端接口所用的格式
+   * 百分比 转换为 万分比
    *
    * @param value 前端的比例值
    * @returns
    */
   function rateToBackend(value) {
     return timesNumber(value, 100);
+  }
+  /**
+   * 计算万分比
+   *
+   * @param value1 除数
+   * @param value2 被除数
+   * @returns
+   */
+  function calculateRate(value1, value2) {
+    if (!value2) {
+      return 0;
+    }
+    return divideNumber(value1 * 10000, value2);
+  }
+
+  /**
+   * 毫克 转换为 克
+   *
+   * @param value 后端的重量值，单位毫克
+   * @returns
+   */
+  function weightToG(value) {
+    return divideNumber(value, 1000);
+  }
+  /**
+   * 毫克 转换为 千克
+   *
+   * @param value 后端的重量值，单位毫克
+   * @returns
+   */
+  function weightToKG(value) {
+    return divideNumber(value, 1000000);
+  }
+  /**
+   * 克 转为后端使用的 毫克
+   *
+   * @param value 前端的重量值，单位是克
+   * @returns
+   */
+  function weightGToBackend(value) {
+    return timesNumber(value, 1000);
+  }
+  /**
+   * 千克 转为后端使用的 毫克
+   *
+   * @param value 前端的重量值，单位是千克
+   * @returns
+   */
+  function weightKGToBackend(value) {
+    return timesNumber(value, 1000000);
   }
 
   /**
@@ -372,6 +422,7 @@
   exports.MS_SECOND = MS_SECOND;
   exports.MS_WEEK = MS_WEEK;
   exports.MS_YEAR = MS_YEAR;
+  exports.calculateRate = calculateRate;
   exports.divideNumber = divideNumber;
   exports.endOfDay = endOfDay;
   exports.endOfMonth = endOfMonth;
@@ -395,6 +446,10 @@
   exports.startOfMonth = startOfMonth;
   exports.startOfWeek = startOfWeek;
   exports.timesNumber = timesNumber;
+  exports.weightGToBackend = weightGToBackend;
+  exports.weightKGToBackend = weightKGToBackend;
+  exports.weightToG = weightToG;
+  exports.weightToKG = weightToKG;
 
 }));
 //# sourceMappingURL=hive.js.map
