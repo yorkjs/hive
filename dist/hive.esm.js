@@ -1,5 +1,5 @@
 /**
- * hive.js v0.0.9
+ * hive.js v0.1.0
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -18,6 +18,8 @@ const DATE_MONTH_DATE = 'MM-DD';
 const DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND = 'YYYY-MM-DD HH:mm:ss';
 // 年月日 时分：2020-10-01 10:00
 const DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE = 'YYYY-MM-DD HH:mm';
+// 月日 时分：10-01 10:00
+const DATE_TIME_MONTH_DATE_HOUR_MINUTE = 'MM-DD HH:mm';
 
 // 毫秒数：秒
 const MS_SECOND = 1000;
@@ -32,9 +34,6 @@ const MS_WEEK = 7 * MS_DAY;
 // 毫秒数：年
 const MS_YEAR = 365 * MS_DAY;
 
-/**
- * 此模块用于整数和浮点数的精确计算，避免浮点数的计算精度问题
- */
 /**
 * 精确加法，比如 plusNumber(3, 1) === 4
 *
@@ -73,7 +72,30 @@ function timesNumber(value1, value2) {
 * @returns 商
 */
 function divideNumber(value1, value2) {
+    if (value2 === 0) {
+        throw new Error('Divisor cannot be zero');
+    }
     return NP.divide(value1, value2);
+}
+/**
+ * 截断数字，解决 1.983.toFixed(1) 为 2.0 的问题
+ *
+ * @param value
+ * @param decimals
+ * @returns
+ */
+function truncateNumber(value, decimals = 0) {
+    let [integerPart, decimalPart] = value.toString().split('.');
+    if (decimals === 0) {
+        return integerPart;
+    }
+    if (!decimalPart) {
+        return `${integerPart}.${''.padEnd(decimals, '0')}`;
+    }
+    const truncatedDecimal = decimalPart.length > decimals
+        ? decimalPart.substring(0, decimals)
+        : decimalPart.padEnd(decimals, '0');
+    return `${integerPart}.${truncatedDecimal}`;
 }
 
 /**
@@ -189,14 +211,28 @@ function formatDateShortly(timestamp) {
 }
 
 /**
- * 把时间戳格式化为 2020-10-01 10:00:00 格式
+ * 把时间戳格式化为 2020-10-01 10:00 格式
  *
  * @param timestamp
- * @param format 默认是 年月日 时分秒 格式
+ * @param format
  * @returns
  */
 function formatDateTime(timestamp, format = DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE) {
     return dayjs(timestamp).format(format);
+}
+/**
+ * 把同年份的时间戳格式化为 10-01 10:00 格式，不同年份的时间戳格式化成 2020-10-01 10:00 格式
+ *
+ * @param timestamp
+ * @returns
+ */
+function formatDateTimeShortly(timestamp) {
+    const t1 = dayjs(timestamp);
+    const t2 = dayjs(Date.now());
+    if (t1.year() === t2.year()) {
+        return t1.format(DATE_TIME_MONTH_DATE_HOUR_MINUTE);
+    }
+    return dayjs(timestamp).format(DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE);
 }
 
 /**
@@ -208,8 +244,8 @@ function formatDateTime(timestamp, format = DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUT
 function formatWeek(timestamp) {
     const date = new Date(timestamp);
     const offset = -1 * date.getDay();
-    const startTimestamp = date.getTime() + offset * MS_DAY;
-    return formatDateShortly(startTimestamp) + ' ~ ' + formatDateShortly(startTimestamp + 6 * MS_DAY);
+    const startTimestamp = timestamp + offset * MS_DAY;
+    return `${formatDateShortly(startTimestamp)} ~ ${formatDateShortly(startTimestamp + 6 * MS_DAY)}`;
 }
 
 /**
@@ -223,40 +259,41 @@ function formatMonth(timestamp) {
 }
 
 /**
- * 把单位为 分 的金额转成显示友好的格式
+ * 把数字的整数部分格式化为以千为段拆分，以逗号为分隔符
  *
  * @param value
- * @param maxDecimals
+ * @param decimals
  * @returns
  */
-function formatMoney(value, maxDecimals = 2) {
-    // 转成 元 为单位
-    const newValue = divideNumber(value, 100);
-    const parts = ('' + newValue).split('.');
-    let list = [], end = parts[0].length - 1;
+function formatNumberWithComma(value, decimals = 0) {
+    const newValue = decimals >= 0
+        ? truncateNumber(value, decimals)
+        : value.toString();
+    let [integerPart, decimalPart] = newValue.split('.');
+    // 格式化整数部分
+    const list = [];
+    const end = integerPart.length - 1;
     for (let i = end; i >= 0; i--) {
         if (i !== end && (end - i) % 3 === 0) {
             list.push(',');
         }
-        list.push(parts[0].charAt(i));
+        list.push(integerPart.charAt(i));
     }
-    let money = list.reverse().join('');
-    let decimal = parts[1];
-    if (decimal) {
-        if (maxDecimals > 0) {
-            decimal = decimal.padEnd(maxDecimals, '0');
-            if (decimal.length > maxDecimals) {
-                decimal = decimal.slice(0, maxDecimals);
+    let result = list.reverse().join('');
+    // 处理小数部分
+    if (decimalPart) {
+        if (decimals > 0) {
+            decimalPart = decimalPart.padEnd(decimals, '0');
+            if (decimalPart.length > decimals) {
+                decimalPart = decimalPart.slice(0, decimals);
             }
+            result += `.${decimalPart}`;
         }
     }
-    else if (maxDecimals > 0) {
-        decimal = ''.padEnd(maxDecimals, '0');
+    else if (decimals > 0) {
+        result += `.${''.padEnd(decimals, '0')}`;
     }
-    if (decimal) {
-        money += '.' + decimal;
-    }
-    return money;
+    return result;
 }
 
 /**
@@ -383,5 +420,5 @@ function endOfMonth(timestamp) {
     return date.getTime();
 }
 
-export { DATE_MONTH_DATE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_YEAR_MONTH, DATE_YEAR_MONTH_DATE, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, calculateRate, divideNumber, endOfDay, endOfMonth, endOfWeek, formatDate, formatDateShortly, formatDateTime, formatMoney, formatMonth, formatWeek, isCustomBarcode, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeVersion, plusNumber, rateToBackend, rateToDisplay, startOfDay, startOfMonth, startOfWeek, timesNumber, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
+export { DATE_MONTH_DATE, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_YEAR_MONTH, DATE_YEAR_MONTH_DATE, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, calculateRate, divideNumber, endOfDay, endOfMonth, endOfWeek, formatDate, formatDateShortly, formatDateTime, formatDateTimeShortly, formatMonth, formatNumberWithComma, formatWeek, isCustomBarcode, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeVersion, plusNumber, rateToBackend, rateToDisplay, startOfDay, startOfMonth, startOfWeek, timesNumber, truncateNumber, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
 //# sourceMappingURL=hive.esm.js.map

@@ -5,7 +5,7 @@ import {
   weightKGToBackend,
 } from '../../src/convert/weight'
 
-test('rate_convert', () => {
+test('weight_convert', () => {
 
   expect(weightToG(1)).toBe(0.001)
   expect(weightToG(10)).toBe(0.01)

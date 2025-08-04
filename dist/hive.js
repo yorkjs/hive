@@ -1,5 +1,5 @@
 /**
- * hive.js v0.0.9
+ * hive.js v0.1.0
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -44,6 +44,8 @@
   var DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND = 'YYYY-MM-DD HH:mm:ss';
   // 年月日 时分：2020-10-01 10:00
   var DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE = 'YYYY-MM-DD HH:mm';
+  // 月日 时分：10-01 10:00
+  var DATE_TIME_MONTH_DATE_HOUR_MINUTE = 'MM-DD HH:mm';
 
   // 毫秒数：秒
   var MS_SECOND = 1000;
@@ -58,9 +60,52 @@
   // 毫秒数：年
   var MS_YEAR = 365 * MS_DAY;
 
-  /**
-   * 此模块用于整数和浮点数的精确计算，避免浮点数的计算精度问题
-   */
+  function _arrayLikeToArray(r, a) {
+    (null == a || a > r.length) && (a = r.length);
+    for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
+    return n;
+  }
+  function _arrayWithHoles(r) {
+    if (Array.isArray(r)) return r;
+  }
+  function _iterableToArrayLimit(r, l) {
+    var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
+    if (null != t) {
+      var e,
+        n,
+        i,
+        u,
+        a = [],
+        f = true,
+        o = false;
+      try {
+        if (i = (t = t.call(r)).next, 0 === l) ; else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);
+      } catch (r) {
+        o = true, n = r;
+      } finally {
+        try {
+          if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return;
+        } finally {
+          if (o) throw n;
+        }
+      }
+      return a;
+    }
+  }
+  function _nonIterableRest() {
+    throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+  }
+  function _slicedToArray(r, e) {
+    return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest();
+  }
+  function _unsupportedIterableToArray(r, a) {
+    if (r) {
+      if ("string" == typeof r) return _arrayLikeToArray(r, a);
+      var t = {}.toString.call(r).slice(8, -1);
+      return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0;
+    }
+  }
+
   /**
   * 精确加法，比如 plusNumber(3, 1) === 4
   *
@@ -99,7 +144,32 @@
   * @returns 商
   */
   function divideNumber(value1, value2) {
+    if (value2 === 0) {
+      throw new Error('Divisor cannot be zero');
+    }
     return NP__namespace.divide(value1, value2);
+  }
+  /**
+   * 截断数字，解决 1.983.toFixed(1) 为 2.0 的问题
+   *
+   * @param value
+   * @param decimals
+   * @returns
+   */
+  function truncateNumber(value) {
+    var decimals = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+    var _value$toString$split = value.toString().split('.'),
+      _value$toString$split2 = _slicedToArray(_value$toString$split, 2),
+      integerPart = _value$toString$split2[0],
+      decimalPart = _value$toString$split2[1];
+    if (decimals === 0) {
+      return integerPart;
+    }
+    if (!decimalPart) {
+      return "".concat(integerPart, ".").concat(''.padEnd(decimals, '0'));
+    }
+    var truncatedDecimal = decimalPart.length > decimals ? decimalPart.substring(0, decimals) : decimalPart.padEnd(decimals, '0');
+    return "".concat(integerPart, ".").concat(truncatedDecimal);
   }
 
   /**
@@ -215,15 +285,29 @@
   }
 
   /**
-   * 把时间戳格式化为 2020-10-01 10:00:00 格式
+   * 把时间戳格式化为 2020-10-01 10:00 格式
    *
    * @param timestamp
-   * @param format 默认是 年月日 时分秒 格式
+   * @param format
    * @returns
    */
   function formatDateTime(timestamp) {
     var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE;
     return dayjs__default.default(timestamp).format(format);
+  }
+  /**
+   * 把同年份的时间戳格式化为 10-01 10:00 格式，不同年份的时间戳格式化成 2020-10-01 10:00 格式
+   *
+   * @param timestamp
+   * @returns
+   */
+  function formatDateTimeShortly(timestamp) {
+    var t1 = dayjs__default.default(timestamp);
+    var t2 = dayjs__default.default(Date.now());
+    if (t1.year() === t2.year()) {
+      return t1.format(DATE_TIME_MONTH_DATE_HOUR_MINUTE);
+    }
+    return dayjs__default.default(timestamp).format(DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE);
   }
 
   /**
@@ -235,8 +319,8 @@
   function formatWeek(timestamp) {
     var date = new Date(timestamp);
     var offset = -1 * date.getDay();
-    var startTimestamp = date.getTime() + offset * MS_DAY;
-    return formatDateShortly(startTimestamp) + ' ~ ' + formatDateShortly(startTimestamp + 6 * MS_DAY);
+    var startTimestamp = timestamp + offset * MS_DAY;
+    return "".concat(formatDateShortly(startTimestamp), " ~ ").concat(formatDateShortly(startTimestamp + 6 * MS_DAY));
   }
 
   /**
@@ -250,41 +334,42 @@
   }
 
   /**
-   * 把单位为 分 的金额转成显示友好的格式
+   * 把数字的整数部分格式化为以千为段拆分，以逗号为分隔符
    *
    * @param value
-   * @param maxDecimals
+   * @param decimals
    * @returns
    */
-  function formatMoney(value) {
-    var maxDecimals = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2;
-    // 转成 元 为单位
-    var newValue = divideNumber(value, 100);
-    var parts = ('' + newValue).split('.');
-    var list = [],
-      end = parts[0].length - 1;
+  function formatNumberWithComma(value) {
+    var decimals = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+    var newValue = decimals >= 0 ? truncateNumber(value, decimals) : value.toString();
+    var _newValue$split = newValue.split('.'),
+      _newValue$split2 = _slicedToArray(_newValue$split, 2),
+      integerPart = _newValue$split2[0],
+      decimalPart = _newValue$split2[1];
+    // 格式化整数部分
+    var list = [];
+    var end = integerPart.length - 1;
     for (var i = end; i >= 0; i--) {
       if (i !== end && (end - i) % 3 === 0) {
         list.push(',');
       }
-      list.push(parts[0].charAt(i));
+      list.push(integerPart.charAt(i));
     }
-    var money = list.reverse().join('');
-    var decimal = parts[1];
-    if (decimal) {
-      if (maxDecimals > 0) {
-        decimal = decimal.padEnd(maxDecimals, '0');
-        if (decimal.length > maxDecimals) {
-          decimal = decimal.slice(0, maxDecimals);
+    var result = list.reverse().join('');
+    // 处理小数部分
+    if (decimalPart) {
+      if (decimals > 0) {
+        decimalPart = decimalPart.padEnd(decimals, '0');
+        if (decimalPart.length > decimals) {
+          decimalPart = decimalPart.slice(0, decimals);
         }
+        result += ".".concat(decimalPart);
       }
-    } else if (maxDecimals > 0) {
-      decimal = ''.padEnd(maxDecimals, '0');
+    } else if (decimals > 0) {
+      result += ".".concat(''.padEnd(decimals, '0'));
     }
-    if (decimal) {
-      money += '.' + decimal;
-    }
-    return money;
+    return result;
   }
 
   /**
@@ -412,6 +497,7 @@
   }
 
   exports.DATE_MONTH_DATE = DATE_MONTH_DATE;
+  exports.DATE_TIME_MONTH_DATE_HOUR_MINUTE = DATE_TIME_MONTH_DATE_HOUR_MINUTE;
   exports.DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE = DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE;
   exports.DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND = DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND;
   exports.DATE_YEAR_MONTH = DATE_YEAR_MONTH;
@@ -430,8 +516,9 @@
   exports.formatDate = formatDate;
   exports.formatDateShortly = formatDateShortly;
   exports.formatDateTime = formatDateTime;
-  exports.formatMoney = formatMoney;
+  exports.formatDateTimeShortly = formatDateTimeShortly;
   exports.formatMonth = formatMonth;
+  exports.formatNumberWithComma = formatNumberWithComma;
   exports.formatWeek = formatWeek;
   exports.isCustomBarcode = isCustomBarcode;
   exports.isStandardBarcode = isStandardBarcode;
@@ -446,6 +533,7 @@
   exports.startOfMonth = startOfMonth;
   exports.startOfWeek = startOfWeek;
   exports.timesNumber = timesNumber;
+  exports.truncateNumber = truncateNumber;
   exports.weightGToBackend = weightGToBackend;
   exports.weightKGToBackend = weightKGToBackend;
   exports.weightToG = weightToG;

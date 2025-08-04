@@ -1,6 +1,12 @@
-import { minusNumber, plusNumber, timesNumber, divideNumber } from '../../src/util/calculator'
+import {
+  plusNumber,
+  minusNumber,
+  timesNumber,
+  divideNumber,
+  truncateNumber,
+} from '../../src/util/number'
 
-test('calculator_plus', () => {
+test('plusNumber', () => {
 
   expect(plusNumber(1, 2)).toBe(3)
   expect(plusNumber(1.1, 2.1)).toBe(3.2)
@@ -12,7 +18,7 @@ test('calculator_plus', () => {
 
 })
 
-test('calculator_minus', () => {
+test('minusNumber', () => {
 
   expect(minusNumber(2, 1)).toBe(1)
   expect(minusNumber(2.1, 1.1)).toBe(1)
@@ -23,7 +29,7 @@ test('calculator_minus', () => {
 
 })
 
-test('calculator_times', () => {
+test('timesNumber', () => {
 
   expect(timesNumber(2, 1)).toBe(2)
   expect(timesNumber(2, 3)).toBe(6)
@@ -43,7 +49,7 @@ test('calculator_times', () => {
 
 })
 
-test('calculator_divide', () => {
+test('divideNumber', () => {
 
   expect(divideNumber(4, 2)).toBe(2)
   expect(divideNumber(6, 3)).toBe(2)
@@ -62,5 +68,19 @@ test('calculator_divide', () => {
   expect(divideNumber(3, -2)).toBe(-1.5)
   expect(divideNumber(-6, -3)).toBe(2)
   expect(divideNumber(-4.4, -2.2)).toBe(2)
+
+})
+
+test('truncateNumber', () => {
+
+  expect(truncateNumber(1.98321)).toBe('1')
+  expect(truncateNumber(1.98321, 3)).toBe('1.983')
+  expect(truncateNumber(1.98321, 2)).toBe('1.98')
+  expect(truncateNumber(1.98321, 1)).toBe('1.9')
+  expect(truncateNumber(1.98321, 0)).toBe('1')
+
+  expect(truncateNumber(1234567.89, 2)).toBe('1234567.89')
+  expect(truncateNumber(1234567.89, 1)).toBe('1234567.8')
+  expect(truncateNumber(1234567.89, 3)).toBe('1234567.890')
 
 })

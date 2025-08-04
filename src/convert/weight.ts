@@ -1,4 +1,4 @@
-import { timesNumber, divideNumber } from '../util/calculator'
+import { timesNumber, divideNumber } from '../util/number'
 
 /**
  * 毫克 转换为 克

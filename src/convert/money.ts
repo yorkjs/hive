@@ -1,4 +1,4 @@
-import { timesNumber, divideNumber } from '../util/calculator'
+import { timesNumber, divideNumber } from '../util/number'
 
 /**
  * 把金额转换为前端显示所用的格式
