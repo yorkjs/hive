@@ -1,5 +1,5 @@
 /**
- * hive.js v0.1.2
+ * hive.js v0.1.3
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -60,10 +60,10 @@
   // 毫秒数：年
   var MS_YEAR = 365 * MS_DAY;
 
-  // 元
-  var MONEY_YUAN = 100;
-  // 万元
-  var MONEY_TEN_THOUSAND_YUAN = 10000 * MONEY_YUAN;
+  // 元 转 分
+  var MONEY_YUAN_TO_CENT = 100;
+  // 万元 转 分
+  var MONEY_TEN_THOUSAND_YUAN_TO_CENT = 10000 * MONEY_YUAN_TO_CENT;
 
   function _arrayLikeToArray(r, a) {
     (null == a || a > r.length) && (a = r.length);
@@ -184,7 +184,7 @@
    * @returns
    */
   function moneyToDisplay(value) {
-    var unit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : MONEY_YUAN;
+    var unit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : MONEY_YUAN_TO_CENT;
     return divideNumber(value, unit);
   }
   /**
@@ -194,7 +194,7 @@
    * @returns
    */
   function moneyToBackend(value) {
-    var unit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : MONEY_YUAN;
+    var unit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : MONEY_YUAN_TO_CENT;
     return timesNumber(value, unit);
   }
 
@@ -571,8 +571,8 @@
   exports.DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND = DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND;
   exports.DATE_YEAR_MONTH = DATE_YEAR_MONTH;
   exports.DATE_YEAR_MONTH_DATE = DATE_YEAR_MONTH_DATE;
-  exports.MONEY_TEN_THOUSAND_YUAN = MONEY_TEN_THOUSAND_YUAN;
-  exports.MONEY_YUAN = MONEY_YUAN;
+  exports.MONEY_TEN_THOUSAND_YUAN_TO_CENT = MONEY_TEN_THOUSAND_YUAN_TO_CENT;
+  exports.MONEY_YUAN_TO_CENT = MONEY_YUAN_TO_CENT;
   exports.MS_DAY = MS_DAY;
   exports.MS_HOUR = MS_HOUR;
   exports.MS_MINUTE = MS_MINUTE;

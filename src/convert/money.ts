@@ -1,4 +1,4 @@
-import { MONEY_YUAN } from '../constant/money'
+import { MONEY_YUAN_TO_CENT } from '../constant/money'
 import { timesNumber, divideNumber } from '../util/number'
 
 /**
@@ -7,7 +7,7 @@ import { timesNumber, divideNumber } from '../util/number'
  * @param value 后端的金额值，单位是分
  * @returns
  */
-export function moneyToDisplay(value: number, unit = MONEY_YUAN) {
+export function moneyToDisplay(value: number, unit = MONEY_YUAN_TO_CENT) {
   return divideNumber(value, unit)
 }
 
@@ -17,6 +17,6 @@ export function moneyToDisplay(value: number, unit = MONEY_YUAN) {
  * @param value 前端的金额值
  * @returns
  */
-export function moneyToBackend(value: number, unit = MONEY_YUAN) {
+export function moneyToBackend(value: number, unit = MONEY_YUAN_TO_CENT) {
   return timesNumber(value, unit)
 }
