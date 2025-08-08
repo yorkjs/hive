@@ -1,5 +1,5 @@
 /**
- * hive.js v0.1.0
+ * hive.js v0.1.1
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -113,8 +113,17 @@ function moneyToDisplay(value) {
  * @param value 前端的金额值，单位是元
  * @returns
  */
-function moneyToBackend(value) {
+function moneyYuanToBackend(value) {
     return timesNumber(value, 100);
+}
+/**
+ * 把金额转换为后端接口所用的格式
+ *
+ * @param value 前端的金额值，单位是万元
+ * @returns
+ */
+function moneyTenThousandYuanToBackend(value) {
+    return timesNumber(value, 1000000);
 }
 
 /**
@@ -357,6 +366,24 @@ function startOfDay(timestamp) {
     return date.getTime();
 }
 /**
+* 获取前一天的开始时间
+*
+* @param timestamp 毫秒时间戳
+* @returns
+*/
+function startOfPrevDay(timestamp) {
+    return startOfDay(timestamp - MS_DAY);
+}
+/**
+* 获取前一天的开始时间
+*
+* @param timestamp 毫秒时间戳
+* @returns
+*/
+function startOfNextDay(timestamp) {
+    return startOfDay(timestamp + MS_DAY);
+}
+/**
 * 获取某天的结束时间
 *
 * @param timestamp 毫秒时间戳
@@ -380,6 +407,24 @@ function startOfWeek(timestamp) {
     date.setDate(date.getDate() - offset);
     date.setHours(0, 0, 0, 0);
     return date.getTime();
+}
+/**
+* 获取前一周的开始时间
+*
+* @param timestamp 毫秒时间戳
+* @returns
+*/
+function startOfPrevWeek(timestamp) {
+    return startOfWeek(timestamp - MS_WEEK);
+}
+/**
+* 获取后一周的开始时间
+*
+* @param timestamp 毫秒时间戳
+* @returns
+*/
+function startOfNextWeek(timestamp) {
+    return startOfWeek(timestamp + MS_WEEK);
 }
 /**
 * 获取某周的结束时间
@@ -408,6 +453,32 @@ function startOfMonth(timestamp) {
     return date.getTime();
 }
 /**
+* 获取前一月的开始时间
+*
+* @param timestamp 毫秒时间戳
+* @returns
+*/
+function startOfPrevMonth(timestamp) {
+    const date = new Date(timestamp);
+    date.setDate(0); // 改成上个月最后一天
+    date.setDate(1); // 改成 1 号
+    date.setHours(0, 0, 0, 0);
+    return date.getTime();
+}
+/**
+* 获取下一月的开始时间
+*
+* @param timestamp 毫秒时间戳
+* @returns
+*/
+function startOfNextMonth(timestamp) {
+    const date = new Date(timestamp);
+    date.setMonth(date.getMonth() + 2, 0); // 改成下个月最后一天
+    date.setDate(1); // 改成 1 号
+    date.setHours(0, 0, 0, 0);
+    return date.getTime();
+}
+/**
 * 获取某月的结束时间
 *
 * @param timestamp 毫秒时间戳
@@ -420,5 +491,5 @@ function endOfMonth(timestamp) {
     return date.getTime();
 }
 
-export { DATE_MONTH_DATE, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_YEAR_MONTH, DATE_YEAR_MONTH_DATE, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, calculateRate, divideNumber, endOfDay, endOfMonth, endOfWeek, formatDate, formatDateShortly, formatDateTime, formatDateTimeShortly, formatMonth, formatNumberWithComma, formatWeek, isCustomBarcode, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeVersion, plusNumber, rateToBackend, rateToDisplay, startOfDay, startOfMonth, startOfWeek, timesNumber, truncateNumber, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
+export { DATE_MONTH_DATE, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_YEAR_MONTH, DATE_YEAR_MONTH_DATE, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, calculateRate, divideNumber, endOfDay, endOfMonth, endOfWeek, formatDate, formatDateShortly, formatDateTime, formatDateTimeShortly, formatMonth, formatNumberWithComma, formatWeek, isCustomBarcode, isStandardBarcode, minusNumber, moneyTenThousandYuanToBackend, moneyToDisplay, moneyYuanToBackend, normalizeVersion, plusNumber, rateToBackend, rateToDisplay, startOfDay, startOfMonth, startOfNextDay, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevMonth, startOfPrevWeek, startOfWeek, timesNumber, truncateNumber, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
 //# sourceMappingURL=hive.esm.js.map

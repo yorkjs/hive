@@ -1,5 +1,5 @@
 /**
- * hive.js v0.1.0
+ * hive.js v0.1.1
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -187,8 +187,17 @@
    * @param value 前端的金额值，单位是元
    * @returns
    */
-  function moneyToBackend(value) {
+  function moneyYuanToBackend(value) {
     return timesNumber(value, 100);
+  }
+  /**
+   * 把金额转换为后端接口所用的格式
+   *
+   * @param value 前端的金额值，单位是万元
+   * @returns
+   */
+  function moneyTenThousandYuanToBackend(value) {
+    return timesNumber(value, 1000000);
   }
 
   /**
@@ -433,6 +442,24 @@
     return date.getTime();
   }
   /**
+  * 获取前一天的开始时间
+  *
+  * @param timestamp 毫秒时间戳
+  * @returns
+  */
+  function startOfPrevDay(timestamp) {
+    return startOfDay(timestamp - MS_DAY);
+  }
+  /**
+  * 获取前一天的开始时间
+  *
+  * @param timestamp 毫秒时间戳
+  * @returns
+  */
+  function startOfNextDay(timestamp) {
+    return startOfDay(timestamp + MS_DAY);
+  }
+  /**
   * 获取某天的结束时间
   *
   * @param timestamp 毫秒时间戳
@@ -458,6 +485,24 @@
     return date.getTime();
   }
   /**
+  * 获取前一周的开始时间
+  *
+  * @param timestamp 毫秒时间戳
+  * @returns
+  */
+  function startOfPrevWeek(timestamp) {
+    return startOfWeek(timestamp - MS_WEEK);
+  }
+  /**
+  * 获取后一周的开始时间
+  *
+  * @param timestamp 毫秒时间戳
+  * @returns
+  */
+  function startOfNextWeek(timestamp) {
+    return startOfWeek(timestamp + MS_WEEK);
+  }
+  /**
   * 获取某周的结束时间
   *
   * @param timestamp 毫秒时间戳
@@ -480,6 +525,32 @@
   function startOfMonth(timestamp) {
     var date = new Date(timestamp);
     date.setDate(1);
+    date.setHours(0, 0, 0, 0);
+    return date.getTime();
+  }
+  /**
+  * 获取前一月的开始时间
+  *
+  * @param timestamp 毫秒时间戳
+  * @returns
+  */
+  function startOfPrevMonth(timestamp) {
+    var date = new Date(timestamp);
+    date.setDate(0); // 改成上个月最后一天
+    date.setDate(1); // 改成 1 号
+    date.setHours(0, 0, 0, 0);
+    return date.getTime();
+  }
+  /**
+  * 获取下一月的开始时间
+  *
+  * @param timestamp 毫秒时间戳
+  * @returns
+  */
+  function startOfNextMonth(timestamp) {
+    var date = new Date(timestamp);
+    date.setMonth(date.getMonth() + 2, 0); // 改成下个月最后一天
+    date.setDate(1); // 改成 1 号
     date.setHours(0, 0, 0, 0);
     return date.getTime();
   }
@@ -523,14 +594,21 @@
   exports.isCustomBarcode = isCustomBarcode;
   exports.isStandardBarcode = isStandardBarcode;
   exports.minusNumber = minusNumber;
-  exports.moneyToBackend = moneyToBackend;
+  exports.moneyTenThousandYuanToBackend = moneyTenThousandYuanToBackend;
   exports.moneyToDisplay = moneyToDisplay;
+  exports.moneyYuanToBackend = moneyYuanToBackend;
   exports.normalizeVersion = normalizeVersion;
   exports.plusNumber = plusNumber;
   exports.rateToBackend = rateToBackend;
   exports.rateToDisplay = rateToDisplay;
   exports.startOfDay = startOfDay;
   exports.startOfMonth = startOfMonth;
+  exports.startOfNextDay = startOfNextDay;
+  exports.startOfNextMonth = startOfNextMonth;
+  exports.startOfNextWeek = startOfNextWeek;
+  exports.startOfPrevDay = startOfPrevDay;
+  exports.startOfPrevMonth = startOfPrevMonth;
+  exports.startOfPrevWeek = startOfPrevWeek;
   exports.startOfWeek = startOfWeek;
   exports.timesNumber = timesNumber;
   exports.truncateNumber = truncateNumber;
