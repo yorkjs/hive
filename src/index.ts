@@ -1,6 +1,7 @@
 export * from './constant/date'
 export * from './constant/dateTime'
 export * from './constant/millisecond'
+export * from './constant/money'
 export * from './convert/money'
 export * from './convert/rate'
 export * from './convert/weight'

@@ -1,5 +1,5 @@
 /**
- * hive.js v0.1.1
+ * hive.js v0.1.2
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -59,6 +59,11 @@
   var MS_WEEK = 7 * MS_DAY;
   // 毫秒数：年
   var MS_YEAR = 365 * MS_DAY;
+
+  // 元
+  var MONEY_YUAN = 100;
+  // 万元
+  var MONEY_TEN_THOUSAND_YUAN = 10000 * MONEY_YUAN;
 
   function _arrayLikeToArray(r, a) {
     (null == a || a > r.length) && (a = r.length);
@@ -179,25 +184,18 @@
    * @returns
    */
   function moneyToDisplay(value) {
-    return divideNumber(value, 100);
+    var unit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : MONEY_YUAN;
+    return divideNumber(value, unit);
   }
   /**
    * 把金额转换为后端接口所用的格式
    *
-   * @param value 前端的金额值，单位是元
+   * @param value 前端的金额值
    * @returns
    */
-  function moneyYuanToBackend(value) {
-    return timesNumber(value, 100);
-  }
-  /**
-   * 把金额转换为后端接口所用的格式
-   *
-   * @param value 前端的金额值，单位是万元
-   * @returns
-   */
-  function moneyTenThousandYuanToBackend(value) {
-    return timesNumber(value, 1000000);
+  function moneyToBackend(value) {
+    var unit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : MONEY_YUAN;
+    return timesNumber(value, unit);
   }
 
   /**
@@ -573,6 +571,8 @@
   exports.DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND = DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND;
   exports.DATE_YEAR_MONTH = DATE_YEAR_MONTH;
   exports.DATE_YEAR_MONTH_DATE = DATE_YEAR_MONTH_DATE;
+  exports.MONEY_TEN_THOUSAND_YUAN = MONEY_TEN_THOUSAND_YUAN;
+  exports.MONEY_YUAN = MONEY_YUAN;
   exports.MS_DAY = MS_DAY;
   exports.MS_HOUR = MS_HOUR;
   exports.MS_MINUTE = MS_MINUTE;
@@ -594,9 +594,8 @@
   exports.isCustomBarcode = isCustomBarcode;
   exports.isStandardBarcode = isStandardBarcode;
   exports.minusNumber = minusNumber;
-  exports.moneyTenThousandYuanToBackend = moneyTenThousandYuanToBackend;
+  exports.moneyToBackend = moneyToBackend;
   exports.moneyToDisplay = moneyToDisplay;
-  exports.moneyYuanToBackend = moneyYuanToBackend;
   exports.normalizeVersion = normalizeVersion;
   exports.plusNumber = plusNumber;
   exports.rateToBackend = rateToBackend;

@@ -1,5 +1,5 @@
 /**
- * hive.js v0.1.1
+ * hive.js v0.1.2
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -33,6 +33,11 @@ const MS_DAY = 24 * MS_HOUR;
 const MS_WEEK = 7 * MS_DAY;
 // 毫秒数：年
 const MS_YEAR = 365 * MS_DAY;
+
+// 元
+const MONEY_YUAN = 100;
+// 万元
+const MONEY_TEN_THOUSAND_YUAN = 10000 * MONEY_YUAN;
 
 /**
 * 精确加法，比如 plusNumber(3, 1) === 4
@@ -104,26 +109,17 @@ function truncateNumber(value, decimals = 0) {
  * @param value 后端的金额值，单位是分
  * @returns
  */
-function moneyToDisplay(value) {
-    return divideNumber(value, 100);
+function moneyToDisplay(value, unit = MONEY_YUAN) {
+    return divideNumber(value, unit);
 }
 /**
  * 把金额转换为后端接口所用的格式
  *
- * @param value 前端的金额值，单位是元
+ * @param value 前端的金额值
  * @returns
  */
-function moneyYuanToBackend(value) {
-    return timesNumber(value, 100);
-}
-/**
- * 把金额转换为后端接口所用的格式
- *
- * @param value 前端的金额值，单位是万元
- * @returns
- */
-function moneyTenThousandYuanToBackend(value) {
-    return timesNumber(value, 1000000);
+function moneyToBackend(value, unit = MONEY_YUAN) {
+    return timesNumber(value, unit);
 }
 
 /**
@@ -491,5 +487,5 @@ function endOfMonth(timestamp) {
     return date.getTime();
 }
 
-export { DATE_MONTH_DATE, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_YEAR_MONTH, DATE_YEAR_MONTH_DATE, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, calculateRate, divideNumber, endOfDay, endOfMonth, endOfWeek, formatDate, formatDateShortly, formatDateTime, formatDateTimeShortly, formatMonth, formatNumberWithComma, formatWeek, isCustomBarcode, isStandardBarcode, minusNumber, moneyTenThousandYuanToBackend, moneyToDisplay, moneyYuanToBackend, normalizeVersion, plusNumber, rateToBackend, rateToDisplay, startOfDay, startOfMonth, startOfNextDay, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevMonth, startOfPrevWeek, startOfWeek, timesNumber, truncateNumber, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
+export { DATE_MONTH_DATE, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_YEAR_MONTH, DATE_YEAR_MONTH_DATE, MONEY_TEN_THOUSAND_YUAN, MONEY_YUAN, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, calculateRate, divideNumber, endOfDay, endOfMonth, endOfWeek, formatDate, formatDateShortly, formatDateTime, formatDateTimeShortly, formatMonth, formatNumberWithComma, formatWeek, isCustomBarcode, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeVersion, plusNumber, rateToBackend, rateToDisplay, startOfDay, startOfMonth, startOfNextDay, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevMonth, startOfPrevWeek, startOfWeek, timesNumber, truncateNumber, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
 //# sourceMappingURL=hive.esm.js.map
