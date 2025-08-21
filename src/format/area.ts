@@ -83,20 +83,12 @@ interface IArea {
 
 export function formatArea(area: IArea, options = { simplify: true }) {
 
-  if (!area) {
-    return ''
-  }
-
   const {
     country,
     province,
     city,
     district,
   } = area
-
-  const {
-    simplify,
-  } = options
 
   const list: string[] = []
   let prevItem = ''
@@ -107,7 +99,7 @@ export function formatArea(area: IArea, options = { simplify: true }) {
   }
 
   let isChina = false
-  const isSimplify = simplify
+  const isSimplify = options.simplify
   const separator = isSimplify ? ' ' : ''
 
   if (country) {

@@ -1,5 +1,5 @@
 /**
- * hive.js v0.1.4
+ * hive.js v0.1.5
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -329,14 +329,10 @@
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
       simplify: true
     };
-    if (!area) {
-      return '';
-    }
     var country = area.country,
       province = area.province,
       city = area.city,
       district = area.district;
-    var simplify = options.simplify;
     var list = [];
     var prevItem = '';
     var appendItem = function appendItem(item) {
@@ -344,7 +340,7 @@
       prevItem = item;
     };
     var isChina = false;
-    var isSimplify = simplify;
+    var isSimplify = options.simplify;
     var separator = isSimplify ? ' ' : '';
     if (country) {
       var item = country.name;

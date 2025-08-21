@@ -1,5 +1,5 @@
 /**
- * hive.js v0.1.4
+ * hive.js v0.1.5
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -250,11 +250,7 @@ const cityMap = {
     '黔南布依族苗族自治州': '黔南',
 };
 function formatArea(area, options = { simplify: true }) {
-    if (!area) {
-        return '';
-    }
     const { country, province, city, district, } = area;
-    const { simplify, } = options;
     const list = [];
     let prevItem = '';
     const appendItem = function (item) {
@@ -262,7 +258,7 @@ function formatArea(area, options = { simplify: true }) {
         prevItem = item;
     };
     let isChina = false;
-    const isSimplify = simplify;
+    const isSimplify = options.simplify;
     const separator = isSimplify ? ' ' : '';
     if (country) {
         const item = country.name;
