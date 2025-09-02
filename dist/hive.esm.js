@@ -1,5 +1,5 @@
 /**
- * hive.js v0.1.4
+ * hive.js v0.1.5
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -416,6 +416,11 @@ function formatMonth(timestamp) {
  * @returns
  */
 function formatNumberWithComma(value, decimals = 0) {
+    const isNegative = value < 0;
+    // 先转成正数，避免 - 号影响格式化流程
+    if (isNegative) {
+        value *= -1;
+    }
     const newValue = decimals >= 0
         ? truncateNumber(value, decimals)
         : value.toString();
@@ -443,7 +448,7 @@ function formatNumberWithComma(value, decimals = 0) {
     else if (decimals > 0) {
         result += `.${''.padEnd(decimals, '0')}`;
     }
-    return result;
+    return isNegative ? '-' + result : result;
 }
 
 /**

@@ -9,6 +9,13 @@ import { truncateNumber } from '../util/number'
  */
 export function formatNumberWithComma(value: number, decimals = 0) {
 
+  const isNegative = value < 0
+
+  // 先转成正数，避免 - 号影响格式化流程
+  if (isNegative) {
+    value *= -1
+  }
+
   const newValue = decimals >= 0
     ? truncateNumber(value, decimals)
     : value.toString()
@@ -42,6 +49,6 @@ export function formatNumberWithComma(value: number, decimals = 0) {
     result += `.${''.padEnd(decimals, '0')}`
   }
 
-  return result
+  return isNegative ? '-' + result : result
 
 }

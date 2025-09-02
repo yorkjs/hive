@@ -1,5 +1,5 @@
 /**
- * hive.js v0.1.4
+ * hive.js v0.1.5
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -494,6 +494,11 @@
    */
   function formatNumberWithComma(value) {
     var decimals = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+    var isNegative = value < 0;
+    // 先转成正数，避免 - 号影响格式化流程
+    if (isNegative) {
+      value *= -1;
+    }
     var newValue = decimals >= 0 ? truncateNumber(value, decimals) : value.toString();
     var _newValue$split = newValue.split('.'),
       _newValue$split2 = _slicedToArray(_newValue$split, 2),
@@ -521,7 +526,7 @@
     } else if (decimals > 0) {
       result += ".".concat(''.padEnd(decimals, '0'));
     }
-    return result;
+    return isNegative ? '-' + result : result;
   }
 
   /**

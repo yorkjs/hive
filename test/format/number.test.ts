@@ -4,6 +4,7 @@ import {
 
 test('formatNumberWithComma', () => {
 
+  expect(formatNumberWithComma(-228.80, 2)).toBe('-228.80')
   expect(formatNumberWithComma(1000000)).toBe('1,000,000')
   expect(formatNumberWithComma(1000000.981, 2)).toBe('1,000,000.98')
   expect(formatNumberWithComma(10000, 1)).toBe('10,000.0')
