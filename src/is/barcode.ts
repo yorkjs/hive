@@ -28,3 +28,15 @@ export function isCustomBarcode(value: string) {
   // 这里留给以后加其他规则
   return false
 }
+
+/// 验证是否为付款码
+export function isPayAuthBarcode(value: string) {
+  // 微信    133619858964803511
+  // 支付宝  283654147086344711
+  const length = value.length
+  if (length == 18 || length == 19 || length == 20) {
+    return value.startsWith('1')
+      || value.startsWith('2')
+  }
+  return false
+}

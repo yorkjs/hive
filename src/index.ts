@@ -2,16 +2,27 @@ export * from './constant/date'
 export * from './constant/dateTime'
 export * from './constant/millisecond'
 export * from './constant/money'
+export * from './constant/shelfLife'
+export * from './constant/size'
+
 export * from './convert/money'
 export * from './convert/rate'
 export * from './convert/weight'
+
 export * from './format/area'
 export * from './format/date'
 export * from './format/dateTime'
 export * from './format/week'
 export * from './format/month'
 export * from './format/number'
+export * from './format/rate'
+export * from './format/shelfLife'
+export * from './format/size'
+
 export * from './is/barcode'
+export * from './is/number'
+
 export * from './normalize/version'
+
 export * from './util/number'
 export * from './util/date'

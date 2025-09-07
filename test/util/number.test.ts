@@ -73,6 +73,7 @@ test('divideNumber', () => {
 
 test('truncateNumber', () => {
 
+  expect(truncateNumber(1)).toBe('1')
   expect(truncateNumber(1.98321)).toBe('1')
   expect(truncateNumber(1.98321, 3)).toBe('1.983')
   expect(truncateNumber(1.98321, 2)).toBe('1.98')

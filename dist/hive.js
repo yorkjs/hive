@@ -1,5 +1,5 @@
 /**
- * hive.js v0.1.5
+ * hive.js v0.1.6
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -64,6 +64,20 @@
   var MONEY_YUAN_TO_CENT = 100;
   // 万元 转 分
   var MONEY_TEN_THOUSAND_YUAN_TO_CENT = 10000 * MONEY_YUAN_TO_CENT;
+
+  // 保质期：日
+  var SHELF_LIFE_DAY = 24;
+  // 保质期：月
+  var SHELF_LIFE_MONTH = 30 * SHELF_LIFE_DAY;
+  // 保质期：年
+  var SHELF_LIFE_YEAR = 365 * SHELF_LIFE_DAY;
+
+  // 体积：KB
+  var SIZE_KB = 1024;
+  // 体积：KB
+  var SIZE_MB = 1024 * SIZE_KB;
+  // 体积：GB
+  var SIZE_GB = 1024 * SIZE_MB;
 
   function _arrayLikeToArray(r, a) {
     (null == a || a > r.length) && (a = r.length);
@@ -199,13 +213,25 @@
   }
 
   /**
+   * 是否为整数
+   *
+   * @param value
+   * @returns
+   */
+  function isInteger(value) {
+    return value % 1 === 0;
+  }
+
+  /**
    * 万分比 转换为 百分比
    *
    * @param value 后端的比例值
    * @returns
    */
   function rateToDisplay(value) {
-    return divideNumber(value, 100);
+    var result = divideNumber(value, 100);
+    // 如果小数部分为 0，返回整数部分
+    return isInteger(result) ? Math.floor(result) : result;
   }
   /**
    * 百分比 转换为 万分比
@@ -227,7 +253,9 @@
     if (!value2) {
       return 0;
     }
-    return divideNumber(value1 * 10000, value2);
+    var result = divideNumber(value1 * 10000, value2);
+    // 如果小数部分为 0，返回整数部分
+    return isInteger(result) ? Math.floor(result) : result;
   }
 
   /**
@@ -530,6 +558,56 @@
   }
 
   /**
+   * 把万分比格式化为百分比
+   *
+   * @param value
+   * @returns
+   */
+  function formatRatePercent(value) {
+    return rateToDisplay(value) + '%';
+  }
+
+  function formatShelfLife(value) {
+    if (value <= 0) {
+      return '';
+    }
+    var result = '';
+    var year = Math.floor(value / SHELF_LIFE_YEAR);
+    if (year > 0) {
+      result += "".concat(year, "\u5E74");
+      value -= SHELF_LIFE_YEAR * year;
+    }
+    var month = Math.floor(value / SHELF_LIFE_MONTH);
+    if (month > 0) {
+      result += "".concat(month, "\u4E2A\u6708");
+      value -= SHELF_LIFE_MONTH * month;
+    }
+    var day = Math.floor(value / SHELF_LIFE_DAY);
+    if (day > 0) {
+      result += "".concat(day, "\u5929");
+      value -= SHELF_LIFE_DAY * day;
+    }
+    if (value > 0) {
+      result += "".concat(value, "\u5C0F\u65F6");
+    }
+    return result;
+  }
+
+  function formatSize(value) {
+    if (value >= SIZE_GB) {
+      var result = divideNumber(value, SIZE_GB);
+      return "".concat(truncateNumber(result, isInteger(result) ? 0 : 2), "GB");
+    } else if (value >= SIZE_MB) {
+      var _result = divideNumber(value, SIZE_MB);
+      return "".concat(truncateNumber(_result, isInteger(_result) ? 0 : 2), "MB");
+    } else if (value >= SIZE_KB) {
+      var _result2 = divideNumber(value, SIZE_KB);
+      return "".concat(truncateNumber(_result2, isInteger(_result2) ? 0 : 2), "KB");
+    }
+    return "".concat(value, "B");
+  }
+
+  /**
    * value 是否是标准商品条形码
    *
    * @param value 条形码文本
@@ -556,6 +634,16 @@
       return true;
     }
     // 这里留给以后加其他规则
+    return false;
+  }
+  /// 验证是否为付款码
+  function isPayAuthBarcode(value) {
+    // 微信    133619858964803511
+    // 支付宝  283654147086344711
+    var length = value.length;
+    if (length == 18 || length == 19 || length == 20) {
+      return value.startsWith('1') || value.startsWith('2');
+    }
     return false;
   }
 
@@ -729,6 +817,12 @@
   exports.MS_SECOND = MS_SECOND;
   exports.MS_WEEK = MS_WEEK;
   exports.MS_YEAR = MS_YEAR;
+  exports.SHELF_LIFE_DAY = SHELF_LIFE_DAY;
+  exports.SHELF_LIFE_MONTH = SHELF_LIFE_MONTH;
+  exports.SHELF_LIFE_YEAR = SHELF_LIFE_YEAR;
+  exports.SIZE_GB = SIZE_GB;
+  exports.SIZE_KB = SIZE_KB;
+  exports.SIZE_MB = SIZE_MB;
   exports.calculateRate = calculateRate;
   exports.divideNumber = divideNumber;
   exports.endOfDay = endOfDay;
@@ -744,8 +838,13 @@
   exports.formatMonth = formatMonth;
   exports.formatNumberWithComma = formatNumberWithComma;
   exports.formatProvince = formatProvince;
+  exports.formatRatePercent = formatRatePercent;
+  exports.formatShelfLife = formatShelfLife;
+  exports.formatSize = formatSize;
   exports.formatWeek = formatWeek;
   exports.isCustomBarcode = isCustomBarcode;
+  exports.isInteger = isInteger;
+  exports.isPayAuthBarcode = isPayAuthBarcode;
   exports.isStandardBarcode = isStandardBarcode;
   exports.minusNumber = minusNumber;
   exports.moneyToBackend = moneyToBackend;

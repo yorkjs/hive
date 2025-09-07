@@ -1,5 +1,5 @@
 /**
- * hive.js v0.1.5
+ * hive.js v0.1.6
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -38,6 +38,20 @@ const MS_YEAR = 365 * MS_DAY;
 const MONEY_YUAN_TO_CENT = 100;
 // 万元 转 分
 const MONEY_TEN_THOUSAND_YUAN_TO_CENT = 10000 * MONEY_YUAN_TO_CENT;
+
+// 保质期：日
+const SHELF_LIFE_DAY = 24;
+// 保质期：月
+const SHELF_LIFE_MONTH = 30 * SHELF_LIFE_DAY;
+// 保质期：年
+const SHELF_LIFE_YEAR = 365 * SHELF_LIFE_DAY;
+
+// 体积：KB
+const SIZE_KB = 1024;
+// 体积：KB
+const SIZE_MB = 1024 * SIZE_KB;
+// 体积：GB
+const SIZE_GB = 1024 * SIZE_MB;
 
 /**
 * 精确加法，比如 plusNumber(3, 1) === 4
@@ -123,13 +137,25 @@ function moneyToBackend(value, unit = MONEY_YUAN_TO_CENT) {
 }
 
 /**
+ * 是否为整数
+ *
+ * @param value
+ * @returns
+ */
+function isInteger(value) {
+    return value % 1 === 0;
+}
+
+/**
  * 万分比 转换为 百分比
  *
  * @param value 后端的比例值
  * @returns
  */
 function rateToDisplay(value) {
-    return divideNumber(value, 100);
+    const result = divideNumber(value, 100);
+    // 如果小数部分为 0，返回整数部分
+    return isInteger(result) ? Math.floor(result) : result;
 }
 /**
  * 百分比 转换为 万分比
@@ -151,7 +177,9 @@ function calculateRate(value1, value2) {
     if (!value2) {
         return 0;
     }
-    return divideNumber(value1 * 10000, value2);
+    const result = divideNumber(value1 * 10000, value2);
+    // 如果小数部分为 0，返回整数部分
+    return isInteger(result) ? Math.floor(result) : result;
 }
 
 /**
@@ -452,6 +480,58 @@ function formatNumberWithComma(value, decimals = 0) {
 }
 
 /**
+ * 把万分比格式化为百分比
+ *
+ * @param value
+ * @returns
+ */
+function formatRatePercent(value) {
+    return rateToDisplay(value) + '%';
+}
+
+function formatShelfLife(value) {
+    if (value <= 0) {
+        return '';
+    }
+    let result = '';
+    const year = Math.floor(value / SHELF_LIFE_YEAR);
+    if (year > 0) {
+        result += `${year}年`;
+        value -= SHELF_LIFE_YEAR * year;
+    }
+    const month = Math.floor(value / SHELF_LIFE_MONTH);
+    if (month > 0) {
+        result += `${month}个月`;
+        value -= SHELF_LIFE_MONTH * month;
+    }
+    const day = Math.floor(value / SHELF_LIFE_DAY);
+    if (day > 0) {
+        result += `${day}天`;
+        value -= SHELF_LIFE_DAY * day;
+    }
+    if (value > 0) {
+        result += `${value}小时`;
+    }
+    return result;
+}
+
+function formatSize(value) {
+    if (value >= SIZE_GB) {
+        const result = divideNumber(value, SIZE_GB);
+        return `${truncateNumber(result, isInteger(result) ? 0 : 2)}GB`;
+    }
+    else if (value >= SIZE_MB) {
+        const result = divideNumber(value, SIZE_MB);
+        return `${truncateNumber(result, isInteger(result) ? 0 : 2)}MB`;
+    }
+    else if (value >= SIZE_KB) {
+        const result = divideNumber(value, SIZE_KB);
+        return `${truncateNumber(result, isInteger(result) ? 0 : 2)}KB`;
+    }
+    return `${value}B`;
+}
+
+/**
  * value 是否是标准商品条形码
  *
  * @param value 条形码文本
@@ -478,6 +558,17 @@ function isCustomBarcode(value) {
         return true;
     }
     // 这里留给以后加其他规则
+    return false;
+}
+/// 验证是否为付款码
+function isPayAuthBarcode(value) {
+    // 微信    133619858964803511
+    // 支付宝  283654147086344711
+    const length = value.length;
+    if (length == 18 || length == 19 || length == 20) {
+        return value.startsWith('1')
+            || value.startsWith('2');
+    }
     return false;
 }
 
@@ -637,5 +728,5 @@ function endOfMonth(timestamp) {
     return date.getTime();
 }
 
-export { DATE_MONTH_DATE, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_YEAR_MONTH, DATE_YEAR_MONTH_DATE, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, calculateRate, divideNumber, endOfDay, endOfMonth, endOfWeek, formatArea, formatCity, formatDate, formatDateShortly, formatDateTime, formatDateTimeShortly, formatDistrict, formatMonth, formatNumberWithComma, formatProvince, formatWeek, isCustomBarcode, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeVersion, plusNumber, rateToBackend, rateToDisplay, startOfDay, startOfMonth, startOfNextDay, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevMonth, startOfPrevWeek, startOfWeek, timesNumber, truncateNumber, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
+export { DATE_MONTH_DATE, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_YEAR_MONTH, DATE_YEAR_MONTH_DATE, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, calculateRate, divideNumber, endOfDay, endOfMonth, endOfWeek, formatArea, formatCity, formatDate, formatDateShortly, formatDateTime, formatDateTimeShortly, formatDistrict, formatMonth, formatNumberWithComma, formatProvince, formatRatePercent, formatShelfLife, formatSize, formatWeek, isCustomBarcode, isInteger, isPayAuthBarcode, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeVersion, plusNumber, rateToBackend, rateToDisplay, startOfDay, startOfMonth, startOfNextDay, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevMonth, startOfPrevWeek, startOfWeek, timesNumber, truncateNumber, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
 //# sourceMappingURL=hive.esm.js.map

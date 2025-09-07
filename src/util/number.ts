@@ -70,5 +70,5 @@ export function truncateNumber(value: number, decimals: number = 0) {
       ? decimalPart.substring(0, decimals)
       : decimalPart.padEnd(decimals, '0')
 
-  return `${integerPart}.${truncatedDecimal}`;
+  return `${integerPart}.${truncatedDecimal}`
 }
