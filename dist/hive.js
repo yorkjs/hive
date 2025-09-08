@@ -1,5 +1,5 @@
 /**
- * hive.js v0.1.6
+ * hive.js v0.1.7
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -558,6 +558,17 @@
   }
 
   /**
+   * 格式化金额，保留 2 位小数
+   *
+   * @param value
+   * @returns
+   */
+  function formatAmount(value) {
+    var unit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '元';
+    return formatNumberWithComma(moneyToDisplay(value), 2) + unit;
+  }
+
+  /**
    * 把万分比格式化为百分比
    *
    * @param value
@@ -637,7 +648,7 @@
     return false;
   }
   /// 验证是否为付款码
-  function isPayAuthBarcode(value) {
+  function isPayAuthCode(value) {
     // 微信    133619858964803511
     // 支付宝  283654147086344711
     var length = value.length;
@@ -828,6 +839,7 @@
   exports.endOfDay = endOfDay;
   exports.endOfMonth = endOfMonth;
   exports.endOfWeek = endOfWeek;
+  exports.formatAmount = formatAmount;
   exports.formatArea = formatArea;
   exports.formatCity = formatCity;
   exports.formatDate = formatDate;
@@ -844,7 +856,7 @@
   exports.formatWeek = formatWeek;
   exports.isCustomBarcode = isCustomBarcode;
   exports.isInteger = isInteger;
-  exports.isPayAuthBarcode = isPayAuthBarcode;
+  exports.isPayAuthCode = isPayAuthCode;
   exports.isStandardBarcode = isStandardBarcode;
   exports.minusNumber = minusNumber;
   exports.moneyToBackend = moneyToBackend;

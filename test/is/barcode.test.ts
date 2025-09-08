@@ -1,7 +1,7 @@
 import {
   isStandardBarcode,
   isCustomBarcode,
-  isPayAuthBarcode,
+  isPayAuthCode,
 } from '../../src/is/barcode'
 
 test('isStandardBarcode', () => {
@@ -20,11 +20,11 @@ test('isCustomBarcode', () => {
 
 })
 
-test('isPayAuthBarcode', () => {
+test('isPayAuthCode', () => {
 
-  expect(isPayAuthBarcode('133619858964803511')).toBe(true)
-  expect(isPayAuthBarcode('283654147086344711')).toBe(true)
-  expect(isPayAuthBarcode('C69241878121')).toBe(false)
-  expect(isPayAuthBarcode('C692418781212')).toBe(false)
+  expect(isPayAuthCode('133619858964803511')).toBe(true)
+  expect(isPayAuthCode('283654147086344711')).toBe(true)
+  expect(isPayAuthCode('C69241878121')).toBe(false)
+  expect(isPayAuthCode('C692418781212')).toBe(false)
 
 })

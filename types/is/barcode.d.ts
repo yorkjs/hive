@@ -12,4 +12,4 @@ export declare function isStandardBarcode(value: string): boolean;
  * @returns
  */
 export declare function isCustomBarcode(value: string): boolean;
-export declare function isPayAuthBarcode(value: string): boolean;
+export declare function isPayAuthCode(value: string): boolean;

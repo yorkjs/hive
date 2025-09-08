@@ -30,7 +30,7 @@ export function isCustomBarcode(value: string) {
 }
 
 /// 验证是否为付款码
-export function isPayAuthBarcode(value: string) {
+export function isPayAuthCode(value: string) {
   // 微信    133619858964803511
   // 支付宝  283654147086344711
   const length = value.length

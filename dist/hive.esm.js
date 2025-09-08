@@ -1,5 +1,5 @@
 /**
- * hive.js v0.1.6
+ * hive.js v0.1.7
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -480,6 +480,16 @@ function formatNumberWithComma(value, decimals = 0) {
 }
 
 /**
+ * 格式化金额，保留 2 位小数
+ *
+ * @param value
+ * @returns
+ */
+function formatAmount(value, unit = '元') {
+    return formatNumberWithComma(moneyToDisplay(value), 2) + unit;
+}
+
+/**
  * 把万分比格式化为百分比
  *
  * @param value
@@ -561,7 +571,7 @@ function isCustomBarcode(value) {
     return false;
 }
 /// 验证是否为付款码
-function isPayAuthBarcode(value) {
+function isPayAuthCode(value) {
     // 微信    133619858964803511
     // 支付宝  283654147086344711
     const length = value.length;
@@ -728,5 +738,5 @@ function endOfMonth(timestamp) {
     return date.getTime();
 }
 
-export { DATE_MONTH_DATE, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_YEAR_MONTH, DATE_YEAR_MONTH_DATE, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, calculateRate, divideNumber, endOfDay, endOfMonth, endOfWeek, formatArea, formatCity, formatDate, formatDateShortly, formatDateTime, formatDateTimeShortly, formatDistrict, formatMonth, formatNumberWithComma, formatProvince, formatRatePercent, formatShelfLife, formatSize, formatWeek, isCustomBarcode, isInteger, isPayAuthBarcode, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeVersion, plusNumber, rateToBackend, rateToDisplay, startOfDay, startOfMonth, startOfNextDay, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevMonth, startOfPrevWeek, startOfWeek, timesNumber, truncateNumber, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
+export { DATE_MONTH_DATE, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_YEAR_MONTH, DATE_YEAR_MONTH_DATE, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, calculateRate, divideNumber, endOfDay, endOfMonth, endOfWeek, formatAmount, formatArea, formatCity, formatDate, formatDateShortly, formatDateTime, formatDateTimeShortly, formatDistrict, formatMonth, formatNumberWithComma, formatProvince, formatRatePercent, formatShelfLife, formatSize, formatWeek, isCustomBarcode, isInteger, isPayAuthCode, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeVersion, plusNumber, rateToBackend, rateToDisplay, startOfDay, startOfMonth, startOfNextDay, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevMonth, startOfPrevWeek, startOfWeek, timesNumber, truncateNumber, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
 //# sourceMappingURL=hive.esm.js.map
