@@ -1,5 +1,5 @@
 /**
- * hive.js v0.1.7
+ * hive.js v0.1.8
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -78,6 +78,16 @@
   var SIZE_MB = 1024 * SIZE_KB;
   // 体积：GB
   var SIZE_GB = 1024 * SIZE_MB;
+
+  /**
+   * 是否为整数
+   *
+   * @param value
+   * @returns
+   */
+  function isInteger(value) {
+    return value % 1 === 0;
+  }
 
   function _arrayLikeToArray(r, a) {
     (null == a || a > r.length) && (a = r.length);
@@ -192,6 +202,28 @@
   }
 
   /**
+   * 万分比 转换为 折扣，最多保留 1 位小数
+   *
+   * @param value 后端的比例值
+   * @returns
+   */
+  function discountToDisplay(value) {
+    var result = divideNumber(value, 1000);
+    // 如果小数部分为 0，返回整数部分
+    // 如果有小数，保留 1 位小数
+    return isInteger(result) ? Math.floor(result) : +truncateNumber(result, 1);
+  }
+  /**
+   * 折扣 转换为 万分比
+   *
+   * @param value 前端的比例值
+   * @returns
+   */
+  function discountToBackend(value) {
+    return timesNumber(isInteger(value) ? value : +truncateNumber(value, 1), 1000);
+  }
+
+  /**
    * 把金额转换为前端显示所用的格式
    *
    * @param value 后端的金额值，单位是分
@@ -210,16 +242,6 @@
   function moneyToBackend(value) {
     var unit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : MONEY_YUAN_TO_CENT;
     return timesNumber(value, unit);
-  }
-
-  /**
-   * 是否为整数
-   *
-   * @param value
-   * @returns
-   */
-  function isInteger(value) {
-    return value % 1 === 0;
   }
 
   /**
@@ -438,6 +460,16 @@
     }
     // 不要处理区，会影响有效信息展示
     return name;
+  }
+
+  /**
+   * 把万分比格式化为折扣
+   *
+   * @param value
+   * @returns
+   */
+  function formatDiscount(value) {
+    return discountToDisplay(value) + '折';
   }
 
   /**
@@ -835,6 +867,8 @@
   exports.SIZE_KB = SIZE_KB;
   exports.SIZE_MB = SIZE_MB;
   exports.calculateRate = calculateRate;
+  exports.discountToBackend = discountToBackend;
+  exports.discountToDisplay = discountToDisplay;
   exports.divideNumber = divideNumber;
   exports.endOfDay = endOfDay;
   exports.endOfMonth = endOfMonth;
@@ -846,6 +880,7 @@
   exports.formatDateShortly = formatDateShortly;
   exports.formatDateTime = formatDateTime;
   exports.formatDateTimeShortly = formatDateTimeShortly;
+  exports.formatDiscount = formatDiscount;
   exports.formatDistrict = formatDistrict;
   exports.formatMonth = formatMonth;
   exports.formatNumberWithComma = formatNumberWithComma;

@@ -5,11 +5,13 @@ export * from './constant/money'
 export * from './constant/shelfLife'
 export * from './constant/size'
 
+export * from './convert/discount'
 export * from './convert/money'
 export * from './convert/rate'
 export * from './convert/weight'
 
 export * from './format/area'
+export * from './format/discount'
 export * from './format/date'
 export * from './format/dateTime'
 export * from './format/week'

@@ -1,5 +1,5 @@
 /**
- * hive.js v0.1.7
+ * hive.js v0.1.8
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -52,6 +52,16 @@ const SIZE_KB = 1024;
 const SIZE_MB = 1024 * SIZE_KB;
 // 体积：GB
 const SIZE_GB = 1024 * SIZE_MB;
+
+/**
+ * 是否为整数
+ *
+ * @param value
+ * @returns
+ */
+function isInteger(value) {
+    return value % 1 === 0;
+}
 
 /**
 * 精确加法，比如 plusNumber(3, 1) === 4
@@ -118,6 +128,32 @@ function truncateNumber(value, decimals = 0) {
 }
 
 /**
+ * 万分比 转换为 折扣，最多保留 1 位小数
+ *
+ * @param value 后端的比例值
+ * @returns
+ */
+function discountToDisplay(value) {
+    const result = divideNumber(value, 1000);
+    // 如果小数部分为 0，返回整数部分
+    // 如果有小数，保留 1 位小数
+    return isInteger(result)
+        ? Math.floor(result)
+        : +truncateNumber(result, 1);
+}
+/**
+ * 折扣 转换为 万分比
+ *
+ * @param value 前端的比例值
+ * @returns
+ */
+function discountToBackend(value) {
+    return timesNumber(isInteger(value)
+        ? value
+        : +truncateNumber(value, 1), 1000);
+}
+
+/**
  * 把金额转换为前端显示所用的格式
  *
  * @param value 后端的金额值，单位是分
@@ -134,16 +170,6 @@ function moneyToDisplay(value, unit = MONEY_YUAN_TO_CENT) {
  */
 function moneyToBackend(value, unit = MONEY_YUAN_TO_CENT) {
     return timesNumber(value, unit);
-}
-
-/**
- * 是否为整数
- *
- * @param value
- * @returns
- */
-function isInteger(value) {
-    return value % 1 === 0;
 }
 
 /**
@@ -362,6 +388,16 @@ function formatDistrict(name) {
     }
     // 不要处理区，会影响有效信息展示
     return name;
+}
+
+/**
+ * 把万分比格式化为折扣
+ *
+ * @param value
+ * @returns
+ */
+function formatDiscount(value) {
+    return discountToDisplay(value) + '折';
 }
 
 /**
@@ -738,5 +774,5 @@ function endOfMonth(timestamp) {
     return date.getTime();
 }
 
-export { DATE_MONTH_DATE, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_YEAR_MONTH, DATE_YEAR_MONTH_DATE, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, calculateRate, divideNumber, endOfDay, endOfMonth, endOfWeek, formatAmount, formatArea, formatCity, formatDate, formatDateShortly, formatDateTime, formatDateTimeShortly, formatDistrict, formatMonth, formatNumberWithComma, formatProvince, formatRatePercent, formatShelfLife, formatSize, formatWeek, isCustomBarcode, isInteger, isPayAuthCode, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeVersion, plusNumber, rateToBackend, rateToDisplay, startOfDay, startOfMonth, startOfNextDay, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevMonth, startOfPrevWeek, startOfWeek, timesNumber, truncateNumber, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
+export { DATE_MONTH_DATE, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_YEAR_MONTH, DATE_YEAR_MONTH_DATE, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, calculateRate, discountToBackend, discountToDisplay, divideNumber, endOfDay, endOfMonth, endOfWeek, formatAmount, formatArea, formatCity, formatDate, formatDateShortly, formatDateTime, formatDateTimeShortly, formatDiscount, formatDistrict, formatMonth, formatNumberWithComma, formatProvince, formatRatePercent, formatShelfLife, formatSize, formatWeek, isCustomBarcode, isInteger, isPayAuthCode, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeVersion, plusNumber, rateToBackend, rateToDisplay, startOfDay, startOfMonth, startOfNextDay, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevMonth, startOfPrevWeek, startOfWeek, timesNumber, truncateNumber, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
 //# sourceMappingURL=hive.esm.js.map
