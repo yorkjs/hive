@@ -12,6 +12,16 @@ export function formatDate(timestamp: number) {
 }
 
 /**
+ * 把时间戳格式化为 2020-10-01 至 2020-10-02 形式
+ *
+ * @param timestamp
+ * @returns
+ */
+export function formatDateRange(startTimestamp: number, endTimestamp: number) {
+  return formatDate(startTimestamp) + ' 至 ' + formatDate(endTimestamp)
+}
+
+/**
  * 把同年份的时间戳格式化为 10-01 格式，不同年份的时间戳格式化成 2020-10-01 格式
  *
  * @param timestamp

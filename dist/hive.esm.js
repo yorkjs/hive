@@ -1,5 +1,5 @@
 /**
- * hive.js v0.1.8
+ * hive.js v0.1.9
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -391,88 +391,6 @@ function formatDistrict(name) {
 }
 
 /**
- * 把万分比格式化为折扣
- *
- * @param value
- * @returns
- */
-function formatDiscount(value) {
-    return discountToDisplay(value) + '折';
-}
-
-/**
- * 把时间戳格式化为 2020-10-01 格式
- *
- * @param timestamp
- * @returns
- */
-function formatDate(timestamp) {
-    return dayjs(timestamp).format(DATE_YEAR_MONTH_DATE);
-}
-/**
- * 把同年份的时间戳格式化为 10-01 格式，不同年份的时间戳格式化成 2020-10-01 格式
- *
- * @param timestamp
- * @returns
- */
-function formatDateShortly(timestamp) {
-    const t1 = dayjs(timestamp);
-    const t2 = dayjs(Date.now());
-    if (t1.year() === t2.year()) {
-        return t1.format(DATE_MONTH_DATE);
-    }
-    return dayjs(timestamp).format(DATE_YEAR_MONTH_DATE);
-}
-
-/**
- * 把时间戳格式化为 2020-10-01 10:00 格式
- *
- * @param timestamp
- * @param format
- * @returns
- */
-function formatDateTime(timestamp, format = DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE) {
-    return dayjs(timestamp).format(format);
-}
-/**
- * 把同年份的时间戳格式化为 10-01 10:00 格式，不同年份的时间戳格式化成 2020-10-01 10:00 格式
- *
- * @param timestamp
- * @returns
- */
-function formatDateTimeShortly(timestamp) {
-    const t1 = dayjs(timestamp);
-    const t2 = dayjs(Date.now());
-    if (t1.year() === t2.year()) {
-        return t1.format(DATE_TIME_MONTH_DATE_HOUR_MINUTE);
-    }
-    return dayjs(timestamp).format(DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE);
-}
-
-/**
- * 把时间戳格式化为 周开始 ~ 周结束 格式
- *
- * @param timestamp
- * @returns
- */
-function formatWeek(timestamp) {
-    const date = new Date(timestamp);
-    const offset = -1 * date.getDay();
-    const startTimestamp = timestamp + offset * MS_DAY;
-    return `${formatDateShortly(startTimestamp)} ~ ${formatDateShortly(startTimestamp + 6 * MS_DAY)}`;
-}
-
-/**
- * 把时间戳格式化为 2020-10 格式
- *
- * @param timestamp
- * @returns
- */
-function formatMonth(timestamp) {
-    return dayjs(timestamp).format(DATE_YEAR_MONTH);
-}
-
-/**
  * 把数字的整数部分格式化为以千为段拆分，以逗号为分隔符
  *
  * @param value
@@ -513,6 +431,116 @@ function formatNumberWithComma(value, decimals = 0) {
         result += `.${''.padEnd(decimals, '0')}`;
     }
     return isNegative ? '-' + result : result;
+}
+
+/**
+ * 格式化数量
+ *
+ * @param value
+ * @returns
+ */
+function formatCount(value, unit = '') {
+    return formatNumberWithComma(value) + unit;
+}
+
+/**
+ * 把万分比格式化为折扣
+ *
+ * @param value
+ * @returns
+ */
+function formatDiscount(value) {
+    return discountToDisplay(value) + '折';
+}
+
+/**
+ * 把时间戳格式化为 2020-10-01 格式
+ *
+ * @param timestamp
+ * @returns
+ */
+function formatDate(timestamp) {
+    return dayjs(timestamp).format(DATE_YEAR_MONTH_DATE);
+}
+/**
+ * 把时间戳格式化为 2020-10-01 至 2020-10-02 形式
+ *
+ * @param timestamp
+ * @returns
+ */
+function formatDateRange(startTimestamp, endTimestamp) {
+    return formatDate(startTimestamp) + ' 至 ' + formatDate(endTimestamp);
+}
+/**
+ * 把同年份的时间戳格式化为 10-01 格式，不同年份的时间戳格式化成 2020-10-01 格式
+ *
+ * @param timestamp
+ * @returns
+ */
+function formatDateShortly(timestamp) {
+    const t1 = dayjs(timestamp);
+    const t2 = dayjs(Date.now());
+    if (t1.year() === t2.year()) {
+        return t1.format(DATE_MONTH_DATE);
+    }
+    return dayjs(timestamp).format(DATE_YEAR_MONTH_DATE);
+}
+
+/**
+ * 把时间戳格式化为 2020-10-01 10:00 格式
+ *
+ * @param timestamp
+ * @param format
+ * @returns
+ */
+function formatDateTime(timestamp, format = DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE) {
+    return dayjs(timestamp).format(format);
+}
+/**
+ * 把时间戳格式化为 2020-10-01 00:00 至 2020-10-02 00:00 形式
+ *
+ * @param timestamp
+ * @returns
+ */
+function formatDateTimeRange(startTimestamp, endTimestamp) {
+    return formatDateTime(startTimestamp) + ' 至 ' + formatDateTime(endTimestamp);
+}
+/**
+ * 把同年份的时间戳格式化为 10-01 10:00 格式，不同年份的时间戳格式化成 2020-10-01 10:00 格式
+ *
+ * @param timestamp
+ * @returns
+ */
+function formatDateTimeShortly(timestamp) {
+    const t1 = dayjs(timestamp);
+    const t2 = dayjs(Date.now());
+    if (t1.year() === t2.year()) {
+        return t1.format(DATE_TIME_MONTH_DATE_HOUR_MINUTE);
+    }
+    return dayjs(timestamp).format(DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE);
+}
+
+/**
+ * 把时间戳格式化为 周开始 ~ 周结束 格式
+ *
+ * @param timestamp
+ * @returns
+ */
+function formatWeek(timestamp) {
+    const date = new Date(timestamp);
+    const offset = -1 * date.getDay();
+    const startTimestamp = timestamp + offset * MS_DAY;
+    return `${formatDateShortly(startTimestamp)} ~ ${formatDateShortly(startTimestamp + 6 * MS_DAY)}`;
+}
+
+/**
+ * 把时间戳格式化为 2020-10 格式
+ *
+ * @param timestamp
+ * @returns
+ */
+function formatMonth(timestamp) {
+    return dayjs(timestamp).format(DATE_YEAR_MONTH);
 }
 
 /**
@@ -774,5 +802,5 @@ function endOfMonth(timestamp) {
     return date.getTime();
 }
 
-export { DATE_MONTH_DATE, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_YEAR_MONTH, DATE_YEAR_MONTH_DATE, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, calculateRate, discountToBackend, discountToDisplay, divideNumber, endOfDay, endOfMonth, endOfWeek, formatAmount, formatArea, formatCity, formatDate, formatDateShortly, formatDateTime, formatDateTimeShortly, formatDiscount, formatDistrict, formatMonth, formatNumberWithComma, formatProvince, formatRatePercent, formatShelfLife, formatSize, formatWeek, isCustomBarcode, isInteger, isPayAuthCode, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeVersion, plusNumber, rateToBackend, rateToDisplay, startOfDay, startOfMonth, startOfNextDay, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevMonth, startOfPrevWeek, startOfWeek, timesNumber, truncateNumber, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
+export { DATE_MONTH_DATE, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_YEAR_MONTH, DATE_YEAR_MONTH_DATE, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, calculateRate, discountToBackend, discountToDisplay, divideNumber, endOfDay, endOfMonth, endOfWeek, formatAmount, formatArea, formatCity, formatCount, formatDate, formatDateRange, formatDateShortly, formatDateTime, formatDateTimeRange, formatDateTimeShortly, formatDiscount, formatDistrict, formatMonth, formatNumberWithComma, formatProvince, formatRatePercent, formatShelfLife, formatSize, formatWeek, isCustomBarcode, isInteger, isPayAuthCode, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeVersion, plusNumber, rateToBackend, rateToDisplay, startOfDay, startOfMonth, startOfNextDay, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevMonth, startOfPrevWeek, startOfWeek, timesNumber, truncateNumber, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
 //# sourceMappingURL=hive.esm.js.map

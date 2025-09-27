@@ -11,6 +11,7 @@ export * from './convert/rate'
 export * from './convert/weight'
 
 export * from './format/area'
+export * from './format/count'
 export * from './format/discount'
 export * from './format/date'
 export * from './format/dateTime'

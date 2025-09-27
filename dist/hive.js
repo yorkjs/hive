@@ -1,5 +1,5 @@
 /**
- * hive.js v0.1.8
+ * hive.js v0.1.9
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -463,89 +463,6 @@
   }
 
   /**
-   * 把万分比格式化为折扣
-   *
-   * @param value
-   * @returns
-   */
-  function formatDiscount(value) {
-    return discountToDisplay(value) + '折';
-  }
-
-  /**
-   * 把时间戳格式化为 2020-10-01 格式
-   *
-   * @param timestamp
-   * @returns
-   */
-  function formatDate(timestamp) {
-    return dayjs__default.default(timestamp).format(DATE_YEAR_MONTH_DATE);
-  }
-  /**
-   * 把同年份的时间戳格式化为 10-01 格式，不同年份的时间戳格式化成 2020-10-01 格式
-   *
-   * @param timestamp
-   * @returns
-   */
-  function formatDateShortly(timestamp) {
-    var t1 = dayjs__default.default(timestamp);
-    var t2 = dayjs__default.default(Date.now());
-    if (t1.year() === t2.year()) {
-      return t1.format(DATE_MONTH_DATE);
-    }
-    return dayjs__default.default(timestamp).format(DATE_YEAR_MONTH_DATE);
-  }
-
-  /**
-   * 把时间戳格式化为 2020-10-01 10:00 格式
-   *
-   * @param timestamp
-   * @param format
-   * @returns
-   */
-  function formatDateTime(timestamp) {
-    var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE;
-    return dayjs__default.default(timestamp).format(format);
-  }
-  /**
-   * 把同年份的时间戳格式化为 10-01 10:00 格式，不同年份的时间戳格式化成 2020-10-01 10:00 格式
-   *
-   * @param timestamp
-   * @returns
-   */
-  function formatDateTimeShortly(timestamp) {
-    var t1 = dayjs__default.default(timestamp);
-    var t2 = dayjs__default.default(Date.now());
-    if (t1.year() === t2.year()) {
-      return t1.format(DATE_TIME_MONTH_DATE_HOUR_MINUTE);
-    }
-    return dayjs__default.default(timestamp).format(DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE);
-  }
-
-  /**
-   * 把时间戳格式化为 周开始 ~ 周结束 格式
-   *
-   * @param timestamp
-   * @returns
-   */
-  function formatWeek(timestamp) {
-    var date = new Date(timestamp);
-    var offset = -1 * date.getDay();
-    var startTimestamp = timestamp + offset * MS_DAY;
-    return "".concat(formatDateShortly(startTimestamp), " ~ ").concat(formatDateShortly(startTimestamp + 6 * MS_DAY));
-  }
-
-  /**
-   * 把时间戳格式化为 2020-10 格式
-   *
-   * @param timestamp
-   * @returns
-   */
-  function formatMonth(timestamp) {
-    return dayjs__default.default(timestamp).format(DATE_YEAR_MONTH);
-  }
-
-  /**
    * 把数字的整数部分格式化为以千为段拆分，以逗号为分隔符
    *
    * @param value
@@ -587,6 +504,118 @@
       result += ".".concat(''.padEnd(decimals, '0'));
     }
     return isNegative ? '-' + result : result;
+  }
+
+  /**
+   * 格式化数量
+   *
+   * @param value
+   * @returns
+   */
+  function formatCount(value) {
+    var unit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+    return formatNumberWithComma(value) + unit;
+  }
+
+  /**
+   * 把万分比格式化为折扣
+   *
+   * @param value
+   * @returns
+   */
+  function formatDiscount(value) {
+    return discountToDisplay(value) + '折';
+  }
+
+  /**
+   * 把时间戳格式化为 2020-10-01 格式
+   *
+   * @param timestamp
+   * @returns
+   */
+  function formatDate(timestamp) {
+    return dayjs__default.default(timestamp).format(DATE_YEAR_MONTH_DATE);
+  }
+  /**
+   * 把时间戳格式化为 2020-10-01 至 2020-10-02 形式
+   *
+   * @param timestamp
+   * @returns
+   */
+  function formatDateRange(startTimestamp, endTimestamp) {
+    return formatDate(startTimestamp) + ' 至 ' + formatDate(endTimestamp);
+  }
+  /**
+   * 把同年份的时间戳格式化为 10-01 格式，不同年份的时间戳格式化成 2020-10-01 格式
+   *
+   * @param timestamp
+   * @returns
+   */
+  function formatDateShortly(timestamp) {
+    var t1 = dayjs__default.default(timestamp);
+    var t2 = dayjs__default.default(Date.now());
+    if (t1.year() === t2.year()) {
+      return t1.format(DATE_MONTH_DATE);
+    }
+    return dayjs__default.default(timestamp).format(DATE_YEAR_MONTH_DATE);
+  }
+
+  /**
+   * 把时间戳格式化为 2020-10-01 10:00 格式
+   *
+   * @param timestamp
+   * @param format
+   * @returns
+   */
+  function formatDateTime(timestamp) {
+    var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE;
+    return dayjs__default.default(timestamp).format(format);
+  }
+  /**
+   * 把时间戳格式化为 2020-10-01 00:00 至 2020-10-02 00:00 形式
+   *
+   * @param timestamp
+   * @returns
+   */
+  function formatDateTimeRange(startTimestamp, endTimestamp) {
+    return formatDateTime(startTimestamp) + ' 至 ' + formatDateTime(endTimestamp);
+  }
+  /**
+   * 把同年份的时间戳格式化为 10-01 10:00 格式，不同年份的时间戳格式化成 2020-10-01 10:00 格式
+   *
+   * @param timestamp
+   * @returns
+   */
+  function formatDateTimeShortly(timestamp) {
+    var t1 = dayjs__default.default(timestamp);
+    var t2 = dayjs__default.default(Date.now());
+    if (t1.year() === t2.year()) {
+      return t1.format(DATE_TIME_MONTH_DATE_HOUR_MINUTE);
+    }
+    return dayjs__default.default(timestamp).format(DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE);
+  }
+
+  /**
+   * 把时间戳格式化为 周开始 ~ 周结束 格式
+   *
+   * @param timestamp
+   * @returns
+   */
+  function formatWeek(timestamp) {
+    var date = new Date(timestamp);
+    var offset = -1 * date.getDay();
+    var startTimestamp = timestamp + offset * MS_DAY;
+    return "".concat(formatDateShortly(startTimestamp), " ~ ").concat(formatDateShortly(startTimestamp + 6 * MS_DAY));
+  }
+
+  /**
+   * 把时间戳格式化为 2020-10 格式
+   *
+   * @param timestamp
+   * @returns
+   */
+  function formatMonth(timestamp) {
+    return dayjs__default.default(timestamp).format(DATE_YEAR_MONTH);
   }
 
   /**
@@ -876,9 +905,12 @@
   exports.formatAmount = formatAmount;
   exports.formatArea = formatArea;
   exports.formatCity = formatCity;
+  exports.formatCount = formatCount;
   exports.formatDate = formatDate;
+  exports.formatDateRange = formatDateRange;
   exports.formatDateShortly = formatDateShortly;
   exports.formatDateTime = formatDateTime;
+  exports.formatDateTimeRange = formatDateTimeRange;
   exports.formatDateTimeShortly = formatDateTimeShortly;
   exports.formatDiscount = formatDiscount;
   exports.formatDistrict = formatDistrict;
