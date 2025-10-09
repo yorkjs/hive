@@ -1,5 +1,5 @@
 /**
- * hive.js v0.1.9
+ * hive.js v0.2.0
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -221,6 +221,55 @@
    */
   function discountToBackend(value) {
     return timesNumber(isInteger(value) ? value : +truncateNumber(value, 1), 1000);
+  }
+
+  /**
+   * 米 转换为 千米
+   *
+   * @param value 后端的比例值
+   * @returns
+   */
+  function distanceToDisplay(value) {
+    var result = divideNumber(value, 1000);
+    // 如果小数部分为 0，返回整数部分
+    return isInteger(result) ? Math.floor(result) : result;
+  }
+  /**
+   * 千米 转换为 米
+   *
+   * @param value 前端的比例值
+   * @returns
+   */
+  function distanceToBackend(value) {
+    return timesNumber(value, 1000);
+  }
+  // 定义地球半径（单位：米）
+  var EARTH_RADIUS_M = 6371 * 1000;
+  // 将角度转换为弧度
+  function toRadians(degrees) {
+    return degrees * Math.PI / 180;
+  }
+  /**
+   * 计算两个点之间的距离，返回距离单位是米
+   *
+   * @param value1 除数
+   * @param value2 被除数
+   * @returns
+   */
+  function calculateDistance(longitude1, latitude1, longitude2, latitude2) {
+    // 将经纬度转换为弧度
+    var lat1 = toRadians(latitude1);
+    var lon1 = toRadians(longitude1);
+    var lat2 = toRadians(latitude2);
+    var lon2 = toRadians(longitude2);
+    // 计算差值
+    var dLat = lat2 - lat1;
+    var dLon = lon2 - lon1;
+    // Haversine 公式
+    var a = Math.pow(Math.sin(dLat / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dLon / 2), 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    // 计算距离
+    return Math.floor(EARTH_RADIUS_M * c);
   }
 
   /**
@@ -525,6 +574,16 @@
    */
   function formatDiscount(value) {
     return discountToDisplay(value) + '折';
+  }
+
+  /**
+   * 把距离格式化为千米单位
+   *
+   * @param distance
+   * @returns
+   */
+  function formatDistance(distance) {
+    return distanceToDisplay(distance) + '公里';
   }
 
   /**
@@ -895,9 +954,12 @@
   exports.SIZE_GB = SIZE_GB;
   exports.SIZE_KB = SIZE_KB;
   exports.SIZE_MB = SIZE_MB;
+  exports.calculateDistance = calculateDistance;
   exports.calculateRate = calculateRate;
   exports.discountToBackend = discountToBackend;
   exports.discountToDisplay = discountToDisplay;
+  exports.distanceToBackend = distanceToBackend;
+  exports.distanceToDisplay = distanceToDisplay;
   exports.divideNumber = divideNumber;
   exports.endOfDay = endOfDay;
   exports.endOfMonth = endOfMonth;
@@ -913,6 +975,7 @@
   exports.formatDateTimeRange = formatDateTimeRange;
   exports.formatDateTimeShortly = formatDateTimeShortly;
   exports.formatDiscount = formatDiscount;
+  exports.formatDistance = formatDistance;
   exports.formatDistrict = formatDistrict;
   exports.formatMonth = formatMonth;
   exports.formatNumberWithComma = formatNumberWithComma;

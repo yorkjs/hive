@@ -1,5 +1,5 @@
 /**
- * hive.js v0.1.9
+ * hive.js v0.2.0
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -151,6 +151,57 @@ function discountToBackend(value) {
     return timesNumber(isInteger(value)
         ? value
         : +truncateNumber(value, 1), 1000);
+}
+
+/**
+ * 米 转换为 千米
+ *
+ * @param value 后端的比例值
+ * @returns
+ */
+function distanceToDisplay(value) {
+    const result = divideNumber(value, 1000);
+    // 如果小数部分为 0，返回整数部分
+    return isInteger(result) ? Math.floor(result) : result;
+}
+/**
+ * 千米 转换为 米
+ *
+ * @param value 前端的比例值
+ * @returns
+ */
+function distanceToBackend(value) {
+    return timesNumber(value, 1000);
+}
+// 定义地球半径（单位：米）
+const EARTH_RADIUS_M = 6371 * 1000;
+// 将角度转换为弧度
+function toRadians(degrees) {
+    return degrees * Math.PI / 180;
+}
+/**
+ * 计算两个点之间的距离，返回距离单位是米
+ *
+ * @param value1 除数
+ * @param value2 被除数
+ * @returns
+ */
+function calculateDistance(longitude1, latitude1, longitude2, latitude2) {
+    // 将经纬度转换为弧度
+    const lat1 = toRadians(latitude1);
+    const lon1 = toRadians(longitude1);
+    const lat2 = toRadians(latitude2);
+    const lon2 = toRadians(longitude2);
+    // 计算差值
+    const dLat = lat2 - lat1;
+    const dLon = lon2 - lon1;
+    // Haversine 公式
+    const a = Math.pow(Math.sin(dLat / 2), 2) +
+        Math.cos(lat1) * Math.cos(lat2) *
+            Math.pow(Math.sin(dLon / 2), 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    // 计算距离
+    return Math.floor(EARTH_RADIUS_M * c);
 }
 
 /**
@@ -451,6 +502,16 @@ function formatCount(value, unit = '') {
  */
 function formatDiscount(value) {
     return discountToDisplay(value) + '折';
+}
+
+/**
+ * 把距离格式化为千米单位
+ *
+ * @param distance
+ * @returns
+ */
+function formatDistance(distance) {
+    return distanceToDisplay(distance) + '公里';
 }
 
 /**
@@ -802,5 +863,5 @@ function endOfMonth(timestamp) {
     return date.getTime();
 }
 
-export { DATE_MONTH_DATE, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_YEAR_MONTH, DATE_YEAR_MONTH_DATE, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, calculateRate, discountToBackend, discountToDisplay, divideNumber, endOfDay, endOfMonth, endOfWeek, formatAmount, formatArea, formatCity, formatCount, formatDate, formatDateRange, formatDateShortly, formatDateTime, formatDateTimeRange, formatDateTimeShortly, formatDiscount, formatDistrict, formatMonth, formatNumberWithComma, formatProvince, formatRatePercent, formatShelfLife, formatSize, formatWeek, isCustomBarcode, isInteger, isPayAuthCode, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeVersion, plusNumber, rateToBackend, rateToDisplay, startOfDay, startOfMonth, startOfNextDay, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevMonth, startOfPrevWeek, startOfWeek, timesNumber, truncateNumber, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
+export { DATE_MONTH_DATE, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_YEAR_MONTH, DATE_YEAR_MONTH_DATE, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, calculateDistance, calculateRate, discountToBackend, discountToDisplay, distanceToBackend, distanceToDisplay, divideNumber, endOfDay, endOfMonth, endOfWeek, formatAmount, formatArea, formatCity, formatCount, formatDate, formatDateRange, formatDateShortly, formatDateTime, formatDateTimeRange, formatDateTimeShortly, formatDiscount, formatDistance, formatDistrict, formatMonth, formatNumberWithComma, formatProvince, formatRatePercent, formatShelfLife, formatSize, formatWeek, isCustomBarcode, isInteger, isPayAuthCode, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeVersion, plusNumber, rateToBackend, rateToDisplay, startOfDay, startOfMonth, startOfNextDay, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevMonth, startOfPrevWeek, startOfWeek, timesNumber, truncateNumber, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
 //# sourceMappingURL=hive.esm.js.map
