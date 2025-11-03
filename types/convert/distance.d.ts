@@ -15,8 +15,10 @@ export declare function distanceToBackend(value: number): number;
 /**
  * 计算两个点之间的距离，返回距离单位是米
  *
- * @param value1 除数
- * @param value2 被除数
+ * @param longitude1 第一个点的经度
+ * @param latitude1 第一个点的纬度
+ * @param longitude2 第二个点的经度
+ * @param latitude2 第二个点的纬度
  * @returns
  */
 export declare function calculateDistance(longitude1: number, latitude1: number, longitude2: number, latitude2: number): number;

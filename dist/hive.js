@@ -1,5 +1,5 @@
 /**
- * hive.js v0.2.0
+ * hive.js v0.2.1
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -64,6 +64,8 @@
   var MONEY_YUAN_TO_CENT = 100;
   // 万元 转 分
   var MONEY_TEN_THOUSAND_YUAN_TO_CENT = 10000 * MONEY_YUAN_TO_CENT;
+  // 元 转 厘
+  var MONEY_YUAN_TO_PENNY = 1000;
 
   // 保质期：日
   var SHELF_LIFE_DAY = 24;
@@ -252,8 +254,10 @@
   /**
    * 计算两个点之间的距离，返回距离单位是米
    *
-   * @param value1 除数
-   * @param value2 被除数
+   * @param longitude1 第一个点的经度
+   * @param latitude1 第一个点的纬度
+   * @param longitude2 第二个点的经度
+   * @param latitude2 第二个点的纬度
    * @returns
    */
   function calculateDistance(longitude1, latitude1, longitude2, latitude2) {
@@ -678,7 +682,7 @@
   }
 
   /**
-   * 格式化金额，保留 2 位小数
+   * 格式化金额（元），保留 2 位小数
    *
    * @param value
    * @returns
@@ -686,6 +690,16 @@
   function formatAmount(value) {
     var unit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '元';
     return formatNumberWithComma(moneyToDisplay(value), 2) + unit;
+  }
+  /**
+   * 格式化金额（厘），保留 2 位小数
+   *
+   * @param value
+   * @returns
+   */
+  function formatPenny(value) {
+    var unit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '元';
+    return formatNumberWithComma(moneyToDisplay(value, MONEY_YUAN_TO_PENNY), 3) + unit;
   }
 
   /**
@@ -942,6 +956,7 @@
   exports.DATE_YEAR_MONTH_DATE = DATE_YEAR_MONTH_DATE;
   exports.MONEY_TEN_THOUSAND_YUAN_TO_CENT = MONEY_TEN_THOUSAND_YUAN_TO_CENT;
   exports.MONEY_YUAN_TO_CENT = MONEY_YUAN_TO_CENT;
+  exports.MONEY_YUAN_TO_PENNY = MONEY_YUAN_TO_PENNY;
   exports.MS_DAY = MS_DAY;
   exports.MS_HOUR = MS_HOUR;
   exports.MS_MINUTE = MS_MINUTE;
@@ -979,6 +994,7 @@
   exports.formatDistrict = formatDistrict;
   exports.formatMonth = formatMonth;
   exports.formatNumberWithComma = formatNumberWithComma;
+  exports.formatPenny = formatPenny;
   exports.formatProvince = formatProvince;
   exports.formatRatePercent = formatRatePercent;
   exports.formatShelfLife = formatShelfLife;
