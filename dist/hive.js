@@ -1,5 +1,5 @@
 /**
- * hive.js v0.2.1
+ * hive.js v0.2.2
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -590,6 +590,53 @@
     return distanceToDisplay(distance) + '公里';
   }
 
+  function normalizeDuration(milliseconds) {
+    var result = {
+      days: 0,
+      hours: 0,
+      minutes: 0,
+      seconds: 0
+    };
+    if (milliseconds <= 0) {
+      return result;
+    }
+    var seconds = Math.ceil(milliseconds / MS_SECOND);
+    var minutes = Math.floor(milliseconds / MS_MINUTE);
+    var hours = Math.floor(milliseconds / MS_HOUR);
+    var days = Math.floor(milliseconds / MS_DAY);
+    if (days > 0) {
+      result.days = days;
+    }
+    if (hours % 24 > 0) {
+      result.hours = hours % 24;
+    }
+    if (minutes % 60 > 0) {
+      result.minutes = minutes % 60;
+    }
+    if (seconds % 60 > 0) {
+      result.seconds = seconds % 60;
+    }
+    return result;
+  }
+
+  function formatDuration(milliseconds) {
+    var result = [];
+    var data = normalizeDuration(milliseconds);
+    if (data.days > 0) {
+      result.push("".concat(data.days, "\u5929"));
+    }
+    if (data.hours > 0) {
+      result.push("".concat(data.hours, "\u5C0F\u65F6"));
+    }
+    if (data.minutes > 0) {
+      result.push("".concat(data.minutes, "\u5206\u949F"));
+    }
+    if (data.seconds > 0) {
+      result.push("".concat(data.seconds, "\u79D2"));
+    }
+    return result.join('');
+  }
+
   /**
    * 把时间戳格式化为 2020-10-01 格式
    *
@@ -692,7 +739,7 @@
     return formatNumberWithComma(moneyToDisplay(value), 2) + unit;
   }
   /**
-   * 格式化金额（厘），保留 2 位小数
+   * 格式化金额（厘），保留 3 位小数
    *
    * @param value
    * @returns
@@ -992,6 +1039,7 @@
   exports.formatDiscount = formatDiscount;
   exports.formatDistance = formatDistance;
   exports.formatDistrict = formatDistrict;
+  exports.formatDuration = formatDuration;
   exports.formatMonth = formatMonth;
   exports.formatNumberWithComma = formatNumberWithComma;
   exports.formatPenny = formatPenny;
@@ -1007,6 +1055,7 @@
   exports.minusNumber = minusNumber;
   exports.moneyToBackend = moneyToBackend;
   exports.moneyToDisplay = moneyToDisplay;
+  exports.normalizeDuration = normalizeDuration;
   exports.normalizeVersion = normalizeVersion;
   exports.plusNumber = plusNumber;
   exports.rateToBackend = rateToBackend;

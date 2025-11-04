@@ -1,5 +1,5 @@
 /**
- * hive.js v0.2.1
+ * hive.js v0.2.2
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -518,6 +518,53 @@ function formatDistance(distance) {
     return distanceToDisplay(distance) + '公里';
 }
 
+function normalizeDuration(milliseconds) {
+    const result = {
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+    };
+    if (milliseconds <= 0) {
+        return result;
+    }
+    const seconds = Math.ceil(milliseconds / MS_SECOND);
+    const minutes = Math.floor(milliseconds / MS_MINUTE);
+    const hours = Math.floor(milliseconds / MS_HOUR);
+    const days = Math.floor(milliseconds / MS_DAY);
+    if (days > 0) {
+        result.days = days;
+    }
+    if (hours % 24 > 0) {
+        result.hours = hours % 24;
+    }
+    if (minutes % 60 > 0) {
+        result.minutes = minutes % 60;
+    }
+    if (seconds % 60 > 0) {
+        result.seconds = seconds % 60;
+    }
+    return result;
+}
+
+function formatDuration(milliseconds) {
+    const result = [];
+    const data = normalizeDuration(milliseconds);
+    if (data.days > 0) {
+        result.push(`${data.days}天`);
+    }
+    if (data.hours > 0) {
+        result.push(`${data.hours}小时`);
+    }
+    if (data.minutes > 0) {
+        result.push(`${data.minutes}分钟`);
+    }
+    if (data.seconds > 0) {
+        result.push(`${data.seconds}秒`);
+    }
+    return result.join('');
+}
+
 /**
  * 把时间戳格式化为 2020-10-01 格式
  *
@@ -618,7 +665,7 @@ function formatAmount(value, unit = '元') {
     return formatNumberWithComma(moneyToDisplay(value), 2) + unit;
 }
 /**
- * 格式化金额（厘），保留 2 位小数
+ * 格式化金额（厘），保留 3 位小数
  *
  * @param value
  * @returns
@@ -876,5 +923,5 @@ function endOfMonth(timestamp) {
     return date.getTime();
 }
 
-export { DATE_MONTH_DATE, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_YEAR_MONTH, DATE_YEAR_MONTH_DATE, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MONEY_YUAN_TO_PENNY, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, calculateDistance, calculateRate, discountToBackend, discountToDisplay, distanceToBackend, distanceToDisplay, divideNumber, endOfDay, endOfMonth, endOfWeek, formatAmount, formatArea, formatCity, formatCount, formatDate, formatDateRange, formatDateShortly, formatDateTime, formatDateTimeRange, formatDateTimeShortly, formatDiscount, formatDistance, formatDistrict, formatMonth, formatNumberWithComma, formatPenny, formatProvince, formatRatePercent, formatShelfLife, formatSize, formatWeek, isCustomBarcode, isInteger, isPayAuthCode, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeVersion, plusNumber, rateToBackend, rateToDisplay, startOfDay, startOfMonth, startOfNextDay, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevMonth, startOfPrevWeek, startOfWeek, timesNumber, truncateNumber, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
+export { DATE_MONTH_DATE, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_YEAR_MONTH, DATE_YEAR_MONTH_DATE, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MONEY_YUAN_TO_PENNY, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, calculateDistance, calculateRate, discountToBackend, discountToDisplay, distanceToBackend, distanceToDisplay, divideNumber, endOfDay, endOfMonth, endOfWeek, formatAmount, formatArea, formatCity, formatCount, formatDate, formatDateRange, formatDateShortly, formatDateTime, formatDateTimeRange, formatDateTimeShortly, formatDiscount, formatDistance, formatDistrict, formatDuration, formatMonth, formatNumberWithComma, formatPenny, formatProvince, formatRatePercent, formatShelfLife, formatSize, formatWeek, isCustomBarcode, isInteger, isPayAuthCode, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeDuration, normalizeVersion, plusNumber, rateToBackend, rateToDisplay, startOfDay, startOfMonth, startOfNextDay, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevMonth, startOfPrevWeek, startOfWeek, timesNumber, truncateNumber, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
 //# sourceMappingURL=hive.esm.js.map
