@@ -1,5 +1,5 @@
 /**
- * hive.js v0.2.2
+ * hive.js v0.2.3
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -32,6 +32,11 @@
 
   var NP__namespace = /*#__PURE__*/_interopNamespace(NP);
   var dayjs__default = /*#__PURE__*/_interopDefault(dayjs);
+
+  // 微信付款码
+  var AUTH_CODE_WECHAT = 1;
+  // 支付宝付款码
+  var AUTH_CODE_ALIPAY = 2;
 
   // 年月日：2020-10-01
   var DATE_YEAR_MONTH_DATE = 'YYYY-MM-DD';
@@ -828,16 +833,6 @@
     // 这里留给以后加其他规则
     return false;
   }
-  /// 验证是否为付款码
-  function isPayAuthCode(value) {
-    // 微信    133619858964803511
-    // 支付宝  283654147086344711
-    var length = value.length;
-    if (length == 18 || length == 19 || length == 20) {
-      return value.startsWith('1') || value.startsWith('2');
-    }
-    return false;
-  }
 
   /**
    * 标准化版本号，方便后续进行比较
@@ -856,6 +851,21 @@
         return tokens[0].padStart(4, '0') + tokens[1].padStart(4, '0') + tokens[2].padStart(4, '0');
     }
     return '000000000000';
+  }
+
+  /// 解析付款码
+  function parseAuthCode(value) {
+    // 微信    133619858964803511
+    // 支付宝  283654147086344711
+    var length = value.length;
+    if (length == 18 || length == 19 || length == 20) {
+      if (value.startsWith('1')) {
+        return AUTH_CODE_WECHAT;
+      } else if (value.startsWith('2')) {
+        return AUTH_CODE_ALIPAY;
+      }
+    }
+    return -1;
   }
 
   /**
@@ -995,6 +1005,8 @@
     return date.getTime();
   }
 
+  exports.AUTH_CODE_ALIPAY = AUTH_CODE_ALIPAY;
+  exports.AUTH_CODE_WECHAT = AUTH_CODE_WECHAT;
   exports.DATE_MONTH_DATE = DATE_MONTH_DATE;
   exports.DATE_TIME_MONTH_DATE_HOUR_MINUTE = DATE_TIME_MONTH_DATE_HOUR_MINUTE;
   exports.DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE = DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE;
@@ -1050,13 +1062,13 @@
   exports.formatWeek = formatWeek;
   exports.isCustomBarcode = isCustomBarcode;
   exports.isInteger = isInteger;
-  exports.isPayAuthCode = isPayAuthCode;
   exports.isStandardBarcode = isStandardBarcode;
   exports.minusNumber = minusNumber;
   exports.moneyToBackend = moneyToBackend;
   exports.moneyToDisplay = moneyToDisplay;
   exports.normalizeDuration = normalizeDuration;
   exports.normalizeVersion = normalizeVersion;
+  exports.parseAuthCode = parseAuthCode;
   exports.plusNumber = plusNumber;
   exports.rateToBackend = rateToBackend;
   exports.rateToDisplay = rateToDisplay;

@@ -1,3 +1,4 @@
+export * from './constant/authCode';
 export * from './constant/date';
 export * from './constant/dateTime';
 export * from './constant/millisecond';
@@ -27,5 +28,6 @@ export * from './is/barcode';
 export * from './is/number';
 export * from './normalize/duration';
 export * from './normalize/version';
+export * from './parse/authCode';
 export * from './util/number';
 export * from './util/date';
