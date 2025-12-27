@@ -3,6 +3,7 @@ export * from './constant/date'
 export * from './constant/dateTime'
 export * from './constant/millisecond'
 export * from './constant/money'
+export * from './constant/phoneNumber'
 export * from './constant/shelfLife'
 export * from './constant/size'
 
@@ -26,15 +27,18 @@ export * from './format/number'
 export * from './format/rate'
 export * from './format/shelfLife'
 export * from './format/size'
-export * from './format/time'
+export * from './format/businessTimes'
 
 export * from './is/barcode'
+export * from './is/email'
 export * from './is/number'
+export * from './is/price'
 
 export * from './normalize/duration'
 export * from './normalize/version'
 
 export * from './parse/authCode'
+export * from './parse/phoneNumber'
 
 export * from './util/number'
 export * from './util/date'

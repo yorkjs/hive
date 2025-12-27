@@ -2,7 +2,7 @@ import {
   isInteger
 } from '../../src/is/number'
 
-test('isStandardBarcode', () => {
+test('isInteger', () => {
 
   expect(isInteger(1)).toBe(true)
   expect(isInteger(1.0)).toBe(true)

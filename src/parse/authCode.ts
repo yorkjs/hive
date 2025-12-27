@@ -1,4 +1,4 @@
-import { AUTH_CODE_ALIPAY, AUTH_CODE_WECHAT } from "../constant/authCode"
+import { AUTH_CODE_ALIPAY, AUTH_CODE_WECHAT } from '../constant/authCode'
 
 /// 解析付款码
 export function parseAuthCode(value: string) {

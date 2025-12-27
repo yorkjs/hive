@@ -15,7 +15,7 @@ export function formatBusinessTimes(businessTimes: number[]): string {
   }
 
   const timeRanges: string[] = []
-  for (let i = 0; i < businessTimes.length; i += 2) {
+  for (let i = 0; i < len; i += 2) {
     const start = businessTimes[i]
     const end = businessTimes[i + 1]
     const startTime = start % 1440
@@ -29,15 +29,12 @@ export function formatBusinessTimes(businessTimes: number[]): string {
 
     let startTimeStr = formatHourMinutes(startTime)
     if (start > 1440) {
-      startTimeStr = `次日 ${startTimeStr}`
-    }
-    else {
-      startTimeStr = `每日 ${startTimeStr}`
+      startTimeStr = `次日${startTimeStr}`
     }
 
     let endTimeStr = formatHourMinutes(endTime)
     if (end > 1440) {
-      endTimeStr = `次日 ${endTimeStr}`
+      endTimeStr = `次日${endTimeStr}`
     }
 
     timeRanges.push(`${startTimeStr}-${endTimeStr}`)

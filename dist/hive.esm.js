@@ -1,5 +1,5 @@
 /**
- * hive.js v0.2.3
+ * hive.js v0.2.4
  * (c) 2025 yorkjs team
  * Released under the MIT License.
  */
@@ -46,6 +46,13 @@ const MONEY_TEN_THOUSAND_YUAN_TO_CENT = 10000 * MONEY_YUAN_TO_CENT;
 // 元 转 厘
 const MONEY_YUAN_TO_PENNY = 1000;
 
+// 手机号
+const PHONE_NUMBER_MOBILE = 1;
+// 固定电话
+const PHONE_NUMBER_LANDLINE = 2;
+// 400 电话
+const PHONE_NUMBER_400 = 3;
+
 // 保质期：日
 const SHELF_LIFE_DAY = 24;
 // 保质期：月
@@ -55,7 +62,7 @@ const SHELF_LIFE_YEAR = 365 * SHELF_LIFE_DAY;
 
 // 体积：KB
 const SIZE_KB = 1024;
-// 体积：KB
+// 体积：MB
 const SIZE_MB = 1024 * SIZE_KB;
 // 体积：GB
 const SIZE_GB = 1024 * SIZE_MB;
@@ -731,6 +738,41 @@ function formatSize(value) {
     return `${value}B`;
 }
 
+function formatHourMinutes(value) {
+    const hours = Math.floor(value / 60);
+    const minutes = value % 60;
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+}
+// 营业时间时段范围为 [0, 2880] 可跨天, 0-1440 为当天，1440-2880 为次日
+function formatBusinessTimes(businessTimes) {
+    const len = businessTimes.length;
+    if (len === 0 || len % 2 !== 0) {
+        return '';
+    }
+    const timeRanges = [];
+    for (let i = 0; i < len; i += 2) {
+        const start = businessTimes[i];
+        const end = businessTimes[i + 1];
+        const startTime = start % 1440;
+        const endTime = end % 1440;
+        // 判断是否是全天
+        if (startTime === 0 && endTime === 0 && end > start) {
+            timeRanges.push('全天');
+            continue;
+        }
+        let startTimeStr = formatHourMinutes(startTime);
+        if (start > 1440) {
+            startTimeStr = `次日${startTimeStr}`;
+        }
+        let endTimeStr = formatHourMinutes(endTime);
+        if (end > 1440) {
+            endTimeStr = `次日${endTimeStr}`;
+        }
+        timeRanges.push(`${startTimeStr}-${endTimeStr}`);
+    }
+    return timeRanges.join('、');
+}
+
 /**
  * value 是否是标准商品条形码
  *
@@ -759,6 +801,26 @@ function isCustomBarcode(value) {
     }
     // 这里留给以后加其他规则
     return false;
+}
+
+/**
+ * 是否为邮箱
+ *
+ * @param value
+ * @returns
+ */
+function isEmail(value) {
+    return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value);
+}
+
+/**
+ * 是否为价格
+ *
+ * @param value
+ * @returns
+ */
+function isPrice(value) {
+    return /^(?:[1-9]\d*|0)(?:\.\d{1,2})?$/.test(value);
 }
 
 /**
@@ -792,6 +854,25 @@ function parseAuthCode(value) {
         else if (value.startsWith('2')) {
             return AUTH_CODE_ALIPAY;
         }
+    }
+    return -1;
+}
+
+/// 解析电话号码
+function parsePhoneNumber(value) {
+    // 手机号码
+    if (/^1\d{10}$/.test(value)) {
+        return PHONE_NUMBER_MOBILE;
+    }
+    // 固定电话
+    if (/^0\d{9,11}$/.test(value)
+        || /^0\d{2,3}-\d{7,8}$/.test(value)) {
+        return PHONE_NUMBER_LANDLINE;
+    }
+    // 400 电话
+    if (/^400\d{7}$/.test(value)
+        || /^400-\d{3}-\d{4}$/.test(value)) {
+        return PHONE_NUMBER_400;
     }
     return -1;
 }
@@ -933,5 +1014,5 @@ function endOfMonth(timestamp) {
     return date.getTime();
 }
 
-export { AUTH_CODE_ALIPAY, AUTH_CODE_WECHAT, DATE_MONTH_DATE, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_YEAR_MONTH, DATE_YEAR_MONTH_DATE, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MONEY_YUAN_TO_PENNY, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, calculateDistance, calculateRate, discountToBackend, discountToDisplay, distanceToBackend, distanceToDisplay, divideNumber, endOfDay, endOfMonth, endOfWeek, formatAmount, formatArea, formatCity, formatCount, formatDate, formatDateRange, formatDateShortly, formatDateTime, formatDateTimeRange, formatDateTimeShortly, formatDiscount, formatDistance, formatDistrict, formatDuration, formatMonth, formatNumberWithComma, formatPenny, formatProvince, formatRatePercent, formatShelfLife, formatSize, formatWeek, isCustomBarcode, isInteger, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeDuration, normalizeVersion, parseAuthCode, plusNumber, rateToBackend, rateToDisplay, startOfDay, startOfMonth, startOfNextDay, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevMonth, startOfPrevWeek, startOfWeek, timesNumber, truncateNumber, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
+export { AUTH_CODE_ALIPAY, AUTH_CODE_WECHAT, DATE_MONTH_DATE, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_YEAR_MONTH, DATE_YEAR_MONTH_DATE, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MONEY_YUAN_TO_PENNY, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, PHONE_NUMBER_400, PHONE_NUMBER_LANDLINE, PHONE_NUMBER_MOBILE, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, calculateDistance, calculateRate, discountToBackend, discountToDisplay, distanceToBackend, distanceToDisplay, divideNumber, endOfDay, endOfMonth, endOfWeek, formatAmount, formatArea, formatBusinessTimes, formatCity, formatCount, formatDate, formatDateRange, formatDateShortly, formatDateTime, formatDateTimeRange, formatDateTimeShortly, formatDiscount, formatDistance, formatDistrict, formatDuration, formatHourMinutes, formatMonth, formatNumberWithComma, formatPenny, formatProvince, formatRatePercent, formatShelfLife, formatSize, formatWeek, isCustomBarcode, isEmail, isInteger, isPrice, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeDuration, normalizeVersion, parseAuthCode, parsePhoneNumber, plusNumber, rateToBackend, rateToDisplay, startOfDay, startOfMonth, startOfNextDay, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevMonth, startOfPrevWeek, startOfWeek, timesNumber, truncateNumber, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
 //# sourceMappingURL=hive.esm.js.map

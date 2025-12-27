@@ -1,4 +1,3 @@
-
 // 微信付款码
 export const AUTH_CODE_WECHAT = 1
 
