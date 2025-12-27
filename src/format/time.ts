@@ -1,6 +1,3 @@
-import { isEmpty } from "../is/empty"
-import { chunk } from "../util/array"
-
 export function formatHourMinutes(value: number): string {
 
   const hours = Math.floor(value / 60)
@@ -12,21 +9,26 @@ export function formatHourMinutes(value: number): string {
 
 // 营业时间时段范围为 [0, 2880] 可跨天, 0-1440 为当天，1440-2880 为次日
 export function formatBusinessTimes(businessTimes: number[]): string {
-  if (isEmpty(businessTimes)) {
+  const len = businessTimes.length
+  if (len === 0 || len % 2 !== 0) {
     return ''
   }
 
-  const timeRanges = chunk(businessTimes, 2).map(item => {
-    const startTime = item[0] % 1440
-    const endTime = item[1] % 1440
+  const timeRanges: string[] = []
+  for (let i = 0; i < businessTimes.length; i += 2) {
+    const start = businessTimes[i]
+    const end = businessTimes[i + 1]
+    const startTime = start % 1440
+    const endTime = end % 1440
 
     // 判断是否是全天
-    if (startTime === 0 && endTime === 0 && item[1] > item[0]) {
-      return '全天'
+    if (startTime === 0 && endTime === 0 && end > start) {
+      timeRanges.push('全天')
+      continue
     }
 
     let startTimeStr = formatHourMinutes(startTime)
-    if (item[0] > 1440) {
+    if (start > 1440) {
       startTimeStr = `次日 ${startTimeStr}`
     }
     else {
@@ -34,12 +36,12 @@ export function formatBusinessTimes(businessTimes: number[]): string {
     }
 
     let endTimeStr = formatHourMinutes(endTime)
-    if (item[1] > 1440) {
+    if (end > 1440) {
       endTimeStr = `次日 ${endTimeStr}`
     }
 
-    return `${startTimeStr}-${endTimeStr}`
-  })
+    timeRanges.push(`${startTimeStr}-${endTimeStr}`)
+  }
 
   return timeRanges.join('、')
 }

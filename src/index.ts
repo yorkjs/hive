@@ -26,6 +26,7 @@ export * from './format/number'
 export * from './format/rate'
 export * from './format/shelfLife'
 export * from './format/size'
+export * from './format/time'
 
 export * from './is/barcode'
 export * from './is/number'
