@@ -4,7 +4,7 @@
  * @param timestamp
  * @returns
  */
-export declare function formatDate(timestamp: number): string;
+export declare function formatDate(timestamp: number, format?: string): string;
 /**
  * 把时间戳格式化为 2020-10-01 至 2020-10-02 形式
  *

@@ -7,8 +7,8 @@ import { DATE_MONTH_DATE, DATE_YEAR_MONTH_DATE } from '../constant/date'
  * @param timestamp
  * @returns
  */
-export function formatDate(timestamp: number) {
-  return dayjs(timestamp).format(DATE_YEAR_MONTH_DATE)
+export function formatDate(timestamp: number, format = DATE_YEAR_MONTH_DATE) {
+  return dayjs(timestamp).format(format)
 }
 
 /**
