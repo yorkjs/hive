@@ -22,7 +22,7 @@ test('formatDateTime', () => {
   expect(formatDateTime(new Date('2020-01-10 10:10:02').getTime(), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_CHINESE)).toBe('2020年1月10日 10:10')
   expect(formatDateTime(new Date('2020-01-01 10:10:02').getTime(), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_CHINESE)).toBe('2020年1月1日 10:10')
 
-  expect(formatDateTimeShortly(new Date('2025-10-01 10:01:02').getTime())).toBe('10-01 10:01')
+  expect(formatDateTimeShortly(new Date('2026-10-01 10:01:02').getTime())).toBe('10-01 10:01')
   expect(formatDateTimeShortly(new Date('2020-10-01 10:01:02').getTime())).toBe('2020-10-01 10:01')
 
 

@@ -7,6 +7,7 @@ interface IArea {
     province?: INode;
     city?: INode;
     district?: INode;
+    address?: string;
 }
 export declare function formatArea(area: IArea, options?: {
     simplify: boolean;

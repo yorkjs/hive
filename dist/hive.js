@@ -1,6 +1,6 @@
 /**
- * hive.js v0.2.5
- * (c) 2025 yorkjs team
+ * hive.js v0.2.6
+ * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
 
@@ -471,7 +471,8 @@
     var country = area.country,
       province = area.province,
       city = area.city,
-      district = area.district;
+      district = area.district,
+      address = area.address;
     var list = [];
     var prevItem = '';
     var appendItem = function appendItem(item) {
@@ -502,6 +503,9 @@
       if (_item2) {
         appendItem(_item2);
       }
+    }
+    if (address) {
+      appendItem(address);
     }
     if (list.length > 1 && isChina) {
       // 删掉中国
@@ -752,7 +756,7 @@
     var date = new Date(timestamp);
     var offset = -1 * date.getDay();
     var startTimestamp = timestamp + offset * MS_DAY;
-    return "".concat(formatDateShortly(startTimestamp), " ~ ").concat(formatDateShortly(startTimestamp + 6 * MS_DAY));
+    return "".concat(formatDateShortly(startTimestamp), " \u81F3 ").concat(formatDateShortly(startTimestamp + 6 * MS_DAY));
   }
 
   /**

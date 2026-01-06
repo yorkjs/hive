@@ -23,7 +23,7 @@ test('formatDate', () => {
   expect(formatDate(new Date('2020-01-01 00:00:00').getTime(), DATE_YEAR_MONTH_DATE_CHINESE)).toBe('2020年1月1日')
 
 
-  expect(formatDateShortly(new Date('2025-10-01 00:00:00').getTime())).toBe('10-01')
+  expect(formatDateShortly(new Date('2026-10-01 00:00:00').getTime())).toBe('10-01')
   expect(formatDateShortly(new Date('2020-10-01 00:00:00').getTime())).toBe('2020-10-01')
 
   expect(formatDateRange(

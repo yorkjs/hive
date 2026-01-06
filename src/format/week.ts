@@ -11,5 +11,5 @@ export function formatWeek(timestamp: number) {
   const date = new Date(timestamp)
   const offset = -1 * date.getDay()
   const startTimestamp = timestamp + offset * MS_DAY
-  return `${formatDateShortly(startTimestamp)} ~ ${formatDateShortly(startTimestamp + 6 * MS_DAY)}`
+  return `${formatDateShortly(startTimestamp)} 至 ${formatDateShortly(startTimestamp + 6 * MS_DAY)}`
 }

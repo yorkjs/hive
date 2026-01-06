@@ -1,6 +1,6 @@
 /**
- * hive.js v0.2.5
- * (c) 2025 yorkjs team
+ * hive.js v0.2.6
+ * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
 
@@ -395,7 +395,7 @@ const cityMap = {
     '黔南布依族苗族自治州': '黔南',
 };
 function formatArea(area, options = { simplify: true }) {
-    const { country, province, city, district, } = area;
+    const { country, province, city, district, address, } = area;
     const list = [];
     let prevItem = '';
     const appendItem = function (item) {
@@ -427,6 +427,9 @@ function formatArea(area, options = { simplify: true }) {
         if (item) {
             appendItem(item);
         }
+    }
+    if (address) {
+        appendItem(address);
     }
     if (list.length > 1 && isChina) {
         // 删掉中国
@@ -678,7 +681,7 @@ function formatWeek(timestamp) {
     const date = new Date(timestamp);
     const offset = -1 * date.getDay();
     const startTimestamp = timestamp + offset * MS_DAY;
-    return `${formatDateShortly(startTimestamp)} ~ ${formatDateShortly(startTimestamp + 6 * MS_DAY)}`;
+    return `${formatDateShortly(startTimestamp)} 至 ${formatDateShortly(startTimestamp + 6 * MS_DAY)}`;
 }
 
 /**

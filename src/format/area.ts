@@ -79,6 +79,7 @@ interface IArea {
   province?: INode
   city?: INode
   district?: INode
+  address?: string
 }
 
 export function formatArea(area: IArea, options = { simplify: true }) {
@@ -88,6 +89,7 @@ export function formatArea(area: IArea, options = { simplify: true }) {
     province,
     city,
     district,
+    address,
   } = area
 
   const list: string[] = []
@@ -130,6 +132,10 @@ export function formatArea(area: IArea, options = { simplify: true }) {
     if (item) {
       appendItem(item)
     }
+  }
+
+  if (address) {
+    appendItem(address)
   }
 
   if (list.length > 1 && isChina) {
