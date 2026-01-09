@@ -1,5 +1,5 @@
 /**
- * hive.js v0.2.6
+ * hive.js v0.2.7
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -609,6 +609,28 @@
     var unit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
     return formatNumberWithComma(value) + unit;
   }
+  /**
+   * 格式化数量（以尽可能短的方式显示数量）
+   *
+   * @param value
+   * @returns
+   */
+  function formatCountShortly(value) {
+    var unit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+    if (value >= 1000000000000) {
+      var trillion = value / 1000000000000;
+      return truncateNumber(trillion, isInteger(trillion) ? 0 : 1) + '万亿' + unit;
+    }
+    if (value >= 100000000) {
+      var billion = divideNumber(value, 100000000);
+      return truncateNumber(billion, isInteger(billion) ? 0 : 1) + '亿' + unit;
+    }
+    if (value >= 10000) {
+      var tenThousand = divideNumber(value, 10000);
+      return truncateNumber(tenThousand, isInteger(tenThousand) ? 0 : 1) + '万' + unit;
+    }
+    return value + unit;
+  }
 
   /**
    * 把万分比格式化为折扣
@@ -1166,6 +1188,7 @@
   exports.formatBusinessTimes = formatBusinessTimes;
   exports.formatCity = formatCity;
   exports.formatCount = formatCount;
+  exports.formatCountShortly = formatCountShortly;
   exports.formatDate = formatDate;
   exports.formatDateRange = formatDateRange;
   exports.formatDateShortly = formatDateShortly;
