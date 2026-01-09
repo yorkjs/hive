@@ -45,4 +45,4 @@ export declare function truncateNumber(value: number, decimals?: number): string
  * @param decimals
  * @returns
  */
-export declare function shortNumber(value: number): string;
+export declare function shortNumber(value: number, formatUnshort: (value: number) => string): string;

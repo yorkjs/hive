@@ -1,5 +1,5 @@
 /**
- * hive.js v0.2.8
+ * hive.js v0.2.9
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -245,7 +245,7 @@
    * @param decimals
    * @returns
    */
-  function shortNumber(value) {
+  function shortNumber(value, formatUnshort) {
     if (value >= 1000000000000) {
       var trillion = divideNumber(value, 1000000000000);
       return truncateNumber(trillion, isInteger(trillion) ? 0 : 1) + '万亿';
@@ -258,7 +258,7 @@
       var tenThousand = divideNumber(value, 10000);
       return truncateNumber(tenThousand, isInteger(tenThousand) ? 0 : 1) + '万';
     }
-    return value.toString();
+    return formatUnshort(value);
   }
 
   /**
@@ -639,7 +639,9 @@
    */
   function formatCountShortly(value) {
     var unit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-    return shortNumber(value) + unit;
+    return shortNumber(value, function (value) {
+      return value.toString();
+    }) + unit;
   }
 
   /**
@@ -829,7 +831,9 @@
    */
   function formatAmountShortly(value) {
     var unit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '元';
-    return shortNumber(moneyToDisplay(value)) + unit;
+    return shortNumber(moneyToDisplay(value), function (value) {
+      return truncateNumber(value, 2);
+    }) + unit;
   }
 
   /**
