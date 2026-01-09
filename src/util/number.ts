@@ -1,4 +1,5 @@
 import * as NP from 'number-precision'
+import { isInteger } from '../is/number'
 
 
 /**
@@ -71,4 +72,27 @@ export function truncateNumber(value: number, decimals: number = 0) {
       : decimalPart.padEnd(decimals, '0')
 
   return `${integerPart}.${truncatedDecimal}`
+}
+
+/**
+ * 以较短的方式返回数字，避免 UI 层显示不下所有数字
+ *
+ * @param value
+ * @param decimals
+ * @returns
+ */
+export function shortNumber(value: number) {
+  if (value >= 1000000000000) {
+    const trillion = divideNumber(value, 1000000000000)
+    return truncateNumber(trillion, isInteger(trillion) ? 0 : 1) + '万亿'
+  }
+  if (value >= 100000000) {
+    const billion = divideNumber(value, 100000000)
+    return truncateNumber(billion, isInteger(billion) ? 0 : 1) + '亿'
+  }
+  if (value >= 10000) {
+    const tenThousand = divideNumber(value, 10000)
+    return truncateNumber(tenThousand, isInteger(tenThousand) ? 0 : 1) + '万'
+  }
+  return value.toString()
 }

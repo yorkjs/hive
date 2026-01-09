@@ -12,3 +12,10 @@ export declare function formatAmount(value: number, unit?: string): string;
  * @returns
  */
 export declare function formatPenny(value: number, unit?: string): string;
+/**
+ * 格式化金额（元），以较短的方式返回
+ *
+ * @param value
+ * @returns
+ */
+export declare function formatAmountShortly(value: number, unit?: string): string;

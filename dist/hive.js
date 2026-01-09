@@ -1,5 +1,5 @@
 /**
- * hive.js v0.2.7
+ * hive.js v0.2.8
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -237,6 +237,28 @@
     }
     var truncatedDecimal = decimalPart.length > decimals ? decimalPart.substring(0, decimals) : decimalPart.padEnd(decimals, '0');
     return "".concat(integerPart, ".").concat(truncatedDecimal);
+  }
+  /**
+   * 以较短的方式返回数字，避免 UI 层显示不下所有数字
+   *
+   * @param value
+   * @param decimals
+   * @returns
+   */
+  function shortNumber(value) {
+    if (value >= 1000000000000) {
+      var trillion = divideNumber(value, 1000000000000);
+      return truncateNumber(trillion, isInteger(trillion) ? 0 : 1) + '万亿';
+    }
+    if (value >= 100000000) {
+      var billion = divideNumber(value, 100000000);
+      return truncateNumber(billion, isInteger(billion) ? 0 : 1) + '亿';
+    }
+    if (value >= 10000) {
+      var tenThousand = divideNumber(value, 10000);
+      return truncateNumber(tenThousand, isInteger(tenThousand) ? 0 : 1) + '万';
+    }
+    return value.toString();
   }
 
   /**
@@ -617,19 +639,7 @@
    */
   function formatCountShortly(value) {
     var unit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-    if (value >= 1000000000000) {
-      var trillion = value / 1000000000000;
-      return truncateNumber(trillion, isInteger(trillion) ? 0 : 1) + '万亿' + unit;
-    }
-    if (value >= 100000000) {
-      var billion = divideNumber(value, 100000000);
-      return truncateNumber(billion, isInteger(billion) ? 0 : 1) + '亿' + unit;
-    }
-    if (value >= 10000) {
-      var tenThousand = divideNumber(value, 10000);
-      return truncateNumber(tenThousand, isInteger(tenThousand) ? 0 : 1) + '万' + unit;
-    }
-    return value + unit;
+    return shortNumber(value) + unit;
   }
 
   /**
@@ -810,6 +820,16 @@
   function formatPenny(value) {
     var unit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '元';
     return formatNumberWithComma(moneyToDisplay(value, MONEY_YUAN_TO_PENNY), 3) + unit;
+  }
+  /**
+   * 格式化金额（元），以较短的方式返回
+   *
+   * @param value
+   * @returns
+   */
+  function formatAmountShortly(value) {
+    var unit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '元';
+    return shortNumber(moneyToDisplay(value)) + unit;
   }
 
   /**
@@ -1184,6 +1204,7 @@
   exports.endOfMonth = endOfMonth;
   exports.endOfWeek = endOfWeek;
   exports.formatAmount = formatAmount;
+  exports.formatAmountShortly = formatAmountShortly;
   exports.formatArea = formatArea;
   exports.formatBusinessTimes = formatBusinessTimes;
   exports.formatCity = formatCity;
@@ -1223,6 +1244,7 @@
   exports.plusNumber = plusNumber;
   exports.rateToBackend = rateToBackend;
   exports.rateToDisplay = rateToDisplay;
+  exports.shortNumber = shortNumber;
   exports.startOfDay = startOfDay;
   exports.startOfMonth = startOfMonth;
   exports.startOfNextDay = startOfNextDay;

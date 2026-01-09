@@ -38,3 +38,11 @@ export declare function divideNumber(value1: number, value2: number): number;
  * @returns
  */
 export declare function truncateNumber(value: number, decimals?: number): string;
+/**
+ * 以较短的方式返回数字，避免 UI 层显示不下所有数字
+ *
+ * @param value
+ * @param decimals
+ * @returns
+ */
+export declare function shortNumber(value: number): string;
