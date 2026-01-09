@@ -1,6 +1,6 @@
 import { MONEY_YUAN_TO_PENNY } from '../constant/money'
 import { moneyToDisplay } from '../convert/money'
-import { shortNumber, } from '../util/number'
+import { shortNumber, truncateNumber, } from '../util/number'
 import { formatNumberWithComma } from './number'
 
 /**
@@ -30,5 +30,10 @@ export function formatPenny(value: number, unit = '元') {
  * @returns
  */
 export function formatAmountShortly(value: number, unit = '元') {
-  return shortNumber(moneyToDisplay(value)) + unit
+  return shortNumber(
+    moneyToDisplay(value),
+    function (value: number) {
+      return truncateNumber(value, 2)
+    }
+  ) + unit
 }

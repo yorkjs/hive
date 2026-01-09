@@ -18,5 +18,10 @@ export function formatCount(value: number, unit = '') {
  * @returns
  */
 export function formatCountShortly(value: number, unit = '') {
-  return shortNumber(value) + unit
+  return shortNumber(
+    value,
+    function (value: number) {
+      return value.toString()
+    }
+  ) + unit
 }

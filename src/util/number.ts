@@ -81,7 +81,7 @@ export function truncateNumber(value: number, decimals: number = 0) {
  * @param decimals
  * @returns
  */
-export function shortNumber(value: number) {
+export function shortNumber(value: number, formatUnshort: (value: number) => string) {
   if (value >= 1000000000000) {
     const trillion = divideNumber(value, 1000000000000)
     return truncateNumber(trillion, isInteger(trillion) ? 0 : 1) + '万亿'
@@ -94,5 +94,5 @@ export function shortNumber(value: number) {
     const tenThousand = divideNumber(value, 10000)
     return truncateNumber(tenThousand, isInteger(tenThousand) ? 0 : 1) + '万'
   }
-  return value.toString()
+  return formatUnshort(value)
 }

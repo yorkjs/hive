@@ -21,8 +21,9 @@ test('formatAmount', () => {
   expect(formatAmountShortly(1000000)).toBe('1万元')
   expect(formatAmountShortly(1100000)).toBe('1.1万元')
   expect(formatAmountShortly(1110000)).toBe('1.1万元')
-  expect(formatAmountShortly(1000)).toBe('10元')
-  expect(formatAmountShortly(1000, '')).toBe('10')
+  expect(formatAmountShortly(1110000)).toBe('1.1万元')
+  expect(formatAmountShortly(1000)).toBe('10.00元')
+  expect(formatAmountShortly(1000, '')).toBe('10.00')
 
 })
 
