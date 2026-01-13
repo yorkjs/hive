@@ -12,6 +12,7 @@ export * from './convert/money';
 export * from './convert/rate';
 export * from './convert/weight';
 export * from './format/area';
+export * from './format/bankCard';
 export * from './format/count';
 export * from './format/discount';
 export * from './format/distance';

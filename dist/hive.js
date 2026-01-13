@@ -1,5 +1,5 @@
 /**
- * hive.js v0.2.9
+ * hive.js v0.3.0
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -575,6 +575,22 @@
     }
     // 不要处理区，会影响有效信息展示
     return name;
+  }
+
+  /**
+   * 格式化银行卡号
+   *
+   * @param value
+   * @returns
+   */
+  function formatBankCardNumber(value) {
+    var length = value.length;
+    // 每4位一组，最后一组如果不足 4 位，有多少显示多少
+    var parts = [];
+    for (var i = 0; i < length; i += 4) {
+      parts.push(value.substring(i, Math.min(i + 4, length)));
+    }
+    return parts.join(' ');
   }
 
   /**
@@ -1210,6 +1226,7 @@
   exports.formatAmount = formatAmount;
   exports.formatAmountShortly = formatAmountShortly;
   exports.formatArea = formatArea;
+  exports.formatBankCardNumber = formatBankCardNumber;
   exports.formatBusinessTimes = formatBusinessTimes;
   exports.formatCity = formatCity;
   exports.formatCount = formatCount;
