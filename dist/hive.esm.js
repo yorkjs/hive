@@ -1,5 +1,5 @@
 /**
- * hive.js v0.3.0
+ * hive.js v0.3.1
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -510,14 +510,20 @@ function formatDistrict(name) {
  * 格式化银行卡号
  *
  * @param value
+ * @param masked 是否脱敏显示
  * @returns
  */
-function formatBankCardNumber(value) {
+function formatBankCardNumber(value, masked = true) {
     const { length } = value;
     // 每4位一组，最后一组如果不足 4 位，有多少显示多少
     const parts = [];
     for (let i = 0; i < length; i += 4) {
         parts.push(value.substring(i, Math.min(i + 4, length)));
+    }
+    if (masked) {
+        for (let i = 0, len = parts.length; i < len - 1; i++) {
+            parts[i] = '****';
+        }
     }
     return parts.join(' ');
 }

@@ -1,5 +1,5 @@
 /**
- * hive.js v0.3.0
+ * hive.js v0.3.1
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -581,14 +581,21 @@
    * 格式化银行卡号
    *
    * @param value
+   * @param masked 是否脱敏显示
    * @returns
    */
   function formatBankCardNumber(value) {
+    var masked = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
     var length = value.length;
     // 每4位一组，最后一组如果不足 4 位，有多少显示多少
     var parts = [];
     for (var i = 0; i < length; i += 4) {
       parts.push(value.substring(i, Math.min(i + 4, length)));
+    }
+    if (masked) {
+      for (var _i = 0, len = parts.length; _i < len - 1; _i++) {
+        parts[_i] = '****';
+      }
     }
     return parts.join(' ');
   }
