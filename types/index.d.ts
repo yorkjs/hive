@@ -14,6 +14,7 @@ export * from './convert/weight';
 export * from './format/area';
 export * from './format/bankCard';
 export * from './format/count';
+export * from './format/category';
 export * from './format/discount';
 export * from './format/distance';
 export * from './format/duration';

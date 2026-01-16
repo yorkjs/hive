@@ -1,5 +1,5 @@
 /**
- * hive.js v0.3.1
+ * hive.js v0.3.2
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -667,6 +667,20 @@
     }) + unit;
   }
 
+  function formatCategory(category) {
+    var list = [];
+    if (category.category1) {
+      list.push(category.category1.name);
+    }
+    if (category.category2) {
+      list.push(category.category2.name);
+    }
+    if (category.category3) {
+      list.push(category.category3.name);
+    }
+    return list.join('/');
+  }
+
   /**
    * 把万分比格式化为折扣
    *
@@ -1235,6 +1249,7 @@
   exports.formatArea = formatArea;
   exports.formatBankCardNumber = formatBankCardNumber;
   exports.formatBusinessTimes = formatBusinessTimes;
+  exports.formatCategory = formatCategory;
   exports.formatCity = formatCity;
   exports.formatCount = formatCount;
   exports.formatCountShortly = formatCountShortly;
