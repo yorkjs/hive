@@ -1,7 +1,3 @@
-interface INode {
-    id: number;
-    name: string;
-}
 interface IArea {
     country?: INode;
     province?: INode;

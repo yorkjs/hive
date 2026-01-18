@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { DATE_YEAR_MONTH } from '../constant/date'
+import { MONTH_DEFAULT } from '../constant/month'
 
 /**
  * 把时间戳格式化为 2020-10 格式
@@ -8,5 +8,5 @@ import { DATE_YEAR_MONTH } from '../constant/date'
  * @returns
  */
 export function formatMonth(timestamp: number) {
-  return dayjs(timestamp).format(DATE_YEAR_MONTH)
+  return dayjs(timestamp).format(MONTH_DEFAULT)
 }

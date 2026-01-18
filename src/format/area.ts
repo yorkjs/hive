@@ -69,11 +69,6 @@ const cityMap = {
   '黔南布依族苗族自治州': '黔南',
 }
 
-interface INode {
-  id: number,
-  name: string,
-}
-
 interface IArea {
   country?: INode
   province?: INode

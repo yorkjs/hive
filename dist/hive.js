@@ -1,5 +1,5 @@
 /**
- * hive.js v0.3.2
+ * hive.js v0.3.3
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -38,22 +38,30 @@
   // 支付宝付款码
   var AUTH_CODE_ALIPAY = 2;
 
+  // 年：2020
+  var YEAR_DEFAULT = 'YYYY';
+  // 中文版
+  var YEAR_CHINESE = 'YYYY年';
+
+  // 月：2020-10
+  var MONTH_DEFAULT = 'YYYY-MM';
+  // 中文版
+  var MONTH_CHINESE = 'YYYY年M月';
+
   // 年月日：2020-10-01
   var DATE_YEAR_MONTH_DATE = 'YYYY-MM-DD';
-  // 年月：2020-10
-  var DATE_YEAR_MONTH = 'YYYY-MM';
   // 月日：10-01
   var DATE_MONTH_DATE = 'MM-DD';
   // 年月日：2020/10/01
   var DATE_YEAR_MONTH_DATE_SLASH = 'YYYY/MM/DD';
-  // 年月：2020/10
-  var DATE_YEAR_MONTH_SLASH = 'YYYY/MM';
   // 月日：10/01
   var DATE_MONTH_DATE_SLASH = 'MM/DD';
+  // 年月日：2020.10.01
+  var DATE_YEAR_MONTH_DATE_DOT = 'YYYY.MM.DD';
+  // 月日：10.01
+  var DATE_MONTH_DATE_DOT = 'MM.DD';
   // 年月日：2020年10月1日
   var DATE_YEAR_MONTH_DATE_CHINESE = 'YYYY年M月D日';
-  // 年月：2020年10月
-  var DATE_YEAR_MONTH_CHINESE = 'YYYY年M月';
   // 月日：10月1日
   var DATE_MONTH_DATE_CHINESE = 'M月D日';
 
@@ -69,6 +77,12 @@
   var DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH = 'YYYY/MM/DD HH:mm';
   // 月日 时分：10/01 10:00
   var DATE_TIME_MONTH_DATE_HOUR_MINUTE_SLASH = 'MM/DD HH:mm';
+  // 年月日 时分秒：2020.10.01 10:00:00
+  var DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT = 'YYYY.MM.DD HH:mm:ss';
+  // 年月日 时分：2020.10.01 10:00
+  var DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT = 'YYYY.MM.DD HH:mm';
+  // 月日 时分：10.01 10:00
+  var DATE_TIME_MONTH_DATE_HOUR_MINUTE_DOT = 'MM.DD HH:mm';
   // 年月日 时分秒：2020/10/01 10:00:00
   var DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_CHINESE = 'YYYY年M月D日 HH:mm:ss';
   // 年月日 时分：2020/10/01 10:00
@@ -601,6 +615,16 @@
   }
 
   /**
+   * 把时间戳格式化为 10.01 格式
+   *
+   * @param timestamp
+   * @returns
+   */
+  function formatBirthday(timestamp) {
+    return dayjs__default.default(timestamp).format(DATE_MONTH_DATE_DOT);
+  }
+
+  /**
    * 把数字的整数部分格式化为以千为段拆分，以逗号为分隔符
    *
    * @param value
@@ -837,7 +861,17 @@
    * @returns
    */
   function formatMonth(timestamp) {
-    return dayjs__default.default(timestamp).format(DATE_YEAR_MONTH);
+    return dayjs__default.default(timestamp).format(MONTH_DEFAULT);
+  }
+
+  /**
+   * 把时间戳格式化为 2020 格式
+   *
+   * @param timestamp
+   * @returns
+   */
+  function formatYear(timestamp) {
+    return dayjs__default.default(timestamp).format(YEAR_DEFAULT);
   }
 
   /**
@@ -1200,25 +1234,29 @@
   exports.AUTH_CODE_WECHAT = AUTH_CODE_WECHAT;
   exports.DATE_MONTH_DATE = DATE_MONTH_DATE;
   exports.DATE_MONTH_DATE_CHINESE = DATE_MONTH_DATE_CHINESE;
+  exports.DATE_MONTH_DATE_DOT = DATE_MONTH_DATE_DOT;
   exports.DATE_MONTH_DATE_SLASH = DATE_MONTH_DATE_SLASH;
   exports.DATE_TIME_MONTH_DATE_HOUR_MINUTE = DATE_TIME_MONTH_DATE_HOUR_MINUTE;
   exports.DATE_TIME_MONTH_DATE_HOUR_MINUTE_CHINESE = DATE_TIME_MONTH_DATE_HOUR_MINUTE_CHINESE;
+  exports.DATE_TIME_MONTH_DATE_HOUR_MINUTE_DOT = DATE_TIME_MONTH_DATE_HOUR_MINUTE_DOT;
   exports.DATE_TIME_MONTH_DATE_HOUR_MINUTE_SLASH = DATE_TIME_MONTH_DATE_HOUR_MINUTE_SLASH;
   exports.DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE = DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE;
   exports.DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_CHINESE = DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_CHINESE;
+  exports.DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT = DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT;
   exports.DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND = DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND;
   exports.DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_CHINESE = DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_CHINESE;
+  exports.DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT = DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT;
   exports.DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH = DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH;
   exports.DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH = DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH;
-  exports.DATE_YEAR_MONTH = DATE_YEAR_MONTH;
-  exports.DATE_YEAR_MONTH_CHINESE = DATE_YEAR_MONTH_CHINESE;
   exports.DATE_YEAR_MONTH_DATE = DATE_YEAR_MONTH_DATE;
   exports.DATE_YEAR_MONTH_DATE_CHINESE = DATE_YEAR_MONTH_DATE_CHINESE;
+  exports.DATE_YEAR_MONTH_DATE_DOT = DATE_YEAR_MONTH_DATE_DOT;
   exports.DATE_YEAR_MONTH_DATE_SLASH = DATE_YEAR_MONTH_DATE_SLASH;
-  exports.DATE_YEAR_MONTH_SLASH = DATE_YEAR_MONTH_SLASH;
   exports.MONEY_TEN_THOUSAND_YUAN_TO_CENT = MONEY_TEN_THOUSAND_YUAN_TO_CENT;
   exports.MONEY_YUAN_TO_CENT = MONEY_YUAN_TO_CENT;
   exports.MONEY_YUAN_TO_PENNY = MONEY_YUAN_TO_PENNY;
+  exports.MONTH_CHINESE = MONTH_CHINESE;
+  exports.MONTH_DEFAULT = MONTH_DEFAULT;
   exports.MS_DAY = MS_DAY;
   exports.MS_HOUR = MS_HOUR;
   exports.MS_MINUTE = MS_MINUTE;
@@ -1234,6 +1272,8 @@
   exports.SIZE_GB = SIZE_GB;
   exports.SIZE_KB = SIZE_KB;
   exports.SIZE_MB = SIZE_MB;
+  exports.YEAR_CHINESE = YEAR_CHINESE;
+  exports.YEAR_DEFAULT = YEAR_DEFAULT;
   exports.calculateDistance = calculateDistance;
   exports.calculateRate = calculateRate;
   exports.discountToBackend = discountToBackend;
@@ -1248,6 +1288,7 @@
   exports.formatAmountShortly = formatAmountShortly;
   exports.formatArea = formatArea;
   exports.formatBankCardNumber = formatBankCardNumber;
+  exports.formatBirthday = formatBirthday;
   exports.formatBusinessTimes = formatBusinessTimes;
   exports.formatCategory = formatCategory;
   exports.formatCity = formatCity;
@@ -1272,6 +1313,7 @@
   exports.formatShelfLife = formatShelfLife;
   exports.formatSize = formatSize;
   exports.formatWeek = formatWeek;
+  exports.formatYear = formatYear;
   exports.isCustomBarcode = isCustomBarcode;
   exports.isEmail = isEmail;
   exports.isInteger = isInteger;
