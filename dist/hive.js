@@ -1,5 +1,5 @@
 /**
- * hive.js v0.3.3
+ * hive.js v0.3.4
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -1063,15 +1063,13 @@
 
   /// 解析付款码
   function parseAuthCode(value) {
-    // 微信    133619858964803511
-    // 支付宝  283654147086344711
-    var length = value.length;
-    if (length == 18 || length == 19 || length == 20) {
-      if (value.startsWith('1')) {
-        return AUTH_CODE_WECHAT;
-      } else if (value.startsWith('2')) {
-        return AUTH_CODE_ALIPAY;
-      }
+    // 微信支付通常以 10-15 开头、18 位纯数字
+    if (/^1[0-5]/.test(value) && /^\d{18}$/.test(value)) {
+      return AUTH_CODE_WECHAT;
+    }
+    // 支付宝通常以 25-30 开头、18-25 位纯数字
+    if ((/^2[5-9]/.test(value) || /^30/.test(value)) && /^\d{18,25}$/.test(value)) {
+      return AUTH_CODE_ALIPAY;
     }
     return -1;
   }
