@@ -11,6 +11,7 @@ import {
   startOfNextWeek,
   startOfPrevMonth,
   startOfNextMonth,
+  optimizeTimeRange,
 } from '../../src/util/date'
 
 import {
@@ -115,5 +116,220 @@ test('date_month', () => {
   expect(formatDateTime(startOfPrevMonth(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2024-12-01 00:00:00')
   expect(formatDateTime(startOfNextMonth(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2025-02-01 00:00:00')
   expect(formatDateTime(endOfMonth(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2025-01-31 23:59:59')
+
+})
+
+
+test('time_range_optimize', () => {
+
+  let date = new Date('2025-02-10 10:01:01')
+
+  // isDay
+
+  let startTime = startOfDay(date.getTime())
+  let endTime = endOfDay(date.getTime())
+  let isDay = false
+  let isWeek = false
+  let isMonth = false
+  let isRange = false
+
+  optimizeTimeRange(
+    startTime,
+    endTime,
+    {
+      isDay(day) {
+        isDay = true
+        expect(day).toBe(startTime)
+      },
+      isWeek(week) {
+        isWeek = true
+      },
+      isMonth(month) {
+        isMonth = true
+      },
+      isRange(start, end) {
+        isRange = true
+      }
+    }
+  )
+
+  expect(isDay).toBe(true)
+  expect(isWeek).toBe(false)
+  expect(isMonth).toBe(false)
+  expect(isRange).toBe(false)
+
+
+
+  // isDay 但是不传 isDay 函数
+
+  startTime = startOfDay(date.getTime())
+  endTime = endOfDay(date.getTime())
+  isDay = false
+  isWeek = false
+  isMonth = false
+  isRange = false
+
+  optimizeTimeRange(
+    startTime,
+    endTime,
+    {
+      isWeek(week) {
+        isWeek = true
+      },
+      isMonth(month) {
+        isMonth = true
+      },
+      isRange(start, end) {
+        isRange = true
+        expect(start).toBe(startTime)
+        expect(end).toBe(endTime)
+      }
+    }
+  )
+
+  expect(isDay).toBe(false)
+  expect(isWeek).toBe(false)
+  expect(isMonth).toBe(false)
+  expect(isRange).toBe(true)
+
+  // 截取日期中间的一段时间
+
+  startTime = new Date('2025-10-10 10:00:00').getTime()
+  endTime = new Date('2025-10-10 12:00:00').getTime()
+  isDay = false
+  isWeek = false
+  isMonth = false
+  isRange = false
+
+  optimizeTimeRange(
+    startTime,
+    endTime,
+    {
+      isDay(day) {
+        isDay = true
+      },
+      isWeek(week) {
+        isWeek = true
+      },
+      isMonth(month) {
+        isMonth = true
+      },
+      isRange(start, end) {
+        isRange = true
+        expect(start).toBe(startTime)
+        expect(end).toBe(endTime)
+      }
+    }
+  )
+
+  expect(isDay).toBe(false)
+  expect(isWeek).toBe(false)
+  expect(isMonth).toBe(false)
+  expect(isRange).toBe(true)
+
+
+  // 跨天
+
+  startTime = startOfDay(new Date('2025-10-10 10:00:00').getTime())
+  endTime = endOfDay(new Date('2025-10-12 12:00:00').getTime())
+  isDay = false
+  isWeek = false
+  isMonth = false
+  isRange = false
+
+  optimizeTimeRange(
+    startTime,
+    endTime,
+    {
+      isDay(day) {
+        isDay = true
+      },
+      isWeek(week) {
+        isWeek = true
+      },
+      isMonth(month) {
+        isMonth = true
+      },
+      isRange(start, end) {
+        isRange = true
+        expect(start).toBe(startTime)
+        expect(end).toBe(endTime)
+      }
+    }
+  )
+
+  expect(isDay).toBe(false)
+  expect(isWeek).toBe(false)
+  expect(isMonth).toBe(false)
+  expect(isRange).toBe(true)
+
+  // isWeek
+
+  startTime = startOfDay(new Date('2026-01-04 10:00:00').getTime())
+  endTime = endOfDay(new Date('2026-01-10 12:00:00').getTime())
+  isDay = false
+  isWeek = false
+  isMonth = false
+  isRange = false
+
+  optimizeTimeRange(
+    startTime,
+    endTime,
+    {
+      isDay(day) {
+        isDay = true
+      },
+      isWeek(week) {
+        isWeek = true
+        expect(week).toBe(startTime)
+      },
+      isMonth(month) {
+        isMonth = true
+      },
+      isRange(start, end) {
+        isRange = true
+      }
+    }
+  )
+
+  expect(isDay).toBe(false)
+  expect(isWeek).toBe(true)
+  expect(isMonth).toBe(false)
+  expect(isRange).toBe(false)
+
+
+  // isMonth
+
+  startTime = startOfDay(new Date('2026-01-01 10:00:00').getTime())
+  endTime = endOfDay(new Date('2026-01-31 12:00:00').getTime())
+  isDay = false
+  isWeek = false
+  isMonth = false
+  isRange = false
+
+  optimizeTimeRange(
+    startTime,
+    endTime,
+    {
+      isDay(day) {
+        isDay = true
+      },
+      isWeek(week) {
+        isWeek = true
+      },
+      isMonth(month) {
+        isMonth = true
+        expect(month).toBe(startTime)
+      },
+      isRange(start, end) {
+        isRange = true
+      }
+    }
+  )
+
+  expect(isDay).toBe(false)
+  expect(isWeek).toBe(false)
+  expect(isMonth).toBe(true)
+  expect(isRange).toBe(false)
 
 })

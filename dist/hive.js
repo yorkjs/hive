@@ -1,5 +1,5 @@
 /**
- * hive.js v0.3.4
+ * hive.js v0.3.5
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -1227,6 +1227,31 @@
     date.setHours(23, 59, 59, 999);
     return date.getTime();
   }
+  /**
+  * 优化时间范围，尽量归一到某个类型下，无法归一时，才用范围
+  *
+  * @param startTimestamp 开始毫秒时间戳
+  * @param endTimestamp 结束毫秒时间戳
+  * @param optimizer 优化器，优先走 day/week/month 分支
+  * @returns
+  */
+  function optimizeTimeRange(startTimestamp, endTimestamp, optimizer) {
+    var startDay = startOfDay(startTimestamp);
+    var endDay = endOfDay(startTimestamp);
+    var startWeek = startOfWeek(startTimestamp);
+    var endWeek = endOfWeek(startTimestamp);
+    var startMonth = startOfMonth(startTimestamp);
+    var endMonth = endOfMonth(startTimestamp);
+    if (startTimestamp === startDay && endTimestamp === endDay && optimizer.isDay) {
+      optimizer.isDay(startTimestamp);
+    } else if (startTimestamp === startWeek && endTimestamp == endWeek && optimizer.isWeek) {
+      optimizer.isWeek(startTimestamp);
+    } else if (startTimestamp === startMonth && endTimestamp == endMonth && optimizer.isMonth) {
+      optimizer.isMonth(startTimestamp);
+    } else {
+      optimizer.isRange(startTimestamp, endTimestamp);
+    }
+  }
 
   exports.AUTH_CODE_ALIPAY = AUTH_CODE_ALIPAY;
   exports.AUTH_CODE_WECHAT = AUTH_CODE_WECHAT;
@@ -1322,6 +1347,7 @@
   exports.moneyToDisplay = moneyToDisplay;
   exports.normalizeDuration = normalizeDuration;
   exports.normalizeVersion = normalizeVersion;
+  exports.optimizeTimeRange = optimizeTimeRange;
   exports.parseAuthCode = parseAuthCode;
   exports.parsePhoneNumber = parsePhoneNumber;
   exports.plusNumber = plusNumber;

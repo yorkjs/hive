@@ -82,3 +82,19 @@ export declare function startOfNextMonth(timestamp: number): number;
 * @returns
 */
 export declare function endOfMonth(timestamp: number): number;
+interface TimeRangeOptimizer {
+    isDay?: (day: number) => void;
+    isWeek?: (week: number) => void;
+    isMonth?: (month: number) => void;
+    isRange: (start: number, end: number) => void;
+}
+/**
+* 优化时间范围，尽量归一到某个类型下，无法归一时，才用范围
+*
+* @param startTimestamp 开始毫秒时间戳
+* @param endTimestamp 结束毫秒时间戳
+* @param optimizer 优化器，优先走 day/week/month 分支
+* @returns
+*/
+export declare function optimizeTimeRange(startTimestamp: number, endTimestamp: number, optimizer: TimeRangeOptimizer): void;
+export {};

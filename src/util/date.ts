@@ -151,3 +151,44 @@ export function endOfMonth(timestamp: number) {
   date.setHours(23, 59, 59, 999)
   return date.getTime()
 }
+
+interface TimeRangeOptimizer {
+  isDay?: (day: number) => void
+  isWeek?: (week: number) => void
+  isMonth?: (month: number) => void
+  isRange: (start: number, end: number) => void
+}
+
+/**
+* 优化时间范围，尽量归一到某个类型下，无法归一时，才用范围
+*
+* @param startTimestamp 开始毫秒时间戳
+* @param endTimestamp 结束毫秒时间戳
+* @param optimizer 优化器，优先走 day/week/month 分支
+* @returns
+*/
+export function optimizeTimeRange(startTimestamp: number, endTimestamp: number, optimizer: TimeRangeOptimizer) {
+
+  const startDay = startOfDay(startTimestamp)
+  const endDay = endOfDay(startTimestamp)
+
+  const startWeek = startOfWeek(startTimestamp)
+  const endWeek = endOfWeek(startTimestamp)
+
+  const startMonth = startOfMonth(startTimestamp)
+  const endMonth = endOfMonth(startTimestamp)
+
+  if (startTimestamp === startDay && endTimestamp === endDay && optimizer.isDay) {
+    optimizer.isDay(startTimestamp)
+  }
+  else if (startTimestamp === startWeek && endTimestamp == endWeek && optimizer.isWeek) {
+    optimizer.isWeek(startTimestamp)
+  }
+  else if (startTimestamp === startMonth && endTimestamp == endMonth && optimizer.isMonth) {
+    optimizer.isMonth(startTimestamp)
+  }
+  else {
+    optimizer.isRange(startTimestamp, endTimestamp)
+  }
+
+}
