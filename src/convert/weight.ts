@@ -27,7 +27,7 @@ export function weightToKG(value: number) {
  * @returns
  */
 export function weightGToBackend(value: number) {
-  return timesNumber(value, 1000)
+  return Math.floor(timesNumber(value, 1000))
 }
 
 /**
@@ -37,5 +37,5 @@ export function weightGToBackend(value: number) {
  * @returns
  */
 export function weightKGToBackend(value: number) {
-  return timesNumber(value, 1000000)
+  return Math.floor(timesNumber(value, 1000000))
 }

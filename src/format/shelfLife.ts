@@ -1,33 +1,21 @@
-import { SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR } from '../constant/shelfLife'
+import { normalizeShelfLife } from '../normalize/shelfLife'
 
 export function formatShelfLife(value: number) {
-  if (value <= 0) {
-    return ''
+  const result: string[] = []
+  
+  const data = normalizeShelfLife(value)
+  if (data.years > 0) {
+    result.push(`${data.years}年`)
+  }
+  if (data.months > 0) {
+    result.push(`${data.months}个月`)
+  }
+  if (data.days > 0) {
+    result.push(`${data.days}天`)
+  }
+  if (data.hours > 0) {
+    result.push(`${data.hours}小时`)
   }
 
-  let result = ''
-
-  const year = Math.floor(value / SHELF_LIFE_YEAR)
-  if (year > 0) {
-    result += `${year}年`
-    value -= SHELF_LIFE_YEAR * year
-  }
-
-  const month = Math.floor(value / SHELF_LIFE_MONTH)
-  if (month > 0) {
-    result += `${month}个月`
-    value -= SHELF_LIFE_MONTH * month
-  }
-
-  const day = Math.floor(value / SHELF_LIFE_DAY)
-  if (day > 0) {
-    result += `${day}天`
-    value -= SHELF_LIFE_DAY * day
-  }
-
-  if (value > 0) {
-    result += `${value}小时`
-  }
-
-  return result
+  return result.join('')
 }

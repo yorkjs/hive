@@ -152,7 +152,7 @@ export function endOfMonth(timestamp: number) {
   return date.getTime()
 }
 
-interface TimeRangeOptimizer {
+interface ITimeRangeOptimizer {
   isDay?: (day: number) => void
   isWeek?: (week: number) => void
   isMonth?: (month: number) => void
@@ -167,7 +167,7 @@ interface TimeRangeOptimizer {
 * @param optimizer 优化器，优先走 day/week/month 分支
 * @returns
 */
-export function optimizeTimeRange(startTimestamp: number, endTimestamp: number, optimizer: TimeRangeOptimizer) {
+export function optimizeTimeRange(startTimestamp: number, endTimestamp: number, optimizer: ITimeRangeOptimizer) {
 
   const startDay = startOfDay(startTimestamp)
   const endDay = endOfDay(startTimestamp)

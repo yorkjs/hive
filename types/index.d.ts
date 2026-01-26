@@ -37,6 +37,7 @@ export * from './is/email';
 export * from './is/number';
 export * from './is/price';
 export * from './normalize/duration';
+export * from './normalize/shelfLife';
 export * from './normalize/version';
 export * from './parse/authCode';
 export * from './parse/phoneNumber';

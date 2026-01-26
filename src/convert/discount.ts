@@ -23,10 +23,12 @@ export function discountToDisplay(value: number) {
  * @returns
  */
 export function discountToBackend(value: number) {
-  return timesNumber(
-    isInteger(value)
-      ? value
-      : +truncateNumber(value, 1),
-    1000
+  return Math.floor(
+    timesNumber(
+      isInteger(value)
+        ? value
+        : +truncateNumber(value, 1),
+      1000
+    )
   )
 }

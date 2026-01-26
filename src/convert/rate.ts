@@ -20,7 +20,7 @@ export function rateToDisplay(value: number) {
  * @returns
  */
 export function rateToBackend(value: number) {
-  return timesNumber(value, 100)
+  return Math.floor(timesNumber(value, 100))
 }
 
 /**

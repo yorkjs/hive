@@ -20,7 +20,7 @@ export function distanceToDisplay(value: number) {
  * @returns
  */
 export function distanceToBackend(value: number) {
-  return timesNumber(value, 1000)
+  return Math.floor(timesNumber(value, 1000))
 }
 
 

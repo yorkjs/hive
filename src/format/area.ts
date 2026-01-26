@@ -115,8 +115,11 @@ export function formatArea(area: IArea, options = { simplify: true }) {
 
   if (city) {
     const item = isSimplify ? formatCity(city.name) : city.name
-    if (item && item !== '市辖区' && item !== '县'
-      && item !== '省直辖' && item !== prevItem
+    if (item 
+      && item !== '市辖区' 
+      && item !== '县'
+      && item !== '省直辖'
+      && item !== prevItem
     ) {
       appendItem(item)
     }

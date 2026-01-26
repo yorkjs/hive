@@ -18,5 +18,5 @@ export function moneyToDisplay(value: number, unit = MONEY_YUAN_TO_CENT) {
  * @returns
  */
 export function moneyToBackend(value: number, unit = MONEY_YUAN_TO_CENT) {
-  return timesNumber(value, unit)
+  return Math.floor(timesNumber(value, unit))
 }

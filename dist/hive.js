@@ -1,5 +1,5 @@
 /**
- * hive.js v0.3.5
+ * hive.js v0.3.6
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -294,7 +294,7 @@
    * @returns
    */
   function discountToBackend(value) {
-    return timesNumber(isInteger(value) ? value : +truncateNumber(value, 1), 1000);
+    return Math.floor(timesNumber(isInteger(value) ? value : +truncateNumber(value, 1), 1000));
   }
 
   /**
@@ -315,7 +315,7 @@
    * @returns
    */
   function distanceToBackend(value) {
-    return timesNumber(value, 1000);
+    return Math.floor(timesNumber(value, 1000));
   }
   // 定义地球半径（单位：米）
   var EARTH_RADIUS_M = 6371 * 1000;
@@ -366,7 +366,7 @@
    */
   function moneyToBackend(value) {
     var unit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : MONEY_YUAN_TO_CENT;
-    return timesNumber(value, unit);
+    return Math.floor(timesNumber(value, unit));
   }
 
   /**
@@ -387,7 +387,7 @@
    * @returns
    */
   function rateToBackend(value) {
-    return timesNumber(value, 100);
+    return Math.floor(timesNumber(value, 100));
   }
   /**
    * 计算万分比
@@ -430,7 +430,7 @@
    * @returns
    */
   function weightGToBackend(value) {
-    return timesNumber(value, 1000);
+    return Math.floor(timesNumber(value, 1000));
   }
   /**
    * 千克 转为后端使用的 毫克
@@ -439,7 +439,7 @@
    * @returns
    */
   function weightKGToBackend(value) {
-    return timesNumber(value, 1000000);
+    return Math.floor(timesNumber(value, 1000000));
   }
 
   var provinceMap = {
@@ -917,30 +917,53 @@
     return rateToDisplay(value) + '%';
   }
 
-  function formatShelfLife(value) {
+  function normalizeShelfLife(value) {
+    var result = {
+      years: 0,
+      months: 0,
+      days: 0,
+      hours: 0
+    };
     if (value <= 0) {
-      return '';
+      return result;
     }
-    var result = '';
-    var year = Math.floor(value / SHELF_LIFE_YEAR);
-    if (year > 0) {
-      result += "".concat(year, "\u5E74");
-      value -= SHELF_LIFE_YEAR * year;
+    var years = Math.floor(value / SHELF_LIFE_YEAR);
+    if (years > 0) {
+      result.years = years;
+      value -= SHELF_LIFE_YEAR * years;
     }
-    var month = Math.floor(value / SHELF_LIFE_MONTH);
-    if (month > 0) {
-      result += "".concat(month, "\u4E2A\u6708");
-      value -= SHELF_LIFE_MONTH * month;
+    var months = Math.floor(value / SHELF_LIFE_MONTH);
+    if (months > 0) {
+      result.months = months;
+      value -= SHELF_LIFE_MONTH * months;
     }
-    var day = Math.floor(value / SHELF_LIFE_DAY);
-    if (day > 0) {
-      result += "".concat(day, "\u5929");
-      value -= SHELF_LIFE_DAY * day;
+    var days = Math.floor(value / SHELF_LIFE_DAY);
+    if (days > 0) {
+      result.days = days;
+      value -= SHELF_LIFE_DAY * days;
     }
     if (value > 0) {
-      result += "".concat(value, "\u5C0F\u65F6");
+      result.hours = value;
     }
     return result;
+  }
+
+  function formatShelfLife(value) {
+    var result = [];
+    var data = normalizeShelfLife(value);
+    if (data.years > 0) {
+      result.push("".concat(data.years, "\u5E74"));
+    }
+    if (data.months > 0) {
+      result.push("".concat(data.months, "\u4E2A\u6708"));
+    }
+    if (data.days > 0) {
+      result.push("".concat(data.days, "\u5929"));
+    }
+    if (data.hours > 0) {
+      result.push("".concat(data.hours, "\u5C0F\u65F6"));
+    }
+    return result.join('');
   }
 
   function formatSize(value) {
@@ -1346,6 +1369,7 @@
   exports.moneyToBackend = moneyToBackend;
   exports.moneyToDisplay = moneyToDisplay;
   exports.normalizeDuration = normalizeDuration;
+  exports.normalizeShelfLife = normalizeShelfLife;
   exports.normalizeVersion = normalizeVersion;
   exports.optimizeTimeRange = optimizeTimeRange;
   exports.parseAuthCode = parseAuthCode;

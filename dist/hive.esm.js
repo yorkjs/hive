@@ -1,5 +1,5 @@
 /**
- * hive.js v0.3.5
+ * hive.js v0.3.6
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -222,9 +222,9 @@ function discountToDisplay(value) {
  * @returns
  */
 function discountToBackend(value) {
-    return timesNumber(isInteger(value)
+    return Math.floor(timesNumber(isInteger(value)
         ? value
-        : +truncateNumber(value, 1), 1000);
+        : +truncateNumber(value, 1), 1000));
 }
 
 /**
@@ -245,7 +245,7 @@ function distanceToDisplay(value) {
  * @returns
  */
 function distanceToBackend(value) {
-    return timesNumber(value, 1000);
+    return Math.floor(timesNumber(value, 1000));
 }
 // 定义地球半径（单位：米）
 const EARTH_RADIUS_M = 6371 * 1000;
@@ -296,7 +296,7 @@ function moneyToDisplay(value, unit = MONEY_YUAN_TO_CENT) {
  * @returns
  */
 function moneyToBackend(value, unit = MONEY_YUAN_TO_CENT) {
-    return timesNumber(value, unit);
+    return Math.floor(timesNumber(value, unit));
 }
 
 /**
@@ -317,7 +317,7 @@ function rateToDisplay(value) {
  * @returns
  */
 function rateToBackend(value) {
-    return timesNumber(value, 100);
+    return Math.floor(timesNumber(value, 100));
 }
 /**
  * 计算万分比
@@ -360,7 +360,7 @@ function weightToKG(value) {
  * @returns
  */
 function weightGToBackend(value) {
-    return timesNumber(value, 1000);
+    return Math.floor(timesNumber(value, 1000));
 }
 /**
  * 千克 转为后端使用的 毫克
@@ -369,7 +369,7 @@ function weightGToBackend(value) {
  * @returns
  */
 function weightKGToBackend(value) {
-    return timesNumber(value, 1000000);
+    return Math.floor(timesNumber(value, 1000000));
 }
 
 const provinceMap = {
@@ -453,8 +453,11 @@ function formatArea(area, options = { simplify: true }) {
     }
     if (city) {
         const item = isSimplify ? formatCity(city.name) : city.name;
-        if (item && item !== '市辖区' && item !== '县'
-            && item !== '省直辖' && item !== prevItem) {
+        if (item
+            && item !== '市辖区'
+            && item !== '县'
+            && item !== '省直辖'
+            && item !== prevItem) {
             appendItem(item);
         }
     }
@@ -837,30 +840,53 @@ function formatRatePercent(value) {
     return rateToDisplay(value) + '%';
 }
 
-function formatShelfLife(value) {
+function normalizeShelfLife(value) {
+    const result = {
+        years: 0,
+        months: 0,
+        days: 0,
+        hours: 0,
+    };
     if (value <= 0) {
-        return '';
+        return result;
     }
-    let result = '';
-    const year = Math.floor(value / SHELF_LIFE_YEAR);
-    if (year > 0) {
-        result += `${year}年`;
-        value -= SHELF_LIFE_YEAR * year;
+    const years = Math.floor(value / SHELF_LIFE_YEAR);
+    if (years > 0) {
+        result.years = years;
+        value -= SHELF_LIFE_YEAR * years;
     }
-    const month = Math.floor(value / SHELF_LIFE_MONTH);
-    if (month > 0) {
-        result += `${month}个月`;
-        value -= SHELF_LIFE_MONTH * month;
+    const months = Math.floor(value / SHELF_LIFE_MONTH);
+    if (months > 0) {
+        result.months = months;
+        value -= SHELF_LIFE_MONTH * months;
     }
-    const day = Math.floor(value / SHELF_LIFE_DAY);
-    if (day > 0) {
-        result += `${day}天`;
-        value -= SHELF_LIFE_DAY * day;
+    const days = Math.floor(value / SHELF_LIFE_DAY);
+    if (days > 0) {
+        result.days = days;
+        value -= SHELF_LIFE_DAY * days;
     }
     if (value > 0) {
-        result += `${value}小时`;
+        result.hours = value;
     }
     return result;
+}
+
+function formatShelfLife(value) {
+    const result = [];
+    const data = normalizeShelfLife(value);
+    if (data.years > 0) {
+        result.push(`${data.years}年`);
+    }
+    if (data.months > 0) {
+        result.push(`${data.months}个月`);
+    }
+    if (data.days > 0) {
+        result.push(`${data.days}天`);
+    }
+    if (data.hours > 0) {
+        result.push(`${data.hours}小时`);
+    }
+    return result.join('');
 }
 
 function formatSize(value) {
@@ -1182,5 +1208,5 @@ function optimizeTimeRange(startTimestamp, endTimestamp, optimizer) {
     }
 }
 
-export { AUTH_CODE_ALIPAY, AUTH_CODE_WECHAT, DATE_MONTH_DATE, DATE_MONTH_DATE_CHINESE, DATE_MONTH_DATE_DOT, DATE_MONTH_DATE_SLASH, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_YEAR_MONTH_DATE, DATE_YEAR_MONTH_DATE_CHINESE, DATE_YEAR_MONTH_DATE_DOT, DATE_YEAR_MONTH_DATE_SLASH, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MONEY_YUAN_TO_PENNY, MONTH_CHINESE, MONTH_DEFAULT, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, PHONE_NUMBER_400, PHONE_NUMBER_LANDLINE, PHONE_NUMBER_MOBILE, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, YEAR_CHINESE, YEAR_DEFAULT, calculateDistance, calculateRate, discountToBackend, discountToDisplay, distanceToBackend, distanceToDisplay, divideNumber, endOfDay, endOfMonth, endOfWeek, formatAmount, formatAmountShortly, formatArea, formatBankCardNumber, formatBirthday, formatBusinessTimes, formatCategory, formatCity, formatCount, formatCountShortly, formatDate, formatDateRange, formatDateShortly, formatDateTime, formatDateTimeRange, formatDateTimeShortly, formatDiscount, formatDistance, formatDistrict, formatDuration, formatHourMinutes, formatMonth, formatNumberWithComma, formatPenny, formatProvince, formatRatePercent, formatShelfLife, formatSize, formatWeek, formatYear, isCustomBarcode, isEmail, isInteger, isPrice, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeDuration, normalizeVersion, optimizeTimeRange, parseAuthCode, parsePhoneNumber, plusNumber, rateToBackend, rateToDisplay, shortNumber, startOfDay, startOfMonth, startOfNextDay, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevMonth, startOfPrevWeek, startOfWeek, timesNumber, truncateNumber, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
+export { AUTH_CODE_ALIPAY, AUTH_CODE_WECHAT, DATE_MONTH_DATE, DATE_MONTH_DATE_CHINESE, DATE_MONTH_DATE_DOT, DATE_MONTH_DATE_SLASH, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_YEAR_MONTH_DATE, DATE_YEAR_MONTH_DATE_CHINESE, DATE_YEAR_MONTH_DATE_DOT, DATE_YEAR_MONTH_DATE_SLASH, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MONEY_YUAN_TO_PENNY, MONTH_CHINESE, MONTH_DEFAULT, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, PHONE_NUMBER_400, PHONE_NUMBER_LANDLINE, PHONE_NUMBER_MOBILE, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, YEAR_CHINESE, YEAR_DEFAULT, calculateDistance, calculateRate, discountToBackend, discountToDisplay, distanceToBackend, distanceToDisplay, divideNumber, endOfDay, endOfMonth, endOfWeek, formatAmount, formatAmountShortly, formatArea, formatBankCardNumber, formatBirthday, formatBusinessTimes, formatCategory, formatCity, formatCount, formatCountShortly, formatDate, formatDateRange, formatDateShortly, formatDateTime, formatDateTimeRange, formatDateTimeShortly, formatDiscount, formatDistance, formatDistrict, formatDuration, formatHourMinutes, formatMonth, formatNumberWithComma, formatPenny, formatProvince, formatRatePercent, formatShelfLife, formatSize, formatWeek, formatYear, isCustomBarcode, isEmail, isInteger, isPrice, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeDuration, normalizeShelfLife, normalizeVersion, optimizeTimeRange, parseAuthCode, parsePhoneNumber, plusNumber, rateToBackend, rateToDisplay, shortNumber, startOfDay, startOfMonth, startOfNextDay, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevMonth, startOfPrevWeek, startOfWeek, timesNumber, truncateNumber, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
 //# sourceMappingURL=hive.esm.js.map

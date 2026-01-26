@@ -29,4 +29,10 @@ test('normalizeDuration', () => {
   expect(data.minutes).toBe(0)
   expect(data.seconds).toBe(0)
 
+  data = normalizeDuration(MS_DAY + 2 * MS_HOUR + 3 * MS_MINUTE + 4 * MS_SECOND)
+  expect(data.days).toBe(1)
+  expect(data.hours).toBe(2)
+  expect(data.minutes).toBe(3)
+  expect(data.seconds).toBe(4)
+
 })
