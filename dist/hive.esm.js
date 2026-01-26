@@ -330,9 +330,8 @@ function calculateRate(value1, value2) {
     if (!value2) {
         return 0;
     }
-    const result = divideNumber(value1 * 10000, value2);
     // 如果小数部分为 0，返回整数部分
-    return isInteger(result) ? Math.floor(result) : result;
+    return Math.floor(divideNumber(value1 * 10000, value2));
 }
 
 /**
