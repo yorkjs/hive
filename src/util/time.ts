@@ -215,7 +215,7 @@ interface ITimeRangeOptimizer {
 export function optimizeTimeRange(startTimestamp: number, endTimestamp: number, optimizer: ITimeRangeOptimizer) {
 
   const startHour = startOfHour(startTimestamp)
-  const endHour = endOfHour(endTimestamp)
+  const endHour = endOfHour(startTimestamp)
 
   const startDay = startOfDay(startTimestamp)
   const endDay = endOfDay(startTimestamp)

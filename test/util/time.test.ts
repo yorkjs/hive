@@ -141,8 +141,8 @@ test('time_range_optimize', () => {
 
   // isHour
 
-  let startTime = startOfDay(date.getTime())
-  let endTime = endOfDay(date.getTime())
+  let startTime = startOfHour(date.getTime())
+  let endTime = endOfHour(date.getTime())
   let isHour = false
   let isDay = false
   let isWeek = false
@@ -180,6 +180,43 @@ test('time_range_optimize', () => {
 
   // isHour 但是不传 isHour 函数
 
+  startTime = startOfHour(date.getTime())
+  endTime = endOfHour(date.getTime())
+  isHour = false
+  isDay = false
+  isWeek = false
+  isMonth = false
+  isRange = false
+
+  optimizeTimeRange(
+    startTime,
+    endTime,
+    {
+      isDay(day) {
+        isDay = true
+      },
+      isWeek(week) {
+        isWeek = true
+      },
+      isMonth(month) {
+        isMonth = true
+      },
+      isRange(start, end) {
+        isRange = true
+        expect(start).toBe(startTime)
+        expect(end).toBe(endTime)
+      }
+    }
+  )
+
+  expect(isHour).toBe(false)
+  expect(isDay).toBe(false)
+  expect(isWeek).toBe(false)
+  expect(isMonth).toBe(false)
+  expect(isRange).toBe(true)
+
+  // isDay
+
   startTime = startOfDay(date.getTime())
   endTime = endOfDay(date.getTime())
   isHour = false
@@ -192,6 +229,9 @@ test('time_range_optimize', () => {
     startTime,
     endTime,
     {
+      isHour(hour) {
+        isHour = true
+      },
       isDay(day) {
         isDay = true
         expect(day).toBe(startTime)
@@ -213,6 +253,7 @@ test('time_range_optimize', () => {
   expect(isWeek).toBe(false)
   expect(isMonth).toBe(false)
   expect(isRange).toBe(false)
+
 
   // isDay 但是不传 isDay 函数
 

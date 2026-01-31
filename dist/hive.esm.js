@@ -1,5 +1,5 @@
 /**
- * hive.js v0.3.6
+ * hive.js v0.3.7
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -332,6 +332,53 @@ function calculateRate(value1, value2) {
     }
     // 如果小数部分为 0，返回整数部分
     return Math.floor(divideNumber(value1 * 10000, value2));
+}
+
+/**
+ * 时间对象转成时间戳
+ *
+ * @param time 时间对象
+ * @returns 时间戳
+ */
+function timeToTimestamp(time) {
+    const timestamp = time.getTime();
+    return isNaN(timestamp) ? 0 : timestamp;
+}
+/**
+ * 时间戳转成时间对象
+ *
+ * @param timestamp 时间戳
+ * @returns 时间对象
+ */
+function timestampToTime(timestamp) {
+    return new Date(timestamp);
+}
+/**
+ * 时间字符串转成时间对象
+ *
+ * @param str 时间字符串
+ * @returns 时间对象
+ */
+function stringToTime(str, format) {
+    switch (format) {
+        case DATE_YEAR_MONTH_DATE:
+        case DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE:
+        case DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND:
+            break;
+        case DATE_YEAR_MONTH_DATE_DOT:
+        case DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT:
+        case DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT:
+            str = str.replace(/\./g, '-');
+            break;
+        case DATE_YEAR_MONTH_DATE_SLASH:
+        case DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH:
+        case DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH:
+            str = str.replace(/\//g, '-');
+            break;
+        default:
+            return new Error('format is not supported');
+    }
+    return new Date(str);
 }
 
 /**
@@ -1043,6 +1090,63 @@ function parsePhoneNumber(value) {
 }
 
 /**
+ * 截断字符串，最多显示 maxLength 个字符，超过部分用省略号表示
+ *
+ * @param str 要截断的字符串
+ * @param maxLength 最大长度
+ * @returns 截断后的字符串
+ */
+function truncateString(str, maxLength) {
+    if (str.length <= maxLength) {
+        return str;
+    }
+    if (maxLength <= 3) {
+        return str.slice(0, maxLength);
+    }
+    return str.slice(0, maxLength - 3) + '...';
+}
+
+/**
+ * 获取某个小时开始时间
+ *
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+function startOfHour(timestamp) {
+    const date = new Date(timestamp);
+    date.setMinutes(0, 0, 0);
+    return date.getTime();
+}
+/**
+ * 获取前一个小时开始时间
+ *
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+function startOfPrevHour(timestamp) {
+    return startOfHour(timestamp - MS_HOUR);
+}
+/**
+ * 获取下个小时开始时间
+ *
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+function startOfNextHour(timestamp) {
+    return startOfHour(timestamp + MS_HOUR);
+}
+/**
+ * 获取某个小时结束时间
+ *
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+function endOfHour(timestamp) {
+    const date = new Date(timestamp);
+    date.setMinutes(59, 59, 999);
+    return date.getTime();
+}
+/**
 * 获取某天的开始时间
 *
 * @param timestamp 毫秒时间戳
@@ -1187,13 +1291,18 @@ function endOfMonth(timestamp) {
 * @returns
 */
 function optimizeTimeRange(startTimestamp, endTimestamp, optimizer) {
+    const startHour = startOfHour(startTimestamp);
+    const endHour = endOfHour(startTimestamp);
     const startDay = startOfDay(startTimestamp);
     const endDay = endOfDay(startTimestamp);
     const startWeek = startOfWeek(startTimestamp);
     const endWeek = endOfWeek(startTimestamp);
     const startMonth = startOfMonth(startTimestamp);
     const endMonth = endOfMonth(startTimestamp);
-    if (startTimestamp === startDay && endTimestamp === endDay && optimizer.isDay) {
+    if (startTimestamp === startHour && endTimestamp === endHour && optimizer.isHour) {
+        optimizer.isHour(startTimestamp);
+    }
+    else if (startTimestamp === startDay && endTimestamp === endDay && optimizer.isDay) {
         optimizer.isDay(startTimestamp);
     }
     else if (startTimestamp === startWeek && endTimestamp == endWeek && optimizer.isWeek) {
@@ -1207,5 +1316,5 @@ function optimizeTimeRange(startTimestamp, endTimestamp, optimizer) {
     }
 }
 
-export { AUTH_CODE_ALIPAY, AUTH_CODE_WECHAT, DATE_MONTH_DATE, DATE_MONTH_DATE_CHINESE, DATE_MONTH_DATE_DOT, DATE_MONTH_DATE_SLASH, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_YEAR_MONTH_DATE, DATE_YEAR_MONTH_DATE_CHINESE, DATE_YEAR_MONTH_DATE_DOT, DATE_YEAR_MONTH_DATE_SLASH, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MONEY_YUAN_TO_PENNY, MONTH_CHINESE, MONTH_DEFAULT, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, PHONE_NUMBER_400, PHONE_NUMBER_LANDLINE, PHONE_NUMBER_MOBILE, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, YEAR_CHINESE, YEAR_DEFAULT, calculateDistance, calculateRate, discountToBackend, discountToDisplay, distanceToBackend, distanceToDisplay, divideNumber, endOfDay, endOfMonth, endOfWeek, formatAmount, formatAmountShortly, formatArea, formatBankCardNumber, formatBirthday, formatBusinessTimes, formatCategory, formatCity, formatCount, formatCountShortly, formatDate, formatDateRange, formatDateShortly, formatDateTime, formatDateTimeRange, formatDateTimeShortly, formatDiscount, formatDistance, formatDistrict, formatDuration, formatHourMinutes, formatMonth, formatNumberWithComma, formatPenny, formatProvince, formatRatePercent, formatShelfLife, formatSize, formatWeek, formatYear, isCustomBarcode, isEmail, isInteger, isPrice, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeDuration, normalizeShelfLife, normalizeVersion, optimizeTimeRange, parseAuthCode, parsePhoneNumber, plusNumber, rateToBackend, rateToDisplay, shortNumber, startOfDay, startOfMonth, startOfNextDay, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevMonth, startOfPrevWeek, startOfWeek, timesNumber, truncateNumber, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
+export { AUTH_CODE_ALIPAY, AUTH_CODE_WECHAT, DATE_MONTH_DATE, DATE_MONTH_DATE_CHINESE, DATE_MONTH_DATE_DOT, DATE_MONTH_DATE_SLASH, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_YEAR_MONTH_DATE, DATE_YEAR_MONTH_DATE_CHINESE, DATE_YEAR_MONTH_DATE_DOT, DATE_YEAR_MONTH_DATE_SLASH, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MONEY_YUAN_TO_PENNY, MONTH_CHINESE, MONTH_DEFAULT, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, PHONE_NUMBER_400, PHONE_NUMBER_LANDLINE, PHONE_NUMBER_MOBILE, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, YEAR_CHINESE, YEAR_DEFAULT, calculateDistance, calculateRate, discountToBackend, discountToDisplay, distanceToBackend, distanceToDisplay, divideNumber, endOfDay, endOfHour, endOfMonth, endOfWeek, formatAmount, formatAmountShortly, formatArea, formatBankCardNumber, formatBirthday, formatBusinessTimes, formatCategory, formatCity, formatCount, formatCountShortly, formatDate, formatDateRange, formatDateShortly, formatDateTime, formatDateTimeRange, formatDateTimeShortly, formatDiscount, formatDistance, formatDistrict, formatDuration, formatHourMinutes, formatMonth, formatNumberWithComma, formatPenny, formatProvince, formatRatePercent, formatShelfLife, formatSize, formatWeek, formatYear, isCustomBarcode, isEmail, isInteger, isPrice, isStandardBarcode, minusNumber, moneyToBackend, moneyToDisplay, normalizeDuration, normalizeShelfLife, normalizeVersion, optimizeTimeRange, parseAuthCode, parsePhoneNumber, plusNumber, rateToBackend, rateToDisplay, shortNumber, startOfDay, startOfHour, startOfMonth, startOfNextDay, startOfNextHour, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevHour, startOfPrevMonth, startOfPrevWeek, startOfWeek, stringToTime, timeToTimestamp, timesNumber, timestampToTime, truncateNumber, truncateString, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
 //# sourceMappingURL=hive.esm.js.map

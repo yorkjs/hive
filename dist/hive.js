@@ -1,5 +1,5 @@
 /**
- * hive.js v0.3.6
+ * hive.js v0.3.7
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -402,6 +402,53 @@
     }
     // 如果小数部分为 0，返回整数部分
     return Math.floor(divideNumber(value1 * 10000, value2));
+  }
+
+  /**
+   * 时间对象转成时间戳
+   *
+   * @param time 时间对象
+   * @returns 时间戳
+   */
+  function timeToTimestamp(time) {
+    var timestamp = time.getTime();
+    return isNaN(timestamp) ? 0 : timestamp;
+  }
+  /**
+   * 时间戳转成时间对象
+   *
+   * @param timestamp 时间戳
+   * @returns 时间对象
+   */
+  function timestampToTime(timestamp) {
+    return new Date(timestamp);
+  }
+  /**
+   * 时间字符串转成时间对象
+   *
+   * @param str 时间字符串
+   * @returns 时间对象
+   */
+  function stringToTime(str, format) {
+    switch (format) {
+      case DATE_YEAR_MONTH_DATE:
+      case DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE:
+      case DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND:
+        break;
+      case DATE_YEAR_MONTH_DATE_DOT:
+      case DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT:
+      case DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT:
+        str = str.replace(/\./g, '-');
+        break;
+      case DATE_YEAR_MONTH_DATE_SLASH:
+      case DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH:
+      case DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH:
+        str = str.replace(/\//g, '-');
+        break;
+      default:
+        return new Error('format is not supported');
+    }
+    return new Date(str);
   }
 
   /**
@@ -1114,6 +1161,63 @@
   }
 
   /**
+   * 截断字符串，最多显示 maxLength 个字符，超过部分用省略号表示
+   *
+   * @param str 要截断的字符串
+   * @param maxLength 最大长度
+   * @returns 截断后的字符串
+   */
+  function truncateString(str, maxLength) {
+    if (str.length <= maxLength) {
+      return str;
+    }
+    if (maxLength <= 3) {
+      return str.slice(0, maxLength);
+    }
+    return str.slice(0, maxLength - 3) + '...';
+  }
+
+  /**
+   * 获取某个小时开始时间
+   *
+   * @param timestamp 毫秒时间戳
+   * @returns 毫秒时间戳
+   */
+  function startOfHour(timestamp) {
+    var date = new Date(timestamp);
+    date.setMinutes(0, 0, 0);
+    return date.getTime();
+  }
+  /**
+   * 获取前一个小时开始时间
+   *
+   * @param timestamp 毫秒时间戳
+   * @returns 毫秒时间戳
+   */
+  function startOfPrevHour(timestamp) {
+    return startOfHour(timestamp - MS_HOUR);
+  }
+  /**
+   * 获取下个小时开始时间
+   *
+   * @param timestamp 毫秒时间戳
+   * @returns 毫秒时间戳
+   */
+  function startOfNextHour(timestamp) {
+    return startOfHour(timestamp + MS_HOUR);
+  }
+  /**
+   * 获取某个小时结束时间
+   *
+   * @param timestamp 毫秒时间戳
+   * @returns 毫秒时间戳
+   */
+  function endOfHour(timestamp) {
+    var date = new Date(timestamp);
+    date.setMinutes(59, 59, 999);
+    return date.getTime();
+  }
+  /**
   * 获取某天的开始时间
   *
   * @param timestamp 毫秒时间戳
@@ -1258,13 +1362,17 @@
   * @returns
   */
   function optimizeTimeRange(startTimestamp, endTimestamp, optimizer) {
+    var startHour = startOfHour(startTimestamp);
+    var endHour = endOfHour(startTimestamp);
     var startDay = startOfDay(startTimestamp);
     var endDay = endOfDay(startTimestamp);
     var startWeek = startOfWeek(startTimestamp);
     var endWeek = endOfWeek(startTimestamp);
     var startMonth = startOfMonth(startTimestamp);
     var endMonth = endOfMonth(startTimestamp);
-    if (startTimestamp === startDay && endTimestamp === endDay && optimizer.isDay) {
+    if (startTimestamp === startHour && endTimestamp === endHour && optimizer.isHour) {
+      optimizer.isHour(startTimestamp);
+    } else if (startTimestamp === startDay && endTimestamp === endDay && optimizer.isDay) {
       optimizer.isDay(startTimestamp);
     } else if (startTimestamp === startWeek && endTimestamp == endWeek && optimizer.isWeek) {
       optimizer.isWeek(startTimestamp);
@@ -1327,6 +1435,7 @@
   exports.distanceToDisplay = distanceToDisplay;
   exports.divideNumber = divideNumber;
   exports.endOfDay = endOfDay;
+  exports.endOfHour = endOfHour;
   exports.endOfMonth = endOfMonth;
   exports.endOfWeek = endOfWeek;
   exports.formatAmount = formatAmount;
@@ -1378,16 +1487,23 @@
   exports.rateToDisplay = rateToDisplay;
   exports.shortNumber = shortNumber;
   exports.startOfDay = startOfDay;
+  exports.startOfHour = startOfHour;
   exports.startOfMonth = startOfMonth;
   exports.startOfNextDay = startOfNextDay;
+  exports.startOfNextHour = startOfNextHour;
   exports.startOfNextMonth = startOfNextMonth;
   exports.startOfNextWeek = startOfNextWeek;
   exports.startOfPrevDay = startOfPrevDay;
+  exports.startOfPrevHour = startOfPrevHour;
   exports.startOfPrevMonth = startOfPrevMonth;
   exports.startOfPrevWeek = startOfPrevWeek;
   exports.startOfWeek = startOfWeek;
+  exports.stringToTime = stringToTime;
+  exports.timeToTimestamp = timeToTimestamp;
   exports.timesNumber = timesNumber;
+  exports.timestampToTime = timestampToTime;
   exports.truncateNumber = truncateNumber;
+  exports.truncateString = truncateString;
   exports.weightGToBackend = weightGToBackend;
   exports.weightKGToBackend = weightKGToBackend;
   exports.weightToG = weightToG;

@@ -13,6 +13,7 @@ export * from './convert/discount'
 export * from './convert/distance'
 export * from './convert/money'
 export * from './convert/rate'
+export * from './convert/time'
 export * from './convert/weight'
 
 export * from './format/area'
