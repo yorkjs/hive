@@ -1,4 +1,48 @@
-import { MS_DAY, MS_WEEK } from '../constant/millisecond'
+import { MS_HOUR, MS_DAY, MS_WEEK } from '../constant/millisecond'
+
+/**
+ * 获取某个小时开始时间
+ *
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export function startOfHour(timestamp: number) {
+  const date = new Date(timestamp)
+  date.setMinutes(0, 0, 0)
+  return date.getTime()
+}
+
+/**
+ * 获取前一个小时开始时间
+ *
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export function startOfPrevHour(timestamp: number) {
+  return startOfHour(timestamp - MS_HOUR)
+}
+
+/**
+ * 获取下个小时开始时间
+ *
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export function startOfNextHour(timestamp: number) {
+  return startOfHour(timestamp + MS_HOUR)
+}
+
+/**
+ * 获取某个小时结束时间
+ *
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export function endOfHour(timestamp: number) {
+  const date = new Date(timestamp)
+  date.setMinutes(59, 59, 999)
+  return date.getTime()
+}
 
 /**
 * 获取某天的开始时间
@@ -153,6 +197,7 @@ export function endOfMonth(timestamp: number) {
 }
 
 interface ITimeRangeOptimizer {
+  isHour?: (hour: number) => void
   isDay?: (day: number) => void
   isWeek?: (week: number) => void
   isMonth?: (month: number) => void
@@ -169,6 +214,9 @@ interface ITimeRangeOptimizer {
 */
 export function optimizeTimeRange(startTimestamp: number, endTimestamp: number, optimizer: ITimeRangeOptimizer) {
 
+  const startHour = startOfHour(startTimestamp)
+  const endHour = endOfHour(endTimestamp)
+
   const startDay = startOfDay(startTimestamp)
   const endDay = endOfDay(startTimestamp)
 
@@ -178,7 +226,10 @@ export function optimizeTimeRange(startTimestamp: number, endTimestamp: number, 
   const startMonth = startOfMonth(startTimestamp)
   const endMonth = endOfMonth(startTimestamp)
 
-  if (startTimestamp === startDay && endTimestamp === endDay && optimizer.isDay) {
+  if (startTimestamp === startHour && endTimestamp === endHour && optimizer.isHour) {
+    optimizer.isHour(startTimestamp)
+  }
+  else if (startTimestamp === startDay && endTimestamp === endDay && optimizer.isDay) {
     optimizer.isDay(startTimestamp)
   }
   else if (startTimestamp === startWeek && endTimestamp == endWeek && optimizer.isWeek) {

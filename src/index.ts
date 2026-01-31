@@ -48,4 +48,5 @@ export * from './parse/authCode'
 export * from './parse/phoneNumber'
 
 export * from './util/number'
-export * from './util/date'
+export * from './util/string'
+export * from './util/time'
