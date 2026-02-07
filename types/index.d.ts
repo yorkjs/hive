@@ -37,6 +37,8 @@ export * from './is/barcode';
 export * from './is/email';
 export * from './is/number';
 export * from './is/price';
+export * from './is/url';
+export * from './is/verifyCode';
 export * from './normalize/duration';
 export * from './normalize/shelfLife';
 export * from './normalize/version';

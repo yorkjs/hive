@@ -16,6 +16,7 @@ test('time_convert', () => {
   expect(timestampToTime(timetamp).getTime()).toBe(timetamp)
 
   expect(timeToTimestamp(new Date('-'))).toBe(0)
+  expect(timeToTimestamp(timestampToTime(0))).toBe(0)
 
 
   let time = stringToTime('2020-10-01 10:00:00', DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)

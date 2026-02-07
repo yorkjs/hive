@@ -1,5 +1,5 @@
 /**
- * hive.js v0.3.7
+ * hive.js v0.3.8
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -1112,6 +1112,32 @@
   }
 
   /**
+   * 是否为 URL
+   *
+   * @param value
+   * @returns
+   */
+  function isUrl(value) {
+    try {
+      var url = new URL(value);
+      // 不用支持 ftp，太少见了
+      return ['http:', 'https:'].includes(url.protocol);
+    } catch (_unused) {
+      return false;
+    }
+  }
+
+  /**
+   * 是否为验证码，长度为 6 位
+   *
+   * @param value
+   * @returns
+   */
+  function isVerifyCode(value) {
+    return /^\d{6}$/.test(value);
+  }
+
+  /**
    * 标准化版本号，方便后续进行比较
    *
    * @param {string} version 如 '1.2.3'，最多支持三段，每段的子版本号不超过 9999
@@ -1473,6 +1499,8 @@
   exports.isInteger = isInteger;
   exports.isPrice = isPrice;
   exports.isStandardBarcode = isStandardBarcode;
+  exports.isUrl = isUrl;
+  exports.isVerifyCode = isVerifyCode;
   exports.minusNumber = minusNumber;
   exports.moneyToBackend = moneyToBackend;
   exports.moneyToDisplay = moneyToDisplay;
