@@ -2,6 +2,8 @@ import { DATE_YEAR_MONTH_DATE, DATE_YEAR_MONTH_DATE_DOT, DATE_YEAR_MONTH_DATE_SL
 import { DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH } from '../../src/constant/dateTime'
 import {
   stringToTime,
+  timeFieldToTime,
+  timeToTimeField,
   timeToTimestamp,
   timestampToTime,
 } from '../../src/convert/time'
@@ -10,10 +12,14 @@ import { formatDateTime } from '../../src/format/dateTime'
 test('time_convert', () => {
 
   const date = new Date()
-  const timetamp = date.getTime()
+  const timestamp = date.getTime()
 
-  expect(timeToTimestamp(date)).toBe(timetamp)
-  expect(timestampToTime(timetamp).getTime()).toBe(timetamp)
+  const timeField = timeToTimeField(date)
+	const convertedTime = timeFieldToTime(timeField)
+  expect(timeToTimestamp(convertedTime)).toBe(timestamp)
+
+  expect(timeToTimestamp(date)).toBe(timestamp)
+  expect(timestampToTime(timestamp).getTime()).toBe(timestamp)
 
   expect(timeToTimestamp(new Date('-'))).toBe(0)
   expect(timeToTimestamp(timestampToTime(0))).toBe(0)

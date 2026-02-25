@@ -7,14 +7,14 @@ export function parseAuthCode(value: string) {
   if (/^1[0-5]/.test(value)
     && /^\d{18}$/.test(value)
   ) {
-    return AUTH_CODE_WECHAT;
+    return AUTH_CODE_WECHAT
   }
 
   // 支付宝通常以 25-30 开头、18-25 位纯数字
   if ((/^2[5-9]/.test(value) || /^30/.test(value))
     && /^\d{18,25}$/.test(value)
   ) {
-    return AUTH_CODE_ALIPAY;
+    return AUTH_CODE_ALIPAY
   }
 
   return -1
