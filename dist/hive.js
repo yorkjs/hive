@@ -1,5 +1,5 @@
 /**
- * hive.js v0.3.8
+ * hive.js v0.4.0
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -109,6 +109,10 @@
   var MONEY_TEN_THOUSAND_YUAN_TO_CENT = 10000 * MONEY_YUAN_TO_CENT;
   // 元 转 厘
   var MONEY_YUAN_TO_PENNY = 1000;
+  // 一元
+  var AMOUNT_ONE_YUAN = 100;
+  // 一万
+  var AMOUNT_TEN_THOUSAND_YUAN = 10000 * AMOUNT_ONE_YUAN;
 
   // 手机号
   var PHONE_NUMBER_MOBILE = 1;
@@ -404,14 +408,28 @@
     return Math.floor(divideNumber(value1 * 10000, value2));
   }
 
+  function timeToTimeField(t) {
+    return {
+      year: t.getFullYear(),
+      month: t.getMonth() + 1,
+      date: t.getDate(),
+      hour: t.getHours(),
+      minute: t.getMinutes(),
+      second: t.getSeconds(),
+      millisecond: t.getMilliseconds()
+    };
+  }
+  function timeFieldToTime(t) {
+    return new Date(t.year, t.month - 1, t.date, t.hour, t.minute, t.second, t.millisecond);
+  }
   /**
    * 时间对象转成时间戳
    *
    * @param time 时间对象
    * @returns 时间戳
    */
-  function timeToTimestamp(time) {
-    var timestamp = time.getTime();
+  function timeToTimestamp(t) {
+    var timestamp = t.getTime();
     return isNaN(timestamp) ? 0 : timestamp;
   }
   /**
@@ -1409,6 +1427,8 @@
     }
   }
 
+  exports.AMOUNT_ONE_YUAN = AMOUNT_ONE_YUAN;
+  exports.AMOUNT_TEN_THOUSAND_YUAN = AMOUNT_TEN_THOUSAND_YUAN;
   exports.AUTH_CODE_ALIPAY = AUTH_CODE_ALIPAY;
   exports.AUTH_CODE_WECHAT = AUTH_CODE_WECHAT;
   exports.DATE_MONTH_DATE = DATE_MONTH_DATE;
@@ -1527,6 +1547,8 @@
   exports.startOfPrevWeek = startOfPrevWeek;
   exports.startOfWeek = startOfWeek;
   exports.stringToTime = stringToTime;
+  exports.timeFieldToTime = timeFieldToTime;
+  exports.timeToTimeField = timeToTimeField;
   exports.timeToTimestamp = timeToTimestamp;
   exports.timesNumber = timesNumber;
   exports.timestampToTime = timestampToTime;

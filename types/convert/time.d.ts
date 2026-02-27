@@ -1,10 +1,21 @@
+interface ITimeField {
+    year: number;
+    month: number;
+    date: number;
+    hour: number;
+    minute: number;
+    second: number;
+    millisecond: number;
+}
+export declare function timeToTimeField(t: Date): ITimeField;
+export declare function timeFieldToTime(t: ITimeField): Date;
 /**
  * 时间对象转成时间戳
  *
  * @param time 时间对象
  * @returns 时间戳
  */
-export declare function timeToTimestamp(time: Date): number;
+export declare function timeToTimestamp(t: Date): number;
 /**
  * 时间戳转成时间对象
  *
@@ -19,3 +30,4 @@ export declare function timestampToTime(timestamp: number): Date;
  * @returns 时间对象
  */
 export declare function stringToTime(str: string, format: string): Date | Error;
+export {};
