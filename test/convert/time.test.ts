@@ -15,7 +15,7 @@ test('time_convert', () => {
   const timestamp = date.getTime()
 
   const timeField = timeToTimeField(date)
-	const convertedTime = timeFieldToTime(timeField)
+  const convertedTime = timeFieldToTime(timeField)
   expect(timeToTimestamp(convertedTime)).toBe(timestamp)
 
   expect(timeToTimestamp(date)).toBe(timestamp)
