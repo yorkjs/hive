@@ -9,6 +9,7 @@ export * from './constant/phoneNumber'
 export * from './constant/shelfLife'
 export * from './constant/size'
 
+export * from './convert/color'
 export * from './convert/discount'
 export * from './convert/distance'
 export * from './convert/money'

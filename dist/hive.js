@@ -1,5 +1,5 @@
 /**
- * hive.js v0.4.0
+ * hive.js v0.4.1
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -48,21 +48,21 @@
   // 中文版
   var MONTH_CHINESE = 'YYYY年M月';
 
-  // 年月日：2020-10-01
+  // 年月日（连字符），示例：2020-10-01
   var DATE_YEAR_MONTH_DATE = 'YYYY-MM-DD';
-  // 月日：10-01
+  // 月日（连字符），示例：10-01
   var DATE_MONTH_DATE = 'MM-DD';
-  // 年月日：2020/10/01
+  // 年月日（斜杠），示例：2020/10/01
   var DATE_YEAR_MONTH_DATE_SLASH = 'YYYY/MM/DD';
-  // 月日：10/01
+  // 月日（斜杠），示例：10/01
   var DATE_MONTH_DATE_SLASH = 'MM/DD';
-  // 年月日：2020.10.01
+  // 年月日（点号），示例：2020.10.01
   var DATE_YEAR_MONTH_DATE_DOT = 'YYYY.MM.DD';
-  // 月日：10.01
+  // 月日（点号），示例：10.01
   var DATE_MONTH_DATE_DOT = 'MM.DD';
-  // 年月日：2020年10月1日
+  // 年月日（中文），示例：2020年10月1日
   var DATE_YEAR_MONTH_DATE_CHINESE = 'YYYY年M月D日';
-  // 月日：10月1日
+  // 月日（中文），示例：10月1日
   var DATE_MONTH_DATE_CHINESE = 'M月D日';
 
   // 年月日 时分秒：2020-10-01 10:00:00
@@ -111,7 +111,7 @@
   var MONEY_YUAN_TO_PENNY = 1000;
   // 一元
   var AMOUNT_ONE_YUAN = 100;
-  // 一万
+  // 一万元
   var AMOUNT_TEN_THOUSAND_YUAN = 10000 * AMOUNT_ONE_YUAN;
 
   // 手机号
@@ -134,6 +134,45 @@
   var SIZE_MB = 1024 * SIZE_KB;
   // 体积：GB
   var SIZE_GB = 1024 * SIZE_MB;
+
+  /**
+   * 将 HEX 颜色转换为 RGBA 格式
+   *
+   * @param color HEX 颜色值
+   * @param alpha 透明度，取值范围 0-1
+   * @returns RGBA 颜色对象
+   */
+  function hexToRgbaObject(color, alpha) {
+    // 移除 # 号
+    var hex = color.replace('#', '');
+    // 处理简写格式 (#rgb 或 #rgba)
+    if (hex.length === 3 || hex.length === 4) {
+      hex = hex.split('').map(function (_char) {
+        return _char + _char;
+      }).join('');
+    }
+    // 验证hex长度
+    if (hex.length !== 6 && hex.length !== 8) {
+      throw new Error('无效的HEX颜色格式');
+    }
+    return {
+      red: parseInt(hex.substring(0, 2), 16),
+      green: parseInt(hex.substring(2, 4), 16),
+      blue: parseInt(hex.substring(4, 6), 16),
+      alpha: Math.max(0, Math.min(1, alpha))
+    };
+  }
+  /**
+   * 将 HEX 颜色转换为 RGBA 格式
+   *
+   * @param color HEX 颜色值
+   * @param alpha 透明度，取值范围 0-1
+   * @returns RGBA 颜色字符串
+   */
+  function hexToRgbaString(color, alpha) {
+    var rgba = hexToRgbaObject(color, alpha);
+    return "rgba(".concat(rgba.red, ",").concat(rgba.green, ",").concat(rgba.blue, ",").concat(rgba.alpha, ")");
+  }
 
   /**
    * 是否为整数
@@ -1514,6 +1553,8 @@
   exports.formatSize = formatSize;
   exports.formatWeek = formatWeek;
   exports.formatYear = formatYear;
+  exports.hexToRgbaObject = hexToRgbaObject;
+  exports.hexToRgbaString = hexToRgbaString;
   exports.isCustomBarcode = isCustomBarcode;
   exports.isEmail = isEmail;
   exports.isInteger = isInteger;

@@ -9,5 +9,5 @@ export const MONEY_YUAN_TO_PENNY = 1000
 
 // 一元
 export const AMOUNT_ONE_YUAN = 100
-// 一万
+// 一万元
 export const AMOUNT_TEN_THOUSAND_YUAN = 10000 * AMOUNT_ONE_YUAN
