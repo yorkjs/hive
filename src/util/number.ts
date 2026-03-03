@@ -9,7 +9,7 @@ import { isInteger } from '../is/number'
 * @param value2 第二个值
 * @returns 和
 */
-export function plusNumber(value1: number, value2: number): number {
+export function plusNumber(value1: number, value2: number) {
   return NP.plus(value1, value2)
 }
 
@@ -20,7 +20,7 @@ export function plusNumber(value1: number, value2: number): number {
 * @param value2 减数
 * @returns 差
 */
-export function minusNumber(value1: number, value2: number): number {
+export function minusNumber(value1: number, value2: number) {
   return NP.minus(value1, value2)
 }
 
@@ -31,7 +31,7 @@ export function minusNumber(value1: number, value2: number): number {
  * @param value2 第二个值
  * @returns 乘积结果
  */
-export function timesNumber(value1: number, value2: number): number {
+export function timesNumber(value1: number, value2: number) {
   return NP.times(value1, value2)
 }
 
@@ -42,7 +42,7 @@ export function timesNumber(value1: number, value2: number): number {
 * @param value2 除数
 * @returns 商
 */
-export function divideNumber(value1: number, value2: number): number {
+export function divideNumber(value1: number, value2: number) {
   if (value2 === 0) {
     throw new Error('Divisor cannot be zero')
   }

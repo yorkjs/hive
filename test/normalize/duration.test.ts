@@ -1,7 +1,7 @@
-import { MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND } from '../../src/constant/millisecond'
 import {
+  MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND,
   normalizeDuration,
-} from '../../src/normalize/duration'
+} from '../../src/index'
 
 test('normalizeDuration', () => {
 

@@ -44,6 +44,9 @@ export * from './is/price'
 export * from './is/url'
 export * from './is/verifyCode'
 
+export * from './mask/mobile'
+export * from './mask/name'
+
 export * from './normalize/duration'
 export * from './normalize/shelfLife'
 export * from './normalize/version'
@@ -52,5 +55,6 @@ export * from './parse/authCode'
 export * from './parse/phoneNumber'
 
 export * from './util/number'
+export * from './util/random'
 export * from './util/string'
 export * from './util/time'

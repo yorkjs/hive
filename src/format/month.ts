@@ -4,7 +4,7 @@ import { MONTH_DEFAULT } from '../constant/month'
 /**
  * 把时间戳格式化为 2020-10 格式
  *
- * @param timestamp
+ * @param timestamp 时间戳
  * @returns
  */
 export function formatMonth(timestamp: number) {

@@ -3,8 +3,8 @@ import {
   trimString,
   sliceString,
   truncateString,
-  randomString,
   renderStringTemplate,
+  encodeURIComponent,
 } from '../../src/index'
 
 test('getStringLength', () => {
@@ -63,15 +63,6 @@ test('truncateString', () => {
 
 })
 
-test('randomString', () => {
-
-  for (let i = 5; i < 100; i++) {
-    expect(randomString(i).length).toBe(i)
-    expect(randomString(i)).not.toBe(randomString(i))
-  }
-
-})
-
 test('renderStringTemplate', () => {
 
   expect(renderStringTemplate('你好，${name}', { name: '张三' })).toBe('你好，张三')
@@ -83,4 +74,12 @@ test('renderStringTemplate', () => {
   expect(renderStringTemplate('你好，${value}。', { value: false })).toBe('你好，false。')
   expect(renderStringTemplate('你好，${value}。', { value: undefined })).toBe('你好，${value}。')
 
+})
+
+test('encodeURIComponent', () => {
+  expect(encodeURIComponent(`key=123 啊啊+-*/_.!~()'`)).toBe(`key%3D123%20%E5%95%8A%E5%95%8A%2B-*%2F_.!~()'`)
+})
+
+test('decodeURIComponent', () => {
+  expect(decodeURIComponent(`key%3D123%20%E5%95%8A%E5%95%8A%2B-*%2F_.!~()'`)).toBe(`key=123 啊啊+-*/_.!~()'`)
 })

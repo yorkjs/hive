@@ -83,3 +83,23 @@ export function renderStringTemplate(str: string, data: Record<string, any>) {
     return value !== undefined ? String(value) : match
   })
 }
+
+/**
+ * 编码 URI 组件
+ *
+ * @param str 要编码的字符串
+ * @returns 编码后的字符串
+ */
+export function encodeURIComponent(str: string) {
+  return global.encodeURIComponent(str)
+}
+
+/**
+ * 解码 URI 组件
+ *
+ * @param str 要解码的字符串
+ * @returns 解码后的字符串
+ */
+export function decodeURIComponent(str: string) {
+  return global.decodeURIComponent(str)
+}
