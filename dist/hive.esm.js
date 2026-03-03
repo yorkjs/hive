@@ -1,5 +1,5 @@
 /**
- * hive.js v0.4.1
+ * hive.js v0.4.2
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -149,8 +149,8 @@ function hexToRgbaString(color, alpha) {
 /**
  * 是否为整数
  *
- * @param value
- * @returns
+ * @param value 要校验的值
+ * @returns 是否为整数
  */
 function isInteger(value) {
     return value % 1 === 0;
@@ -633,7 +633,7 @@ function formatDistrict(name) {
  */
 function formatBankCardNumber(value, masked = true) {
     const { length } = value;
-    // 每4位一组，最后一组如果不足 4 位，有多少显示多少
+    // 每 4 位一组，最后一组如果不足 4 位，有多少显示多少
     const parts = [];
     for (let i = 0; i < length; i += 4) {
         parts.push(value.substring(i, Math.min(i + 4, length)));
@@ -884,7 +884,7 @@ function formatWeek(timestamp) {
 /**
  * 把时间戳格式化为 2020-10 格式
  *
- * @param timestamp
+ * @param timestamp 时间戳
  * @returns
  */
 function formatMonth(timestamp) {
@@ -1042,6 +1042,56 @@ function formatBusinessTimes(businessTimes) {
 }
 
 /**
+ * 是否为银行卡号码
+ *
+ * @param value 要校验的值
+ * @returns 是否为银行卡号码
+ */
+function isBankCardNumber(value) {
+    // 1. 基础验证：只能是数字
+    if (!/^\d+$/.test(value)) {
+        return false;
+    }
+    // 2. 长度验证：银行卡号长度通常在 13-19 位之间
+    if (value.length < 13 || value.length > 19) {
+        return false;
+    }
+    // 3. Luhn 算法验证
+    return luhnCheck(value);
+}
+/**
+ * Luhn 算法验证（模10算法）
+ *
+ * 算法步骤：
+ * 1. 从右向左，将每一位数字隔位乘以2
+ * 2. 如果乘以2后的数字大于9，则减去9（或相加各位数字）
+ * 3. 将所有数字相加
+ * 4. 如果总和能被10整除，则有效
+ *
+ * @param digits 数字字符串
+ * @returns 是否通过校验
+ */
+function luhnCheck(digits) {
+    let sum = 0;
+    let isEven = false;
+    // 从右向左遍历
+    for (let i = digits.length - 1; i >= 0; i--) {
+        let digit = parseInt(digits[i], 10);
+        // 隔位乘以2
+        if (isEven) {
+            digit *= 2;
+            // 如果大于9，减去9（等同于各位数字相加）
+            if (digit > 9) {
+                digit -= 9;
+            }
+        }
+        sum += digit;
+        isEven = !isEven;
+    }
+    return sum % 10 === 0;
+}
+
+/**
  * value 是否是标准商品条形码
  *
  * @param value 条形码文本
@@ -1074,18 +1124,93 @@ function isCustomBarcode(value) {
 /**
  * 是否为邮箱
  *
- * @param value
- * @returns
+ * @param value 要校验的值
+ * @returns 是否为邮箱
  */
 function isEmail(value) {
     return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value);
 }
 
 /**
+ * 是否为身份证号码
+ *
+ * @param value 要校验的值
+ * @returns 是否为身份证号码
+ */
+function isIdentityCardNumber(value) {
+    const areaMap = {
+        11: '北京',
+        12: '天津',
+        13: '河北',
+        14: '山西',
+        15: '内蒙古',
+        21: '辽宁',
+        22: '吉林',
+        23: '黑龙江',
+        31: '上海',
+        32: '江苏',
+        33: '浙江',
+        34: '安徽',
+        35: '福建',
+        36: '江西',
+        37: '山东',
+        41: '河南',
+        42: '湖北',
+        43: '湖南',
+        44: '广东',
+        45: '广西',
+        46: '海南',
+        50: '重庆',
+        51: '四川',
+        52: '贵州',
+        53: '云南',
+        54: '西藏',
+        61: '陕西',
+        62: '甘肃',
+        63: '青海',
+        64: '宁夏',
+        65: '新疆',
+        71: '台湾',
+        81: '香港',
+        82: '澳门',
+        91: '国外'
+    };
+    if (!value || !/^\d{6}(18|19|20)?\d{2}(0[1-9]|1[012])(0[1-9]|[12]\d|3[01])\d{3}(\d|X)$/i.test(value)) {
+        // 身份证号格式错误
+        return false;
+    }
+    else if (!areaMap[value.substr(0, 2)]) {
+        // 地址编码错误
+        return false;
+    }
+    // 18 位身份证需要验证最后一位校验位
+    if (value.length === 18) {
+        const digits = value.split('');
+        // ∑(ai×Wi)(mod 11)
+        // 加权因子
+        const factor = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];
+        // 校验位
+        const parity = [1, 0, 'X', 9, 8, 7, 6, 5, 4, 3, 2];
+        let sum = 0, ai = 0, wi = 0;
+        for (let i = 0; i < 17; i++) {
+            ai = +digits[i]; // 转成 number
+            wi = factor[i];
+            sum += ai * wi;
+        }
+        const last = parity[sum % 11];
+        if (last != digits[17]) {
+            // 校验位错误
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
  * 是否为价格
  *
- * @param value
- * @returns
+ * @param value 要校验的值
+ * @returns 是否为价格
  */
 function isPrice(value) {
     return /^(?:[1-9]\d*|0)(?:\.\d{1,2})?$/.test(value);
@@ -1094,8 +1219,8 @@ function isPrice(value) {
 /**
  * 是否为 URL
  *
- * @param value
- * @returns
+ * @param value 要校验的值
+ * @returns 是否为 URL
  */
 function isUrl(value) {
     try {
@@ -1116,6 +1241,130 @@ function isUrl(value) {
  */
 function isVerifyCode(value) {
     return /^\d{6}$/.test(value);
+}
+
+/**
+ * 脱敏手机号
+ *
+ * @param mobile 手机号
+ * @returns 脱敏后的手机号
+ */
+function maskMobile(mobile) {
+    if (mobile.length === 11) {
+        return mobile.substring(0, 3) + "****" + mobile.substring(7);
+    }
+    return mobile;
+}
+
+/**
+ * 获取字符串长度
+ *
+ * 注意：中文算 1 个字符
+ *
+ * @param str 要截断的字符串
+ * @returns 字符串长度
+ */
+function getStringLength(str) {
+    return str.length;
+}
+/**
+ * 移除字符串开头和结尾的空白符
+ *
+ * @param str 要截断的字符串
+ * @returns 移除空白符后的字符串
+ */
+function trimString(str) {
+    return str.trim();
+}
+/**
+ * 截取字符串
+ *
+ * @param str 要截断的字符串
+ * @param start 开始索引
+ * @param end 结束索引
+ * @returns 截取后的字符串
+ */
+function sliceString(str, start, end) {
+    return str.slice(start, end);
+}
+/**
+ * 截断字符串，最多显示 maxLength 个字符，超过部分用省略号表示
+ *
+ * @param str 要截断的字符串
+ * @param maxLength 最大长度
+ * @returns 截断后的字符串
+ */
+function truncateString(str, maxLength) {
+    if (str.length <= maxLength) {
+        return str;
+    }
+    if (maxLength <= 3) {
+        return str.slice(0, maxLength);
+    }
+    return str.slice(0, maxLength - 3) + '...';
+}
+/**
+ * 生成指定长度的随机字符串
+ *
+ * @param length 随机字符串长度
+ * @param chars 随机字符集
+ * @returns 随机字符串
+ */
+function randomString(length, chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789') {
+    const result = new Array(length);
+    const charLength = chars.length;
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * charLength);
+        result[i] = chars[randomIndex];
+    }
+    return result.join('');
+}
+/**
+ * 渲染字符串模板
+ *
+ * @param str 字符串模板，例如：'你好，${name}'
+ * @param data 数据对象，例如：{ name: '张三' }
+ * @returns 渲染后的字符串，例如：'你好，张三'
+ */
+function renderStringTemplate(str, data) {
+    return str.replace(/\${(.*?)}/g, function (match, key) {
+        // 去除变量名两端的空白
+        const value = data[trimString(key)];
+        // 如果找不到对应的值，返回原字符串
+        return value !== undefined ? String(value) : match;
+    });
+}
+/**
+ * 编码 URI 组件
+ *
+ * @param str 要编码的字符串
+ * @returns 编码后的字符串
+ */
+function encodeURIComponent(str) {
+    return global.encodeURIComponent(str);
+}
+/**
+ * 解码 URI 组件
+ *
+ * @param str 要解码的字符串
+ * @returns 解码后的字符串
+ */
+function decodeURIComponent(str) {
+    return global.decodeURIComponent(str);
+}
+
+/**
+ * 脱敏姓名
+ *
+ * @param name 姓名
+ * @returns 脱敏后的姓名
+ */
+function maskName(name) {
+    const length = getStringLength(name);
+    if (length <= 1) {
+        return "***";
+    }
+    return "***" + name[length - 1];
 }
 
 /**
@@ -1172,20 +1421,44 @@ function parsePhoneNumber(value) {
 }
 
 /**
- * 截断字符串，最多显示 maxLength 个字符，超过部分用省略号表示
+ * 生成指定长度的随机整数
  *
- * @param str 要截断的字符串
- * @param maxLength 最大长度
- * @returns 截断后的字符串
+ * @param length 数字长度
+ * @returns 指定长度的随机整数
  */
-function truncateString(str, maxLength) {
-    if (str.length <= maxLength) {
-        return str;
+function randomIntegerByLength(length) {
+    const min = Math.pow(10, length - 1);
+    const max = Math.pow(10, length) - 1;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+/**
+ * 生成指定范围内的随机整数 [min, max)
+ *
+ * @param min 最小值（包含）
+ * @param max 最大值（不包含）
+ * @returns 范围内的随机整数
+ */
+function randomIntegerByRange(min, max) {
+    if (min === max) {
+        return min;
     }
-    if (maxLength <= 3) {
-        return str.slice(0, maxLength);
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+/**
+ * 生成指定长度的随机字符串
+ *
+ * @param length 字符串长度
+ * @param chars 随机字符集
+ * @returns 随机字符串
+ */
+function randomStringByLength(length, chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789') {
+    const result = new Array(length);
+    const charLength = chars.length;
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * charLength);
+        result[i] = chars[randomIndex];
     }
-    return str.slice(0, maxLength - 3) + '...';
+    return result.join('');
 }
 
 /**
@@ -1398,5 +1671,5 @@ function optimizeTimeRange(startTimestamp, endTimestamp, optimizer) {
     }
 }
 
-export { AMOUNT_ONE_YUAN, AMOUNT_TEN_THOUSAND_YUAN, AUTH_CODE_ALIPAY, AUTH_CODE_WECHAT, DATE_MONTH_DATE, DATE_MONTH_DATE_CHINESE, DATE_MONTH_DATE_DOT, DATE_MONTH_DATE_SLASH, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_YEAR_MONTH_DATE, DATE_YEAR_MONTH_DATE_CHINESE, DATE_YEAR_MONTH_DATE_DOT, DATE_YEAR_MONTH_DATE_SLASH, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MONEY_YUAN_TO_PENNY, MONTH_CHINESE, MONTH_DEFAULT, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, PHONE_NUMBER_400, PHONE_NUMBER_LANDLINE, PHONE_NUMBER_MOBILE, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, YEAR_CHINESE, YEAR_DEFAULT, calculateDistance, calculateRate, discountToBackend, discountToDisplay, distanceToBackend, distanceToDisplay, divideNumber, endOfDay, endOfHour, endOfMonth, endOfWeek, formatAmount, formatAmountShortly, formatArea, formatBankCardNumber, formatBirthday, formatBusinessTimes, formatCategory, formatCity, formatCount, formatCountShortly, formatDate, formatDateRange, formatDateShortly, formatDateTime, formatDateTimeRange, formatDateTimeShortly, formatDiscount, formatDistance, formatDistrict, formatDuration, formatHourMinutes, formatMonth, formatNumberWithComma, formatPenny, formatProvince, formatRatePercent, formatShelfLife, formatSize, formatWeek, formatYear, hexToRgbaObject, hexToRgbaString, isCustomBarcode, isEmail, isInteger, isPrice, isStandardBarcode, isUrl, isVerifyCode, minusNumber, moneyToBackend, moneyToDisplay, normalizeDuration, normalizeShelfLife, normalizeVersion, optimizeTimeRange, parseAuthCode, parsePhoneNumber, plusNumber, rateToBackend, rateToDisplay, shortNumber, startOfDay, startOfHour, startOfMonth, startOfNextDay, startOfNextHour, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevHour, startOfPrevMonth, startOfPrevWeek, startOfWeek, stringToTime, timeFieldToTime, timeToTimeField, timeToTimestamp, timesNumber, timestampToTime, truncateNumber, truncateString, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
+export { AMOUNT_ONE_YUAN, AMOUNT_TEN_THOUSAND_YUAN, AUTH_CODE_ALIPAY, AUTH_CODE_WECHAT, DATE_MONTH_DATE, DATE_MONTH_DATE_CHINESE, DATE_MONTH_DATE_DOT, DATE_MONTH_DATE_SLASH, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_YEAR_MONTH_DATE, DATE_YEAR_MONTH_DATE_CHINESE, DATE_YEAR_MONTH_DATE_DOT, DATE_YEAR_MONTH_DATE_SLASH, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MONEY_YUAN_TO_PENNY, MONTH_CHINESE, MONTH_DEFAULT, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, PHONE_NUMBER_400, PHONE_NUMBER_LANDLINE, PHONE_NUMBER_MOBILE, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, YEAR_CHINESE, YEAR_DEFAULT, calculateDistance, calculateRate, decodeURIComponent, discountToBackend, discountToDisplay, distanceToBackend, distanceToDisplay, divideNumber, encodeURIComponent, endOfDay, endOfHour, endOfMonth, endOfWeek, formatAmount, formatAmountShortly, formatArea, formatBankCardNumber, formatBirthday, formatBusinessTimes, formatCategory, formatCity, formatCount, formatCountShortly, formatDate, formatDateRange, formatDateShortly, formatDateTime, formatDateTimeRange, formatDateTimeShortly, formatDiscount, formatDistance, formatDistrict, formatDuration, formatHourMinutes, formatMonth, formatNumberWithComma, formatPenny, formatProvince, formatRatePercent, formatShelfLife, formatSize, formatWeek, formatYear, getStringLength, hexToRgbaObject, hexToRgbaString, isBankCardNumber, isCustomBarcode, isEmail, isIdentityCardNumber, isInteger, isPrice, isStandardBarcode, isUrl, isVerifyCode, maskMobile, maskName, minusNumber, moneyToBackend, moneyToDisplay, normalizeDuration, normalizeShelfLife, normalizeVersion, optimizeTimeRange, parseAuthCode, parsePhoneNumber, plusNumber, randomIntegerByLength, randomIntegerByRange, randomString, randomStringByLength, rateToBackend, rateToDisplay, renderStringTemplate, shortNumber, sliceString, startOfDay, startOfHour, startOfMonth, startOfNextDay, startOfNextHour, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevHour, startOfPrevMonth, startOfPrevWeek, startOfWeek, stringToTime, timeFieldToTime, timeToTimeField, timeToTimestamp, timesNumber, timestampToTime, trimString, truncateNumber, truncateString, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
 //# sourceMappingURL=hive.esm.js.map
