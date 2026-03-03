@@ -5,7 +5,41 @@
  * @returns 是否为身份证号码
  */
 export function isIdentityCardNumber(value: string) {
-  const areaMap = {
+  if (!value || !/^\d{6}(18|19|20)?\d{2}(0[1-9]|1[012])(0[1-9]|[12]\d|3[01])\d{3}(\d|X)$/i.test(value)) {
+    // 身份证号格式错误
+    return false
+  }
+  else if (!areaMap[value.substring(0, 2)]) {
+    // 地址编码错误
+    return false
+  }
+
+  // 18 位身份证需要验证最后一位校验位
+  if (value.length === 18) {
+    const digits = value.split('')
+    // ∑(ai×Wi)(mod 11)
+    // 加权因子
+    const factor = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2]
+    // 校验位
+    const parity = [1, 0, 'X', 9, 8, 7, 6, 5, 4, 3, 2]
+    let sum = 0, ai = 0, wi = 0
+    for (let i = 0; i < 17; i++) {
+      ai = +digits[i] // 转成 number
+      wi = factor[i]
+      sum += ai * wi
+    }
+    const last = parity[sum % 11]
+    if (last != digits[17]) {
+      // 校验位错误
+      return false
+    }
+  }
+
+  return true
+
+}
+
+const areaMap = {
     11: '北京',
     12: '天津',
     13: '河北',
@@ -42,37 +76,3 @@ export function isIdentityCardNumber(value: string) {
     82: '澳门',
     91: '国外'
   }
-
-  if (!value || !/^\d{6}(18|19|20)?\d{2}(0[1-9]|1[012])(0[1-9]|[12]\d|3[01])\d{3}(\d|X)$/i.test(value)) {
-    // 身份证号格式错误
-    return false
-  }
-  else if (!areaMap[value.substr(0, 2)]) {
-    // 地址编码错误
-    return false
-  }
-
-  // 18 位身份证需要验证最后一位校验位
-  if (value.length === 18) {
-    const digits = value.split('')
-    // ∑(ai×Wi)(mod 11)
-    // 加权因子
-    const factor = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2]
-    // 校验位
-    const parity = [1, 0, 'X', 9, 8, 7, 6, 5, 4, 3, 2]
-    let sum = 0, ai = 0, wi = 0
-    for (let i = 0; i < 17; i++) {
-      ai = +digits[i] // 转成 number
-      wi = factor[i]
-      sum += ai * wi
-    }
-    const last = parity[sum % 11]
-    if (last != digits[17]) {
-      // 校验位错误
-      return false
-    }
-  }
-
-  return true
-
-}
