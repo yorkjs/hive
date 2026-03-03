@@ -1,6 +1,6 @@
 import {
   isEmail
-} from '../../src/is/email'
+} from '../../src/index'
 
 test('isEmail', () => {
 

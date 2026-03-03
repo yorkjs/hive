@@ -1,8 +1,8 @@
 /**
  * 是否为 URL
  *
- * @param value
- * @returns
+ * @param value 要校验的值
+ * @returns 是否为 URL
  */
 export function isUrl(value: string) {
   try {
