@@ -1,13 +1,38 @@
 /**
- * 获取字符串长度
+ * 获取字符串字符数量
  *
- * 注意：中文算 1 个字符
+ * 注意：中文和英文都算 1 个字符
  *
- * @param str 要截断的字符串
- * @returns 字符串长度
+ * @param str 目标字符串
+ * @returns 字符串字符数量
  */
 export function getStringLength(str: string) {
   return str.length
+}
+
+/**
+ * 获取字符串宽度，此函数常用于排版辅助计算
+ *
+ * 注意：中文算 2 个单位，英文数字算 1 个单位
+ *
+ * @param str 目标字符串
+ * @returns 字符串宽度
+ */
+export function getStringWidth(str: string) {
+  if (!str) {
+    return 0
+  }
+
+  // 匹配所有宽字符（中文字符、全角标点等）
+  const wideCharRegex = /[^\x00-\xff]|[｡-ﾟ]/g
+  const wideMatches = str.match(wideCharRegex)
+
+  // 宽字符数量
+  const wideCount = wideMatches ? wideMatches.length : 0
+  // 窄字符数量
+  const narrowCount = str.length - wideCount
+
+  return wideCount * 2 + narrowCount
 }
 
 /**
@@ -79,21 +104,38 @@ export function padStringStart(str: string, length: number) {
 }
 
 /**
- * 编码 URI 组件
+ * 判断字符串是否包含特殊字符
  *
- * @param str 要编码的字符串
- * @returns 编码后的字符串
+ * @param str 目标字符串
+ * @returns 是否包含特殊字符
  */
-export function encodeURIComponent(str: string) {
-  return global.encodeURIComponent(str)
+export function hasSpecialCharacters(str: string) {
+  if (!str) {
+    return false
+  }
+
+  // 正则表达式说明：
+  // ^ 表示取反
+  // \u4e00-\u9fa5 匹配所有中文字符
+  // a-zA-Z 匹配所有英文字母
+  // 0-9 匹配所有数字
+  // 后面的字符是允许的常见标点符号
+  const allowedPattern = /[^a-zA-Z0-9\u4e00-\u9fa5 ，。！？；：""''()（）\[\]【】、·.,!?;:\-_']/gu;
+
+  return allowedPattern.test(str)
 }
 
 /**
- * 解码 URI 组件
+ * 移除字符串中的特殊字符
  *
- * @param str 要解码的字符串
- * @returns 解码后的字符串
+ * @param str 目标字符串
+ * @returns 清理后的字符串
  */
-export function decodeURIComponent(str: string) {
-  return global.decodeURIComponent(str)
+export function removeSpecialCharacters(str: string) {
+  if (!str) {
+    return ''
+  }
+
+  const allowedPattern = /[^a-zA-Z0-9\u4e00-\u9fa5 ，。！？；：""''()（）\[\]【】、·.,!?;:\-_']/gu;
+  return trimString(str.replace(allowedPattern, ''))
 }

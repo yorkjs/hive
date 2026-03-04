@@ -1,3 +1,6 @@
+import { timeToTimeField } from "../convert/time"
+import { padStringStart } from "./string"
+
 /**
  * 生成指定长度的随机整数
  *
@@ -5,7 +8,6 @@
  * @returns 指定长度的随机整数
  */
 export function randomIntegerByLength(length: number) {
-
   const min = Math.pow(10, length - 1)
   const max = Math.pow(10, length) - 1
 
@@ -41,4 +43,29 @@ export function randomStringByLength(length: number, chars = 'ABCDEFGHIJKLMNOPQR
     result[i] = chars[randomIndex]
   }
   return result.join('')
+}
+
+/**
+ * 根据当前时间生成随机字符串，可通过 tailLength 控制重复的概率
+ *
+ * @param tailLength 尾部随机数长度，用于降低重复概率
+ * @returns 生成的随机字符串
+ */
+export function randomStringByCurrentTime(tailLength: number): string {
+
+  const timeField = timeToTimeField(new Date())
+
+  const year = timeField.year
+  const month = padStringStart(`${timeField.month}`, 2)
+  const date = padStringStart(`${timeField.date}`, 2)
+  const hour = padStringStart(`${timeField.hour}`, 2)
+  const minute = padStringStart(`${timeField.minute}`, 2)
+  const second = padStringStart(`${timeField.second}`, 2)
+  const millisecond = padStringStart(`${timeField.millisecond}`, 3)
+
+  let timeStr = `${year}${month}${date}${hour}${minute}${second}${millisecond}`
+  if (tailLength > 0) {
+    timeStr += randomIntegerByLength(tailLength)
+  }
+  return timeStr
 }

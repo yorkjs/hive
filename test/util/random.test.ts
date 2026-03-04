@@ -2,6 +2,7 @@ import {
   randomStringByLength,
   randomIntegerByLength,
   randomIntegerByRange,
+  randomStringByCurrentTime,
 } from '../../src/index'
 
 test('randomStringByLength', () => {
@@ -30,5 +31,13 @@ test('randomIntegerByRange', () => {
     expect(random >= min).toBe(true)
     expect(random < max).toBe(true)
   }
+})
+
+test('randomStringByCurrentTime', () => {
+  expect(randomStringByCurrentTime(-1).length).toBe(17)
+  expect(randomStringByCurrentTime(0).length).toBe(17)
+  expect(randomStringByCurrentTime(3).length).toBe(20)
+  expect(/^\d+$/.test(randomStringByCurrentTime(3))).toBe(true)
+  expect(randomStringByCurrentTime(3).startsWith(`${new Date().getFullYear()}`)).toBe(true)
 })
 

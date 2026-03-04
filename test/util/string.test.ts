@@ -1,11 +1,13 @@
 import {
   getStringLength,
+  getStringWidth,
   trimString,
   sliceString,
   truncateString,
   padStringStart,
+  hasSpecialCharacters,
+  removeSpecialCharacters,
   renderStringTemplate,
-  encodeURIComponent,
 } from '../../src/index'
 
 test('getStringLength', () => {
@@ -13,6 +15,17 @@ test('getStringLength', () => {
   expect(getStringLength("1234")).toBe(4)
   expect(getStringLength("1234你")).toBe(5)
   expect(getStringLength("1234你好")).toBe(6)
+
+})
+test('getStringWidth', () => {
+
+  expect(getStringWidth("12")).toBe(2)
+  expect(getStringWidth("12A")).toBe(3)
+  expect(getStringWidth("12Aa")).toBe(4)
+  expect(getStringWidth("12Aa啊")).toBe(6)
+  expect(getStringWidth("12Aa啊_")).toBe(7)
+  expect(getStringWidth("12Aa啊_，")).toBe(9)
+  expect(getStringWidth("12Aa啊_，。")).toBe(11)
 
 })
 
@@ -85,10 +98,20 @@ test('padStringStart', () => {
 
 })
 
-test('encodeURIComponent', () => {
-  expect(encodeURIComponent(`key=123 啊啊+-*/_.!~()'`)).toBe(`key%3D123%20%E5%95%8A%E5%95%8A%2B-*%2F_.!~()'`)
+test('hasSpecialCharacters', () => {
+
+  expect(hasSpecialCharacters('abc,[1]23. 你好，【世界】！')).toBe(false)
+  expect(hasSpecialCharacters('abc,123. \t\n')).toBe(true)
+  expect(hasSpecialCharacters('abc,123.☺️')).toBe(true)
+  expect(hasSpecialCharacters(' abc,  123. ')).toBe(false)
+
 })
 
-test('decodeURIComponent', () => {
-  expect(decodeURIComponent(`key%3D123%20%E5%95%8A%E5%95%8A%2B-*%2F_.!~()'`)).toBe(`key=123 啊啊+-*/_.!~()'`)
+test('removeSpecialCharacters', () => {
+
+  expect(removeSpecialCharacters('abc,[1]23. 你好，【世界】！')).toBe('abc,[1]23. 你好，【世界】！')
+  expect(removeSpecialCharacters('abc,123. \t\n')).toBe('abc,123.')
+  expect(removeSpecialCharacters('abc,123.☺️')).toBe('abc,123.')
+  expect(removeSpecialCharacters(' abc,  123. ')).toBe('abc,  123.')
+
 })
