@@ -1,12 +1,21 @@
 /**
- * 获取字符串长度
+ * 获取字符串字符数量
  *
- * 注意：中文算 1 个字符
+ * 注意：中文和英文都算 1 个字符
  *
- * @param str 要截断的字符串
- * @returns 字符串长度
+ * @param str 目标字符串
+ * @returns 字符串字符数量
  */
 export declare function getStringLength(str: string): number;
+/**
+ * 获取字符串宽度，此函数常用于排版辅助计算
+ *
+ * 注意：中文算 2 个单位，英文数字算 1 个单位
+ *
+ * @param str 目标字符串
+ * @returns 字符串宽度
+ */
+export declare function getStringWidth(str: string): number;
 /**
  * 移除字符串开头和结尾的空白符
  *
@@ -32,14 +41,6 @@ export declare function sliceString(str: string, start: number, end: number): st
  */
 export declare function truncateString(str: string, maxLength: number): string;
 /**
- * 生成指定长度的随机字符串
- *
- * @param length 随机字符串长度
- * @param chars 随机字符集
- * @returns 随机字符串
- */
-export declare function randomString(length: number, chars?: string): string;
-/**
  * 渲染字符串模板
  *
  * @param str 字符串模板，例如：'你好，${name}'
@@ -48,16 +49,24 @@ export declare function randomString(length: number, chars?: string): string;
  */
 export declare function renderStringTemplate(str: string, data: Record<string, any>): string;
 /**
- * 编码 URI 组件
+ * 补全字符串开头，不足 length 个字符用 0 填充
  *
- * @param str 要编码的字符串
- * @returns 编码后的字符串
+ * @param str 要补全的字符串
+ * @param length 目标长度
+ * @returns 补全后的字符串
  */
-export declare function encodeURIComponent(str: string): string;
+export declare function padStringStart(str: string, length: number): string;
 /**
- * 解码 URI 组件
+ * 判断字符串是否包含特殊字符
  *
- * @param str 要解码的字符串
- * @returns 解码后的字符串
+ * @param str 目标字符串
+ * @returns 是否包含特殊字符
  */
-export declare function decodeURIComponent(str: string): string;
+export declare function hasSpecialCharacters(str: string): boolean;
+/**
+ * 移除字符串中的特殊字符
+ *
+ * @param str 目标字符串
+ * @returns 清理后的字符串
+ */
+export declare function removeSpecialCharacters(str: string): string;

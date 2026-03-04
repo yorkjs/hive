@@ -1,5 +1,5 @@
 /**
- * hive.js v0.4.3
+ * hive.js v0.4.4
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -17,10 +17,14 @@ const YEAR_DEFAULT = 'YYYY';
 // 中文版
 const YEAR_CHINESE = 'YYYY年';
 
-// 月：2020-10
+// 年月：2020-10
 const MONTH_DEFAULT = 'YYYY-MM';
-// 中文版
+// 只有月：10
+const MONTH_ONLY = 'MM';
+// 中文版年月
 const MONTH_CHINESE = 'YYYY年M月';
+// 中文版只有月
+const MONTH_ONLY_CHINESE = 'M月';
 
 // 年月日（连字符），示例：2020-10-01
 const DATE_YEAR_MONTH_DATE = 'YYYY-MM-DD';
@@ -1006,10 +1010,136 @@ function formatSize(value) {
     return `${value}B`;
 }
 
+/**
+ * 获取字符串字符数量
+ *
+ * 注意：中文和英文都算 1 个字符
+ *
+ * @param str 目标字符串
+ * @returns 字符串字符数量
+ */
+function getStringLength(str) {
+    return str.length;
+}
+/**
+ * 获取字符串宽度，此函数常用于排版辅助计算
+ *
+ * 注意：中文算 2 个单位，英文数字算 1 个单位
+ *
+ * @param str 目标字符串
+ * @returns 字符串宽度
+ */
+function getStringWidth(str) {
+    if (!str) {
+        return 0;
+    }
+    // 匹配所有宽字符（中文字符、全角标点等）
+    const wideCharRegex = /[^\x00-\xff]|[｡-ﾟ]/g;
+    const wideMatches = str.match(wideCharRegex);
+    // 宽字符数量
+    const wideCount = wideMatches ? wideMatches.length : 0;
+    // 窄字符数量
+    const narrowCount = str.length - wideCount;
+    return wideCount * 2 + narrowCount;
+}
+/**
+ * 移除字符串开头和结尾的空白符
+ *
+ * @param str 要截断的字符串
+ * @returns 移除空白符后的字符串
+ */
+function trimString(str) {
+    return str.trim();
+}
+/**
+ * 截取字符串
+ *
+ * @param str 要截断的字符串
+ * @param start 开始索引
+ * @param end 结束索引
+ * @returns 截取后的字符串
+ */
+function sliceString(str, start, end) {
+    return str.slice(start, end);
+}
+/**
+ * 截断字符串，最多显示 maxLength 个字符，超过部分用省略号表示
+ *
+ * @param str 要截断的字符串
+ * @param maxLength 最大长度
+ * @returns 截断后的字符串
+ */
+function truncateString(str, maxLength) {
+    if (str.length <= maxLength) {
+        return str;
+    }
+    if (maxLength <= 3) {
+        return str.slice(0, maxLength);
+    }
+    return str.slice(0, maxLength - 3) + '...';
+}
+/**
+ * 渲染字符串模板
+ *
+ * @param str 字符串模板，例如：'你好，${name}'
+ * @param data 数据对象，例如：{ name: '张三' }
+ * @returns 渲染后的字符串，例如：'你好，张三'
+ */
+function renderStringTemplate(str, data) {
+    return str.replace(/\${(.*?)}/g, function (match, key) {
+        // 去除变量名两端的空白
+        const value = data[trimString(key)];
+        // 如果找不到对应的值，返回原字符串
+        return value !== undefined ? String(value) : match;
+    });
+}
+/**
+ * 补全字符串开头，不足 length 个字符用 0 填充
+ *
+ * @param str 要补全的字符串
+ * @param length 目标长度
+ * @returns 补全后的字符串
+ */
+function padStringStart(str, length) {
+    return str.padStart(length, '0');
+}
+/**
+ * 判断字符串是否包含特殊字符
+ *
+ * @param str 目标字符串
+ * @returns 是否包含特殊字符
+ */
+function hasSpecialCharacters(str) {
+    if (!str) {
+        return false;
+    }
+    // 正则表达式说明：
+    // ^ 表示取反
+    // \u4e00-\u9fa5 匹配所有中文字符
+    // a-zA-Z 匹配所有英文字母
+    // 0-9 匹配所有数字
+    // 后面的字符是允许的常见标点符号
+    const allowedPattern = /[^a-zA-Z0-9\u4e00-\u9fa5 ，。！？；：""''()（）\[\]【】、·.,!?;:\-_']/gu;
+    return allowedPattern.test(str);
+}
+/**
+ * 移除字符串中的特殊字符
+ *
+ * @param str 目标字符串
+ * @returns 清理后的字符串
+ */
+function removeSpecialCharacters(str) {
+    if (!str) {
+        return '';
+    }
+    const allowedPattern = /[^a-zA-Z0-9\u4e00-\u9fa5 ，。！？；：""''()（）\[\]【】、·.,!?;:\-_']/gu;
+    return trimString(str.replace(allowedPattern, ''));
+}
+
 function formatHourMinutes(value) {
     const hours = Math.floor(value / 60);
     const minutes = value % 60;
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    return `${padStringStart(hours.toString(), 2)}:${padStringStart(minutes.toString(), 2)}`;
 }
 // 营业时间时段范围为 [0, 2880] 可跨天, 0-1440 为当天，1440-2880 为次日
 function formatBusinessTimes(businessTimes) {
@@ -1244,6 +1374,25 @@ function isVerifyCode(value) {
 }
 
 /**
+ * 脱敏邮箱
+ *
+ * @param mobile 邮箱
+ * @returns 脱敏后的邮箱
+ */
+function maskEmail(email) {
+    const atIndex = email.indexOf('@');
+    if (atIndex <= 0) {
+        return email;
+    }
+    const username = email.substring(0, atIndex);
+    const domain = email.substring(atIndex);
+    if (username.length <= 1) {
+        return '***' + domain;
+    }
+    return '***' + username[username.length - 1] + domain;
+}
+
+/**
  * 脱敏手机号
  *
  * @param mobile 手机号
@@ -1254,103 +1403,6 @@ function maskMobile(mobile) {
         return mobile.substring(0, 3) + "****" + mobile.substring(7);
     }
     return mobile;
-}
-
-/**
- * 获取字符串长度
- *
- * 注意：中文算 1 个字符
- *
- * @param str 要截断的字符串
- * @returns 字符串长度
- */
-function getStringLength(str) {
-    return str.length;
-}
-/**
- * 移除字符串开头和结尾的空白符
- *
- * @param str 要截断的字符串
- * @returns 移除空白符后的字符串
- */
-function trimString(str) {
-    return str.trim();
-}
-/**
- * 截取字符串
- *
- * @param str 要截断的字符串
- * @param start 开始索引
- * @param end 结束索引
- * @returns 截取后的字符串
- */
-function sliceString(str, start, end) {
-    return str.slice(start, end);
-}
-/**
- * 截断字符串，最多显示 maxLength 个字符，超过部分用省略号表示
- *
- * @param str 要截断的字符串
- * @param maxLength 最大长度
- * @returns 截断后的字符串
- */
-function truncateString(str, maxLength) {
-    if (str.length <= maxLength) {
-        return str;
-    }
-    if (maxLength <= 3) {
-        return str.slice(0, maxLength);
-    }
-    return str.slice(0, maxLength - 3) + '...';
-}
-/**
- * 生成指定长度的随机字符串
- *
- * @param length 随机字符串长度
- * @param chars 随机字符集
- * @returns 随机字符串
- */
-function randomString(length, chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789') {
-    const result = new Array(length);
-    const charLength = chars.length;
-    for (let i = 0; i < length; i++) {
-        const randomIndex = Math.floor(Math.random() * charLength);
-        result[i] = chars[randomIndex];
-    }
-    return result.join('');
-}
-/**
- * 渲染字符串模板
- *
- * @param str 字符串模板，例如：'你好，${name}'
- * @param data 数据对象，例如：{ name: '张三' }
- * @returns 渲染后的字符串，例如：'你好，张三'
- */
-function renderStringTemplate(str, data) {
-    return str.replace(/\${(.*?)}/g, function (match, key) {
-        // 去除变量名两端的空白
-        const value = data[trimString(key)];
-        // 如果找不到对应的值，返回原字符串
-        return value !== undefined ? String(value) : match;
-    });
-}
-/**
- * 编码 URI 组件
- *
- * @param str 要编码的字符串
- * @returns 编码后的字符串
- */
-function encodeURIComponent(str) {
-    return global.encodeURIComponent(str);
-}
-/**
- * 解码 URI 组件
- *
- * @param str 要解码的字符串
- * @returns 解码后的字符串
- */
-function decodeURIComponent(str) {
-    return global.decodeURIComponent(str);
 }
 
 /**
@@ -1377,11 +1429,11 @@ function normalizeVersion(version) {
     const tokens = version && version.split('.');
     switch (tokens.length) {
         case 1:
-            return tokens[0].padStart(12, '0');
+            return padStringStart(tokens[0], 12);
         case 2:
-            return tokens[0].padStart(6, '0') + tokens[1].padStart(6, '0');
+            return padStringStart(tokens[0], 6) + padStringStart(tokens[1], 6);
         case 3:
-            return tokens[0].padStart(4, '0') + tokens[1].padStart(4, '0') + tokens[2].padStart(4, '0');
+            return padStringStart(tokens[0], 4) + padStringStart(tokens[1], 4) + padStringStart(tokens[2], 4);
     }
     return '000000000000';
 }
@@ -1459,6 +1511,27 @@ function randomStringByLength(length, chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefg
         result[i] = chars[randomIndex];
     }
     return result.join('');
+}
+/**
+ * 根据当前时间生成随机字符串，可通过 tailLength 控制重复的概率
+ *
+ * @param tailLength 尾部随机数长度，用于降低重复概率
+ * @returns 生成的随机字符串
+ */
+function randomStringByCurrentTime(tailLength) {
+    const timeField = timeToTimeField(new Date());
+    const year = timeField.year;
+    const month = padStringStart(`${timeField.month}`, 2);
+    const date = padStringStart(`${timeField.date}`, 2);
+    const hour = padStringStart(`${timeField.hour}`, 2);
+    const minute = padStringStart(`${timeField.minute}`, 2);
+    const second = padStringStart(`${timeField.second}`, 2);
+    const millisecond = padStringStart(`${timeField.millisecond}`, 3);
+    let timeStr = `${year}${month}${date}${hour}${minute}${second}${millisecond}`;
+    if (tailLength > 0) {
+        timeStr += randomIntegerByLength(tailLength);
+    }
+    return timeStr;
 }
 
 /**
@@ -1671,5 +1744,61 @@ function optimizeTimeRange(startTimestamp, endTimestamp, optimizer) {
     }
 }
 
-export { AMOUNT_ONE_YUAN, AMOUNT_TEN_THOUSAND_YUAN, AUTH_CODE_ALIPAY, AUTH_CODE_WECHAT, DATE_MONTH_DATE, DATE_MONTH_DATE_CHINESE, DATE_MONTH_DATE_DOT, DATE_MONTH_DATE_SLASH, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_YEAR_MONTH_DATE, DATE_YEAR_MONTH_DATE_CHINESE, DATE_YEAR_MONTH_DATE_DOT, DATE_YEAR_MONTH_DATE_SLASH, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MONEY_YUAN_TO_PENNY, MONTH_CHINESE, MONTH_DEFAULT, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, PHONE_NUMBER_400, PHONE_NUMBER_LANDLINE, PHONE_NUMBER_MOBILE, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, YEAR_CHINESE, YEAR_DEFAULT, calculateDistance, calculateRate, decodeURIComponent, discountToBackend, discountToDisplay, distanceToBackend, distanceToDisplay, divideNumber, encodeURIComponent, endOfDay, endOfHour, endOfMonth, endOfWeek, formatAmount, formatAmountShortly, formatArea, formatBankCardNumber, formatBirthday, formatBusinessTimes, formatCategory, formatCity, formatCount, formatCountShortly, formatDate, formatDateRange, formatDateShortly, formatDateTime, formatDateTimeRange, formatDateTimeShortly, formatDiscount, formatDistance, formatDistrict, formatDuration, formatHourMinutes, formatMonth, formatNumberWithComma, formatPenny, formatProvince, formatRatePercent, formatShelfLife, formatSize, formatWeek, formatYear, getStringLength, hexToRgbaObject, hexToRgbaString, isBankCardNumber, isCustomBarcode, isEmail, isIdentityCardNumber, isInteger, isPrice, isStandardBarcode, isUrl, isVerifyCode, maskMobile, maskName, minusNumber, moneyToBackend, moneyToDisplay, normalizeDuration, normalizeShelfLife, normalizeVersion, optimizeTimeRange, parseAuthCode, parsePhoneNumber, plusNumber, randomIntegerByLength, randomIntegerByRange, randomString, randomStringByLength, rateToBackend, rateToDisplay, renderStringTemplate, shortNumber, sliceString, startOfDay, startOfHour, startOfMonth, startOfNextDay, startOfNextHour, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevHour, startOfPrevMonth, startOfPrevWeek, startOfWeek, stringToTime, timeFieldToTime, timeToTimeField, timeToTimestamp, timesNumber, timestampToTime, trimString, truncateNumber, truncateString, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
+/**
+ * 编码 URI 组件
+ *
+ * @param str 要编码的字符串
+ * @returns 编码后的字符串
+ */
+function encodeUriComponent(str) {
+    return encodeURIComponent(str);
+}
+/**
+ * 解码 URI 组件
+ *
+ * @param str 要解码的字符串
+ * @returns 解码后的字符串
+ */
+function decodeUriComponent(str) {
+    return decodeURIComponent(str);
+}
+const httpProtocolPattern = /^https?:\/\//i;
+/**
+ * 标准化 URL：确保包含协议部分
+ *
+ * @param url 要标准化的 URL
+ * @returns 标准化后的 URL
+ */
+function normalizeUrl(url) {
+    if (!url) {
+        return '';
+    }
+    if (httpProtocolPattern.test(url)) {
+        return url;
+    }
+    if (url.startsWith('//')) {
+        return `https:${url}`;
+    }
+    return `https://${url}`;
+}
+/**
+ * 将 URL 转换为协议相对路径（以 // 开头）
+ *
+ * @param url 要转换的 URL
+ * @returns 协议相对路径
+ */
+function toProtocolRelativeUrl(url) {
+    if (!url) {
+        return '';
+    }
+    if (httpProtocolPattern.test(url)) {
+        return url.replace(httpProtocolPattern, '//');
+    }
+    if (!url.startsWith('//')) {
+        return `//${url}`;
+    }
+    return url;
+}
+
+export { AMOUNT_ONE_YUAN, AMOUNT_TEN_THOUSAND_YUAN, AUTH_CODE_ALIPAY, AUTH_CODE_WECHAT, DATE_MONTH_DATE, DATE_MONTH_DATE_CHINESE, DATE_MONTH_DATE_DOT, DATE_MONTH_DATE_SLASH, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_YEAR_MONTH_DATE, DATE_YEAR_MONTH_DATE_CHINESE, DATE_YEAR_MONTH_DATE_DOT, DATE_YEAR_MONTH_DATE_SLASH, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MONEY_YUAN_TO_PENNY, MONTH_CHINESE, MONTH_DEFAULT, MONTH_ONLY, MONTH_ONLY_CHINESE, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, PHONE_NUMBER_400, PHONE_NUMBER_LANDLINE, PHONE_NUMBER_MOBILE, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, YEAR_CHINESE, YEAR_DEFAULT, calculateDistance, calculateRate, decodeUriComponent, discountToBackend, discountToDisplay, distanceToBackend, distanceToDisplay, divideNumber, encodeUriComponent, endOfDay, endOfHour, endOfMonth, endOfWeek, formatAmount, formatAmountShortly, formatArea, formatBankCardNumber, formatBirthday, formatBusinessTimes, formatCategory, formatCity, formatCount, formatCountShortly, formatDate, formatDateRange, formatDateShortly, formatDateTime, formatDateTimeRange, formatDateTimeShortly, formatDiscount, formatDistance, formatDistrict, formatDuration, formatHourMinutes, formatMonth, formatNumberWithComma, formatPenny, formatProvince, formatRatePercent, formatShelfLife, formatSize, formatWeek, formatYear, getStringLength, getStringWidth, hasSpecialCharacters, hexToRgbaObject, hexToRgbaString, isBankCardNumber, isCustomBarcode, isEmail, isIdentityCardNumber, isInteger, isPrice, isStandardBarcode, isUrl, isVerifyCode, maskEmail, maskMobile, maskName, minusNumber, moneyToBackend, moneyToDisplay, normalizeDuration, normalizeShelfLife, normalizeUrl, normalizeVersion, optimizeTimeRange, padStringStart, parseAuthCode, parsePhoneNumber, plusNumber, randomIntegerByLength, randomIntegerByRange, randomStringByCurrentTime, randomStringByLength, rateToBackend, rateToDisplay, removeSpecialCharacters, renderStringTemplate, shortNumber, sliceString, startOfDay, startOfHour, startOfMonth, startOfNextDay, startOfNextHour, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevHour, startOfPrevMonth, startOfPrevWeek, startOfWeek, stringToTime, timeFieldToTime, timeToTimeField, timeToTimestamp, timesNumber, timestampToTime, toProtocolRelativeUrl, trimString, truncateNumber, truncateString, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
 //# sourceMappingURL=hive.esm.js.map

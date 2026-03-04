@@ -21,3 +21,10 @@ export declare function randomIntegerByRange(min: number, max: number): number;
  * @returns 随机字符串
  */
 export declare function randomStringByLength(length: number, chars?: string): string;
+/**
+ * 根据当前时间生成随机字符串，可通过 tailLength 控制重复的概率
+ *
+ * @param tailLength 尾部随机数长度，用于降低重复概率
+ * @returns 生成的随机字符串
+ */
+export declare function randomStringByCurrentTime(tailLength: number): string;

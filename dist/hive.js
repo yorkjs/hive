@@ -1,5 +1,5 @@
 /**
- * hive.js v0.4.3
+ * hive.js v0.4.4
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -43,10 +43,14 @@
   // 中文版
   var YEAR_CHINESE = 'YYYY年';
 
-  // 月：2020-10
+  // 年月：2020-10
   var MONTH_DEFAULT = 'YYYY-MM';
-  // 中文版
+  // 只有月：10
+  var MONTH_ONLY = 'MM';
+  // 中文版年月
   var MONTH_CHINESE = 'YYYY年M月';
+  // 中文版只有月
+  var MONTH_ONLY_CHINESE = 'M月';
 
   // 年月日（连字符），示例：2020-10-01
   var DATE_YEAR_MONTH_DATE = 'YYYY-MM-DD';
@@ -1083,10 +1087,136 @@
     return "".concat(value, "B");
   }
 
+  /**
+   * 获取字符串字符数量
+   *
+   * 注意：中文和英文都算 1 个字符
+   *
+   * @param str 目标字符串
+   * @returns 字符串字符数量
+   */
+  function getStringLength(str) {
+    return str.length;
+  }
+  /**
+   * 获取字符串宽度，此函数常用于排版辅助计算
+   *
+   * 注意：中文算 2 个单位，英文数字算 1 个单位
+   *
+   * @param str 目标字符串
+   * @returns 字符串宽度
+   */
+  function getStringWidth(str) {
+    if (!str) {
+      return 0;
+    }
+    // 匹配所有宽字符（中文字符、全角标点等）
+    var wideCharRegex = /[^\x00-\xff]|[｡-ﾟ]/g;
+    var wideMatches = str.match(wideCharRegex);
+    // 宽字符数量
+    var wideCount = wideMatches ? wideMatches.length : 0;
+    // 窄字符数量
+    var narrowCount = str.length - wideCount;
+    return wideCount * 2 + narrowCount;
+  }
+  /**
+   * 移除字符串开头和结尾的空白符
+   *
+   * @param str 要截断的字符串
+   * @returns 移除空白符后的字符串
+   */
+  function trimString(str) {
+    return str.trim();
+  }
+  /**
+   * 截取字符串
+   *
+   * @param str 要截断的字符串
+   * @param start 开始索引
+   * @param end 结束索引
+   * @returns 截取后的字符串
+   */
+  function sliceString(str, start, end) {
+    return str.slice(start, end);
+  }
+  /**
+   * 截断字符串，最多显示 maxLength 个字符，超过部分用省略号表示
+   *
+   * @param str 要截断的字符串
+   * @param maxLength 最大长度
+   * @returns 截断后的字符串
+   */
+  function truncateString(str, maxLength) {
+    if (str.length <= maxLength) {
+      return str;
+    }
+    if (maxLength <= 3) {
+      return str.slice(0, maxLength);
+    }
+    return str.slice(0, maxLength - 3) + '...';
+  }
+  /**
+   * 渲染字符串模板
+   *
+   * @param str 字符串模板，例如：'你好，${name}'
+   * @param data 数据对象，例如：{ name: '张三' }
+   * @returns 渲染后的字符串，例如：'你好，张三'
+   */
+  function renderStringTemplate(str, data) {
+    return str.replace(/\${(.*?)}/g, function (match, key) {
+      // 去除变量名两端的空白
+      var value = data[trimString(key)];
+      // 如果找不到对应的值，返回原字符串
+      return value !== undefined ? String(value) : match;
+    });
+  }
+  /**
+   * 补全字符串开头，不足 length 个字符用 0 填充
+   *
+   * @param str 要补全的字符串
+   * @param length 目标长度
+   * @returns 补全后的字符串
+   */
+  function padStringStart(str, length) {
+    return str.padStart(length, '0');
+  }
+  /**
+   * 判断字符串是否包含特殊字符
+   *
+   * @param str 目标字符串
+   * @returns 是否包含特殊字符
+   */
+  function hasSpecialCharacters(str) {
+    if (!str) {
+      return false;
+    }
+    // 正则表达式说明：
+    // ^ 表示取反
+    // \u4e00-\u9fa5 匹配所有中文字符
+    // a-zA-Z 匹配所有英文字母
+    // 0-9 匹配所有数字
+    // 后面的字符是允许的常见标点符号
+    var allowedPattern = /(?:[\0-\x1F#-&\*\+\/<->@\\\^`\{-\xB6\xB8-\u3000\u3003-\u300F\u3012-\u4DFF\u9FA6-\uD7FF\uE000-\uFF00\uFF02-\uFF07\uFF0A\uFF0B\uFF0D-\uFF19\uFF1C-\uFF1E\uFF20-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])/g;
+    return allowedPattern.test(str);
+  }
+  /**
+   * 移除字符串中的特殊字符
+   *
+   * @param str 目标字符串
+   * @returns 清理后的字符串
+   */
+  function removeSpecialCharacters(str) {
+    if (!str) {
+      return '';
+    }
+    var allowedPattern = /(?:[\0-\x1F#-&\*\+\/<->@\\\^`\{-\xB6\xB8-\u3000\u3003-\u300F\u3012-\u4DFF\u9FA6-\uD7FF\uE000-\uFF00\uFF02-\uFF07\uFF0A\uFF0B\uFF0D-\uFF19\uFF1C-\uFF1E\uFF20-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])/g;
+    return trimString(str.replace(allowedPattern, ''));
+  }
+
   function formatHourMinutes(value) {
     var hours = Math.floor(value / 60);
     var minutes = value % 60;
-    return "".concat(hours.toString().padStart(2, '0'), ":").concat(minutes.toString().padStart(2, '0'));
+    return "".concat(padStringStart(hours.toString(), 2), ":").concat(padStringStart(minutes.toString(), 2));
   }
   // 营业时间时段范围为 [0, 2880] 可跨天, 0-1440 为当天，1440-2880 为次日
   function formatBusinessTimes(businessTimes) {
@@ -1321,6 +1451,25 @@
   }
 
   /**
+   * 脱敏邮箱
+   *
+   * @param mobile 邮箱
+   * @returns 脱敏后的邮箱
+   */
+  function maskEmail(email) {
+    var atIndex = email.indexOf('@');
+    if (atIndex <= 0) {
+      return email;
+    }
+    var username = email.substring(0, atIndex);
+    var domain = email.substring(atIndex);
+    if (username.length <= 1) {
+      return '***' + domain;
+    }
+    return '***' + username[username.length - 1] + domain;
+  }
+
+  /**
    * 脱敏手机号
    *
    * @param mobile 手机号
@@ -1331,104 +1480,6 @@
       return mobile.substring(0, 3) + "****" + mobile.substring(7);
     }
     return mobile;
-  }
-
-  /**
-   * 获取字符串长度
-   *
-   * 注意：中文算 1 个字符
-   *
-   * @param str 要截断的字符串
-   * @returns 字符串长度
-   */
-  function getStringLength(str) {
-    return str.length;
-  }
-  /**
-   * 移除字符串开头和结尾的空白符
-   *
-   * @param str 要截断的字符串
-   * @returns 移除空白符后的字符串
-   */
-  function trimString(str) {
-    return str.trim();
-  }
-  /**
-   * 截取字符串
-   *
-   * @param str 要截断的字符串
-   * @param start 开始索引
-   * @param end 结束索引
-   * @returns 截取后的字符串
-   */
-  function sliceString(str, start, end) {
-    return str.slice(start, end);
-  }
-  /**
-   * 截断字符串，最多显示 maxLength 个字符，超过部分用省略号表示
-   *
-   * @param str 要截断的字符串
-   * @param maxLength 最大长度
-   * @returns 截断后的字符串
-   */
-  function truncateString(str, maxLength) {
-    if (str.length <= maxLength) {
-      return str;
-    }
-    if (maxLength <= 3) {
-      return str.slice(0, maxLength);
-    }
-    return str.slice(0, maxLength - 3) + '...';
-  }
-  /**
-   * 生成指定长度的随机字符串
-   *
-   * @param length 随机字符串长度
-   * @param chars 随机字符集
-   * @returns 随机字符串
-   */
-  function randomString(length) {
-    var chars = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var result = new Array(length);
-    var charLength = chars.length;
-    for (var i = 0; i < length; i++) {
-      var randomIndex = Math.floor(Math.random() * charLength);
-      result[i] = chars[randomIndex];
-    }
-    return result.join('');
-  }
-  /**
-   * 渲染字符串模板
-   *
-   * @param str 字符串模板，例如：'你好，${name}'
-   * @param data 数据对象，例如：{ name: '张三' }
-   * @returns 渲染后的字符串，例如：'你好，张三'
-   */
-  function renderStringTemplate(str, data) {
-    return str.replace(/\${(.*?)}/g, function (match, key) {
-      // 去除变量名两端的空白
-      var value = data[trimString(key)];
-      // 如果找不到对应的值，返回原字符串
-      return value !== undefined ? String(value) : match;
-    });
-  }
-  /**
-   * 编码 URI 组件
-   *
-   * @param str 要编码的字符串
-   * @returns 编码后的字符串
-   */
-  function encodeURIComponent(str) {
-    return global.encodeURIComponent(str);
-  }
-  /**
-   * 解码 URI 组件
-   *
-   * @param str 要解码的字符串
-   * @returns 解码后的字符串
-   */
-  function decodeURIComponent(str) {
-    return global.decodeURIComponent(str);
   }
 
   /**
@@ -1455,11 +1506,11 @@
     var tokens = version && version.split('.');
     switch (tokens.length) {
       case 1:
-        return tokens[0].padStart(12, '0');
+        return padStringStart(tokens[0], 12);
       case 2:
-        return tokens[0].padStart(6, '0') + tokens[1].padStart(6, '0');
+        return padStringStart(tokens[0], 6) + padStringStart(tokens[1], 6);
       case 3:
-        return tokens[0].padStart(4, '0') + tokens[1].padStart(4, '0') + tokens[2].padStart(4, '0');
+        return padStringStart(tokens[0], 4) + padStringStart(tokens[1], 4) + padStringStart(tokens[2], 4);
     }
     return '000000000000';
   }
@@ -1534,6 +1585,27 @@
       result[i] = chars[randomIndex];
     }
     return result.join('');
+  }
+  /**
+   * 根据当前时间生成随机字符串，可通过 tailLength 控制重复的概率
+   *
+   * @param tailLength 尾部随机数长度，用于降低重复概率
+   * @returns 生成的随机字符串
+   */
+  function randomStringByCurrentTime(tailLength) {
+    var timeField = timeToTimeField(new Date());
+    var year = timeField.year;
+    var month = padStringStart("".concat(timeField.month), 2);
+    var date = padStringStart("".concat(timeField.date), 2);
+    var hour = padStringStart("".concat(timeField.hour), 2);
+    var minute = padStringStart("".concat(timeField.minute), 2);
+    var second = padStringStart("".concat(timeField.second), 2);
+    var millisecond = padStringStart("".concat(timeField.millisecond), 3);
+    var timeStr = "".concat(year).concat(month).concat(date).concat(hour).concat(minute).concat(second).concat(millisecond);
+    if (tailLength > 0) {
+      timeStr += randomIntegerByLength(tailLength);
+    }
+    return timeStr;
   }
 
   /**
@@ -1742,6 +1814,62 @@
     }
   }
 
+  /**
+   * 编码 URI 组件
+   *
+   * @param str 要编码的字符串
+   * @returns 编码后的字符串
+   */
+  function encodeUriComponent(str) {
+    return encodeURIComponent(str);
+  }
+  /**
+   * 解码 URI 组件
+   *
+   * @param str 要解码的字符串
+   * @returns 解码后的字符串
+   */
+  function decodeUriComponent(str) {
+    return decodeURIComponent(str);
+  }
+  var httpProtocolPattern = /^https?:\/\//i;
+  /**
+   * 标准化 URL：确保包含协议部分
+   *
+   * @param url 要标准化的 URL
+   * @returns 标准化后的 URL
+   */
+  function normalizeUrl(url) {
+    if (!url) {
+      return '';
+    }
+    if (httpProtocolPattern.test(url)) {
+      return url;
+    }
+    if (url.startsWith('//')) {
+      return "https:".concat(url);
+    }
+    return "https://".concat(url);
+  }
+  /**
+   * 将 URL 转换为协议相对路径（以 // 开头）
+   *
+   * @param url 要转换的 URL
+   * @returns 协议相对路径
+   */
+  function toProtocolRelativeUrl(url) {
+    if (!url) {
+      return '';
+    }
+    if (httpProtocolPattern.test(url)) {
+      return url.replace(httpProtocolPattern, '//');
+    }
+    if (!url.startsWith('//')) {
+      return "//".concat(url);
+    }
+    return url;
+  }
+
   exports.AMOUNT_ONE_YUAN = AMOUNT_ONE_YUAN;
   exports.AMOUNT_TEN_THOUSAND_YUAN = AMOUNT_TEN_THOUSAND_YUAN;
   exports.AUTH_CODE_ALIPAY = AUTH_CODE_ALIPAY;
@@ -1771,6 +1899,8 @@
   exports.MONEY_YUAN_TO_PENNY = MONEY_YUAN_TO_PENNY;
   exports.MONTH_CHINESE = MONTH_CHINESE;
   exports.MONTH_DEFAULT = MONTH_DEFAULT;
+  exports.MONTH_ONLY = MONTH_ONLY;
+  exports.MONTH_ONLY_CHINESE = MONTH_ONLY_CHINESE;
   exports.MS_DAY = MS_DAY;
   exports.MS_HOUR = MS_HOUR;
   exports.MS_MINUTE = MS_MINUTE;
@@ -1790,13 +1920,13 @@
   exports.YEAR_DEFAULT = YEAR_DEFAULT;
   exports.calculateDistance = calculateDistance;
   exports.calculateRate = calculateRate;
-  exports.decodeURIComponent = decodeURIComponent;
+  exports.decodeUriComponent = decodeUriComponent;
   exports.discountToBackend = discountToBackend;
   exports.discountToDisplay = discountToDisplay;
   exports.distanceToBackend = distanceToBackend;
   exports.distanceToDisplay = distanceToDisplay;
   exports.divideNumber = divideNumber;
-  exports.encodeURIComponent = encodeURIComponent;
+  exports.encodeUriComponent = encodeUriComponent;
   exports.endOfDay = endOfDay;
   exports.endOfHour = endOfHour;
   exports.endOfMonth = endOfMonth;
@@ -1832,6 +1962,8 @@
   exports.formatWeek = formatWeek;
   exports.formatYear = formatYear;
   exports.getStringLength = getStringLength;
+  exports.getStringWidth = getStringWidth;
+  exports.hasSpecialCharacters = hasSpecialCharacters;
   exports.hexToRgbaObject = hexToRgbaObject;
   exports.hexToRgbaString = hexToRgbaString;
   exports.isBankCardNumber = isBankCardNumber;
@@ -1843,6 +1975,7 @@
   exports.isStandardBarcode = isStandardBarcode;
   exports.isUrl = isUrl;
   exports.isVerifyCode = isVerifyCode;
+  exports.maskEmail = maskEmail;
   exports.maskMobile = maskMobile;
   exports.maskName = maskName;
   exports.minusNumber = minusNumber;
@@ -1850,17 +1983,20 @@
   exports.moneyToDisplay = moneyToDisplay;
   exports.normalizeDuration = normalizeDuration;
   exports.normalizeShelfLife = normalizeShelfLife;
+  exports.normalizeUrl = normalizeUrl;
   exports.normalizeVersion = normalizeVersion;
   exports.optimizeTimeRange = optimizeTimeRange;
+  exports.padStringStart = padStringStart;
   exports.parseAuthCode = parseAuthCode;
   exports.parsePhoneNumber = parsePhoneNumber;
   exports.plusNumber = plusNumber;
   exports.randomIntegerByLength = randomIntegerByLength;
   exports.randomIntegerByRange = randomIntegerByRange;
-  exports.randomString = randomString;
+  exports.randomStringByCurrentTime = randomStringByCurrentTime;
   exports.randomStringByLength = randomStringByLength;
   exports.rateToBackend = rateToBackend;
   exports.rateToDisplay = rateToDisplay;
+  exports.removeSpecialCharacters = removeSpecialCharacters;
   exports.renderStringTemplate = renderStringTemplate;
   exports.shortNumber = shortNumber;
   exports.sliceString = sliceString;
@@ -1882,6 +2018,7 @@
   exports.timeToTimestamp = timeToTimestamp;
   exports.timesNumber = timesNumber;
   exports.timestampToTime = timestampToTime;
+  exports.toProtocolRelativeUrl = toProtocolRelativeUrl;
   exports.trimString = trimString;
   exports.truncateNumber = truncateNumber;
   exports.truncateString = truncateString;
