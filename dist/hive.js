@@ -1,5 +1,5 @@
 /**
- * hive.js v0.4.4
+ * hive.js v0.4.5
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -140,13 +140,138 @@
   var SIZE_GB = 1024 * SIZE_MB;
 
   /**
-   * 将 HEX 颜色转换为 RGBA 格式
+   * 获取字符串字符数量
+   *
+   * 注意：中文和英文都算 1 个字符
+   *
+   * @param str 目标字符串
+   * @returns 字符串字符数量
+   */
+  function getStringLength(str) {
+    return str.length;
+  }
+  /**
+   * 获取字符串宽度，此函数常用于排版辅助计算
+   *
+   * 注意：中文算 2 个单位，英文数字算 1 个单位
+   *
+   * @param str 目标字符串
+   * @returns 字符串宽度
+   */
+  function getStringWidth(str) {
+    if (!str) {
+      return 0;
+    }
+    // 匹配所有宽字符（中文字符、全角标点等）
+    var wideCharRegex = /[^\x00-\xff]|[｡-ﾟ]/g;
+    var wideMatches = str.match(wideCharRegex);
+    // 宽字符数量
+    var wideCount = wideMatches ? wideMatches.length : 0;
+    // 窄字符数量
+    var narrowCount = str.length - wideCount;
+    return wideCount * 2 + narrowCount;
+  }
+  /**
+   * 移除字符串开头和结尾的空白符
+   *
+   * @param str 要截断的字符串
+   * @returns 移除空白符后的字符串
+   */
+  function trimString(str) {
+    return str.trim();
+  }
+  /**
+   * 截取字符串
+   *
+   * @param str 要截断的字符串
+   * @param start 开始索引
+   * @param end 结束索引
+   * @returns 截取后的字符串
+   */
+  function sliceString(str, start, end) {
+    return str.slice(start, end);
+  }
+  /**
+   * 截断字符串，最多显示 maxLength 个字符，超过部分用省略号表示
+   *
+   * @param str 要截断的字符串
+   * @param maxLength 最大长度
+   * @returns 截断后的字符串
+   */
+  function truncateString(str, maxLength) {
+    if (str.length <= maxLength) {
+      return str;
+    }
+    if (maxLength <= 3) {
+      return str.slice(0, maxLength);
+    }
+    return str.slice(0, maxLength - 3) + '...';
+  }
+  /**
+   * 渲染字符串模板
+   *
+   * @param str 字符串模板，例如：'你好，${name}'
+   * @param data 数据对象，例如：{ name: '张三' }
+   * @returns 渲染后的字符串，例如：'你好，张三'
+   */
+  function renderStringTemplate(str, data) {
+    return str.replace(/\${(.*?)}/g, function (match, key) {
+      // 去除变量名两端的空白
+      var value = data[trimString(key)];
+      // 如果找不到对应的值，返回原字符串
+      return value !== undefined ? String(value) : match;
+    });
+  }
+  /**
+   * 补全字符串开头，不足 length 个字符用 0 填充
+   *
+   * @param str 要补全的字符串
+   * @param length 目标长度
+   * @returns 补全后的字符串
+   */
+  function padStringStart(str, length) {
+    return str.padStart(length, '0');
+  }
+  /**
+   * 判断字符串是否包含特殊字符
+   *
+   * @param str 目标字符串
+   * @returns 是否包含特殊字符
+   */
+  function hasSpecialCharacters(str) {
+    if (!str) {
+      return false;
+    }
+    // 正则表达式说明：
+    // ^ 表示取反
+    // \u4e00-\u9fa5 匹配所有中文字符
+    // a-zA-Z 匹配所有英文字母
+    // 0-9 匹配所有数字
+    // 后面的字符是允许的常见标点符号
+    var allowedPattern = /(?:[\0-\x1F#-&\*\+\/<->@\\\^`\{-\xB6\xB8-\u3000\u3003-\u300F\u3012-\u4DFF\u9FA6-\uD7FF\uE000-\uFF00\uFF02-\uFF07\uFF0A\uFF0B\uFF0D-\uFF19\uFF1C-\uFF1E\uFF20-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])/g;
+    return allowedPattern.test(str);
+  }
+  /**
+   * 移除字符串中的特殊字符
+   *
+   * @param str 目标字符串
+   * @returns 清理后的字符串
+   */
+  function removeSpecialCharacters(str) {
+    if (!str) {
+      return '';
+    }
+    var allowedPattern = /(?:[\0-\x1F#-&\*\+\/<->@\\\^`\{-\xB6\xB8-\u3000\u3003-\u300F\u3012-\u4DFF\u9FA6-\uD7FF\uE000-\uFF00\uFF02-\uFF07\uFF0A\uFF0B\uFF0D-\uFF19\uFF1C-\uFF1E\uFF20-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])/g;
+    return trimString(str.replace(allowedPattern, ''));
+  }
+
+  /**
+   * 将 HEX 颜色转换为 RGBA 对象
    *
    * @param color HEX 颜色值
-   * @param alpha 透明度，取值范围 0-1
    * @returns RGBA 颜色对象
    */
-  function hexToRgbaObject(color, alpha) {
+  function hexToRgbaObject(color) {
     // 移除 # 号
     var hex = color.replace('#', '');
     // 处理简写格式 (#rgb 或 #rgba)
@@ -159,12 +284,25 @@
     if (hex.length !== 6 && hex.length !== 8) {
       throw new Error('无效的HEX颜色格式');
     }
-    return {
+    var result = {
       red: parseInt(hex.substring(0, 2), 16),
       green: parseInt(hex.substring(2, 4), 16),
       blue: parseInt(hex.substring(4, 6), 16),
-      alpha: Math.max(0, Math.min(1, alpha))
+      alpha: 1
     };
+    if (hex.length === 8) {
+      result.alpha = parseInt(hex.substring(6, 8), 16) / 255;
+    }
+    return result;
+  }
+  /**
+   * 将 HEX 颜色转换为 HSL 对象
+   *
+   * @param color HEX 颜色值
+   * @returns HSL 颜色对象
+   */
+  function hexToHslObject(color) {
+    return rgbToHsl(hexToRgbaObject(color));
   }
   /**
    * 将 HEX 颜色转换为 RGBA 格式
@@ -174,8 +312,126 @@
    * @returns RGBA 颜色字符串
    */
   function hexToRgbaString(color, alpha) {
-    var rgba = hexToRgbaObject(color, alpha);
-    return "rgba(".concat(rgba.red, ",").concat(rgba.green, ",").concat(rgba.blue, ",").concat(rgba.alpha, ")");
+    var rgba = hexToRgbaObject(color);
+    return "rgba(".concat(rgba.red, ",").concat(rgba.green, ",").concat(rgba.blue, ",").concat(alpha, ")");
+  }
+  /**
+   * 加深颜色亮度
+   *
+   * @param color HEX 颜色值
+   * @param offset 加深幅度，取值范围 0-1
+   * @returns 新的 hex 颜色
+   */
+  function darkenColor(color, offset) {
+    return adjustColorBrightness(color, -offset);
+  }
+  /**
+   * 减淡颜色亮度
+   *
+   * @param color HEX 颜色值
+   * @param offset 减淡幅度，取值范围 0-1
+   * @returns 新的 hex 颜色
+   */
+  function lightenColor(color, offset) {
+    return adjustColorBrightness(color, offset);
+  }
+  /**
+   * 调整颜色亮度
+   *
+   * @param hex 原始颜色
+   * @param offset 取值范围 0-1
+   * @returns 新的 hex 颜色字符串
+   */
+  function adjustColorBrightness(hex, offset) {
+    var rgba = hexToRgbaObject(hex);
+    var hsl = rgbToHsl(rgba);
+    // 调整亮度，限制在 0-100 之间
+    var newL = hsl.lightness + offset * 100;
+    hsl.lightness = Math.max(0, Math.min(100, newL));
+    var newRgb = hslToRgb(hsl);
+    // 如果原颜色有透明度，返回值保留该透明度
+    var result = "#".concat(toHex(newRgb.red)).concat(toHex(newRgb.green)).concat(toHex(newRgb.blue));
+    if (rgba.alpha < 1) {
+      result += toHex(rgba.alpha * 255);
+    }
+    return result;
+  }
+  /**
+   * 将 RGB 转换为 HSL
+   * r, g, b: 0-255
+   * 返回 h: 0-360, s: 0-100, l: 0-100
+   */
+  function rgbToHsl(rgb) {
+    var r = rgb.red / 255;
+    var g = rgb.green / 255;
+    var b = rgb.blue / 255;
+    var max = Math.max(r, g, b);
+    var min = Math.min(r, g, b);
+    var h = 0;
+    var s = 0;
+    var l = (max + min) / 2;
+    if (max !== min) {
+      var d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r:
+          h = (g - b) / d + (g < b ? 6 : 0);
+          break;
+        case g:
+          h = (b - r) / d + 2;
+          break;
+        case b:
+          h = (r - g) / d + 4;
+          break;
+      }
+      h *= 60;
+    }
+    return {
+      hue: h,
+      saturation: s * 100,
+      lightness: l * 100
+    };
+  }
+  /**
+   * 将 HSL 转换为 RGB
+   * 返回 r, g, b: 0-255
+   */
+  function hslToRgb(hsl) {
+    var h = hsl.hue / 360;
+    var s = hsl.saturation / 100;
+    var l = hsl.lightness / 100;
+    var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    var p = 2 * l - q;
+    var r = hue2rgb(p, q, h + 1 / 3);
+    var g = hue2rgb(p, q, h);
+    var b = hue2rgb(p, q, h - 1 / 3);
+    return {
+      red: Math.round(r * 255),
+      green: Math.round(g * 255),
+      blue: Math.round(b * 255),
+      alpha: 1
+    };
+  }
+  function hue2rgb(p, q, t) {
+    if (t < 0) {
+      t += 1;
+    }
+    if (t > 1) {
+      t -= 1;
+    }
+    if (t < 1 / 6) {
+      return p + (q - p) * 6 * t;
+    }
+    if (t < 1 / 2) {
+      return q;
+    }
+    if (t < 2 / 3) {
+      return p + (q - p) * (2 / 3 - t) * 6;
+    }
+    return p;
+  }
+  function toHex(color) {
+    return padStringStart(color.toString(16), 2);
   }
 
   /**
@@ -1087,132 +1343,6 @@
     return "".concat(value, "B");
   }
 
-  /**
-   * 获取字符串字符数量
-   *
-   * 注意：中文和英文都算 1 个字符
-   *
-   * @param str 目标字符串
-   * @returns 字符串字符数量
-   */
-  function getStringLength(str) {
-    return str.length;
-  }
-  /**
-   * 获取字符串宽度，此函数常用于排版辅助计算
-   *
-   * 注意：中文算 2 个单位，英文数字算 1 个单位
-   *
-   * @param str 目标字符串
-   * @returns 字符串宽度
-   */
-  function getStringWidth(str) {
-    if (!str) {
-      return 0;
-    }
-    // 匹配所有宽字符（中文字符、全角标点等）
-    var wideCharRegex = /[^\x00-\xff]|[｡-ﾟ]/g;
-    var wideMatches = str.match(wideCharRegex);
-    // 宽字符数量
-    var wideCount = wideMatches ? wideMatches.length : 0;
-    // 窄字符数量
-    var narrowCount = str.length - wideCount;
-    return wideCount * 2 + narrowCount;
-  }
-  /**
-   * 移除字符串开头和结尾的空白符
-   *
-   * @param str 要截断的字符串
-   * @returns 移除空白符后的字符串
-   */
-  function trimString(str) {
-    return str.trim();
-  }
-  /**
-   * 截取字符串
-   *
-   * @param str 要截断的字符串
-   * @param start 开始索引
-   * @param end 结束索引
-   * @returns 截取后的字符串
-   */
-  function sliceString(str, start, end) {
-    return str.slice(start, end);
-  }
-  /**
-   * 截断字符串，最多显示 maxLength 个字符，超过部分用省略号表示
-   *
-   * @param str 要截断的字符串
-   * @param maxLength 最大长度
-   * @returns 截断后的字符串
-   */
-  function truncateString(str, maxLength) {
-    if (str.length <= maxLength) {
-      return str;
-    }
-    if (maxLength <= 3) {
-      return str.slice(0, maxLength);
-    }
-    return str.slice(0, maxLength - 3) + '...';
-  }
-  /**
-   * 渲染字符串模板
-   *
-   * @param str 字符串模板，例如：'你好，${name}'
-   * @param data 数据对象，例如：{ name: '张三' }
-   * @returns 渲染后的字符串，例如：'你好，张三'
-   */
-  function renderStringTemplate(str, data) {
-    return str.replace(/\${(.*?)}/g, function (match, key) {
-      // 去除变量名两端的空白
-      var value = data[trimString(key)];
-      // 如果找不到对应的值，返回原字符串
-      return value !== undefined ? String(value) : match;
-    });
-  }
-  /**
-   * 补全字符串开头，不足 length 个字符用 0 填充
-   *
-   * @param str 要补全的字符串
-   * @param length 目标长度
-   * @returns 补全后的字符串
-   */
-  function padStringStart(str, length) {
-    return str.padStart(length, '0');
-  }
-  /**
-   * 判断字符串是否包含特殊字符
-   *
-   * @param str 目标字符串
-   * @returns 是否包含特殊字符
-   */
-  function hasSpecialCharacters(str) {
-    if (!str) {
-      return false;
-    }
-    // 正则表达式说明：
-    // ^ 表示取反
-    // \u4e00-\u9fa5 匹配所有中文字符
-    // a-zA-Z 匹配所有英文字母
-    // 0-9 匹配所有数字
-    // 后面的字符是允许的常见标点符号
-    var allowedPattern = /(?:[\0-\x1F#-&\*\+\/<->@\\\^`\{-\xB6\xB8-\u3000\u3003-\u300F\u3012-\u4DFF\u9FA6-\uD7FF\uE000-\uFF00\uFF02-\uFF07\uFF0A\uFF0B\uFF0D-\uFF19\uFF1C-\uFF1E\uFF20-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])/g;
-    return allowedPattern.test(str);
-  }
-  /**
-   * 移除字符串中的特殊字符
-   *
-   * @param str 目标字符串
-   * @returns 清理后的字符串
-   */
-  function removeSpecialCharacters(str) {
-    if (!str) {
-      return '';
-    }
-    var allowedPattern = /(?:[\0-\x1F#-&\*\+\/<->@\\\^`\{-\xB6\xB8-\u3000\u3003-\u300F\u3012-\u4DFF\u9FA6-\uD7FF\uE000-\uFF00\uFF02-\uFF07\uFF0A\uFF0B\uFF0D-\uFF19\uFF1C-\uFF1E\uFF20-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])/g;
-    return trimString(str.replace(allowedPattern, ''));
-  }
-
   function formatHourMinutes(value) {
     var hours = Math.floor(value / 60);
     var minutes = value % 60;
@@ -1920,6 +2050,7 @@
   exports.YEAR_DEFAULT = YEAR_DEFAULT;
   exports.calculateDistance = calculateDistance;
   exports.calculateRate = calculateRate;
+  exports.darkenColor = darkenColor;
   exports.decodeUriComponent = decodeUriComponent;
   exports.discountToBackend = discountToBackend;
   exports.discountToDisplay = discountToDisplay;
@@ -1964,6 +2095,7 @@
   exports.getStringLength = getStringLength;
   exports.getStringWidth = getStringWidth;
   exports.hasSpecialCharacters = hasSpecialCharacters;
+  exports.hexToHslObject = hexToHslObject;
   exports.hexToRgbaObject = hexToRgbaObject;
   exports.hexToRgbaString = hexToRgbaString;
   exports.isBankCardNumber = isBankCardNumber;
@@ -1975,6 +2107,7 @@
   exports.isStandardBarcode = isStandardBarcode;
   exports.isUrl = isUrl;
   exports.isVerifyCode = isVerifyCode;
+  exports.lightenColor = lightenColor;
   exports.maskEmail = maskEmail;
   exports.maskMobile = maskMobile;
   exports.maskName = maskName;
