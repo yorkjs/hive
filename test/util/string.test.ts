@@ -3,6 +3,7 @@ import {
   trimString,
   sliceString,
   truncateString,
+  padStringStart,
   renderStringTemplate,
   encodeURIComponent,
 } from '../../src/index'
@@ -73,6 +74,14 @@ test('renderStringTemplate', () => {
   expect(renderStringTemplate('你好，${value}。', { value: true })).toBe('你好，true。')
   expect(renderStringTemplate('你好，${value}。', { value: false })).toBe('你好，false。')
   expect(renderStringTemplate('你好，${value}。', { value: undefined })).toBe('你好，${value}。')
+
+})
+
+test('padStringStart', () => {
+
+  expect(padStringStart('1', 3)).toBe('001')
+  expect(padStringStart('12', 3)).toBe('012')
+  expect(padStringStart('123', 3)).toBe('123')
 
 })
 

@@ -46,6 +46,7 @@ export * from './is/price'
 export * from './is/url'
 export * from './is/verifyCode'
 
+export * from './mask/email'
 export * from './mask/mobile'
 export * from './mask/name'
 

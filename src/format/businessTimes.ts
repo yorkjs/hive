@@ -1,9 +1,11 @@
+import { padStringStart } from '../util/string'
+
 export function formatHourMinutes(value: number): string {
 
   const hours = Math.floor(value / 60)
   const minutes = value % 60
 
-  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
+  return `${padStringStart(hours.toString(), 2)}:${padStringStart(minutes.toString(), 2)}`
 
 }
 

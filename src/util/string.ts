@@ -52,23 +52,6 @@ export function truncateString(str: string, maxLength: number) {
 }
 
 /**
- * 生成指定长度的随机字符串
- *
- * @param length 随机字符串长度
- * @param chars 随机字符集
- * @returns 随机字符串
- */
-export function randomString(length: number, chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789') {
-  const result = new Array(length)
-  const charLength = chars.length
-  for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * charLength)
-    result[i] = chars[randomIndex]
-  }
-  return result.join('')
-}
-
-/**
  * 渲染字符串模板
  *
  * @param str 字符串模板，例如：'你好，${name}'
@@ -82,6 +65,17 @@ export function renderStringTemplate(str: string, data: Record<string, any>) {
     // 如果找不到对应的值，返回原字符串
     return value !== undefined ? String(value) : match
   })
+}
+
+/**
+ * 补全字符串开头，不足 length 个字符用 0 填充
+ *
+ * @param str 要补全的字符串
+ * @param length 目标长度
+ * @returns 补全后的字符串
+ */
+export function padStringStart(str: string, length: number) {
+  return str.padStart(length, '0')
 }
 
 /**
