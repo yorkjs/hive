@@ -113,16 +113,7 @@ export function hasSpecialCharacters(str: string) {
   if (!str) {
     return false
   }
-
-  // 正则表达式说明：
-  // ^ 表示取反
-  // \u4e00-\u9fa5 匹配所有中文字符
-  // a-zA-Z 匹配所有英文字母
-  // 0-9 匹配所有数字
-  // 后面的字符是允许的常见标点符号
-  const allowedPattern = /[^a-zA-Z0-9\u4e00-\u9fa5 ，。！？；：""''()（）\[\]【】、·.,!?;:\-_']/gu;
-
-  return allowedPattern.test(str)
+  return /[^ \u4e00-\u9fa5a-zA-Z0-9，。、；：！“”‘’（）【】《》？～·—…\.,;:!?"'()\[\]{}<>@#&%￥$_\-]/g.test(str)
 }
 
 /**
@@ -135,7 +126,5 @@ export function removeSpecialCharacters(str: string) {
   if (!str) {
     return ''
   }
-
-  const allowedPattern = /[^a-zA-Z0-9\u4e00-\u9fa5 ，。！？；：""''()（）\[\]【】、·.,!?;:\-_']/gu;
-  return trimString(str.replace(allowedPattern, ''))
+  return str.replace(/[^ \u4e00-\u9fa5a-zA-Z0-9，。、；：！“”‘’（）【】《》？～·—…\.,;:!?"'()\[\]{}<>@#&%￥$_\-]/g, '')
 }

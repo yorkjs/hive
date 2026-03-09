@@ -4,6 +4,8 @@ import {
   timesNumber,
   divideNumber,
   truncateNumber,
+  parseInteger,
+  parseNumber,
 } from '../../src/util/number'
 
 test('plusNumber', () => {
@@ -83,5 +85,48 @@ test('truncateNumber', () => {
   expect(truncateNumber(1234567.89, 2)).toBe('1234567.89')
   expect(truncateNumber(1234567.89, 1)).toBe('1234567.8')
   expect(truncateNumber(1234567.89, 3)).toBe('1234567.890')
+
+})
+
+test('parseInteger', () => {
+
+  expect(parseInteger(' 123')).toBe(123)
+  expect(parseInteger('123 ')).toBe(123)
+  expect(parseInteger(' 123 ')).toBe(123)
+  expect(parseInteger('123')).toBe(123)
+  expect(parseInteger('-123')).toBe(-123)
+  expect(parseInteger('+123')).toBe(123)
+  expect(parseInteger('123px')).toBe(123)
+  expect(parseInteger('px123')).toBe(null)
+  expect(parseInteger('123.456')).toBe(123)
+  expect(parseInteger('123.456px')).toBe(123)
+
+  expect(parseInteger('101')).toBe(101)
+  expect(parseInteger('101', 2)).toBe(5)
+  expect(parseInteger('101a')).toBe(101)
+  expect(parseInteger('101a', 2)).toBe(5)
+
+  expect(parseInteger('0XFF')).toBe(255)
+  expect(parseInteger('0XFF', 16)).toBe(255)
+  expect(parseInteger('0xFF')).toBe(255)
+  expect(parseInteger('0xFF', 16)).toBe(255)
+
+})
+
+test('parseNumber', () => {
+
+  expect(parseNumber(' 123')).toBe(123)
+  expect(parseNumber('123 ')).toBe(123)
+  expect(parseNumber(' 123 ')).toBe(123)
+  expect(parseNumber('123')).toBe(123)
+  expect(parseNumber('-123')).toBe(-123)
+  expect(parseNumber('+123')).toBe(123)
+  expect(parseNumber('123px')).toBe(123)
+  expect(parseNumber('px123')).toBe(null)
+  expect(parseNumber('123.456')).toBe(123.456)
+  expect(parseNumber('123.456px')).toBe(123.456)
+
+  expect(parseNumber('0xFF')).toBe(0)
+  expect(parseNumber('0XFF')).toBe(0)
 
 })

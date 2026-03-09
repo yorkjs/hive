@@ -96,3 +96,26 @@ export function shortNumber(value: number, formatUnshort: (value: number) => str
   }
   return formatUnshort(value)
 }
+
+/**
+ * 内部使用原生 parseInt 函数解析字符串中的整数
+ *
+ * @param value 要解析的字符串
+ * @param radix 进制
+ * @returns 解析后的整数，解析失败返回 null
+ */
+export function parseInteger(value: string, radix?: number) {
+  const result = parseInt(value, radix)
+  return isNaN(result) ? null : result
+}
+
+/**
+ * 内部使用原生 parseFloat 函数解析字符串中的浮点数
+ *
+ * @param value 要解析的字符串
+ * @returns 解析后的浮点数，解析失败返回 null
+ */
+export function parseNumber(value: string) {
+  const result = parseFloat(value)
+  return isNaN(result) ? null : result
+}

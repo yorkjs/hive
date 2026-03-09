@@ -2,6 +2,7 @@ import {
   rateToDisplay,
   rateToBackend,
   calculateRate,
+  applyRate,
 } from '../../src/convert/rate'
 
 test('rate_convert', () => {
@@ -15,5 +16,9 @@ test('rate_convert', () => {
   expect(calculateRate(5, 100)).toBe(500)
   expect(calculateRate(5, 1000)).toBe(50)
   expect(calculateRate(5, 10000)).toBe(5)
+  expect(applyRate(1000, 0)).toBe(0)
+  expect(applyRate(1000, 1000)).toBe(100)
+  expect(applyRate(1000, 10000)).toBe(1000)
+  expect(applyRate(1000, 245)).toBe(24)
 
 })

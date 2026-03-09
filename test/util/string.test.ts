@@ -110,8 +110,9 @@ test('hasSpecialCharacters', () => {
 test('removeSpecialCharacters', () => {
 
   expect(removeSpecialCharacters('abc,[1]23. 你好，【世界】！')).toBe('abc,[1]23. 你好，【世界】！')
-  expect(removeSpecialCharacters('abc,123. \t\n')).toBe('abc,123.')
-  expect(removeSpecialCharacters('abc,123.☺️')).toBe('abc,123.')
-  expect(removeSpecialCharacters(' abc,  123. ')).toBe('abc,  123.')
+  expect(removeSpecialCharacters('abc,123.\t\n')).toBe('abc,123.')
+  expect(removeSpecialCharacters('a☺️bc,☺️123.^456☺️%')).toBe('abc,123.456%')
+  expect(removeSpecialCharacters('a☺️bc，123。☺️')).toBe('abc，123。')
+  expect(removeSpecialCharacters(' abc,  123. ')).toBe(' abc,  123. ')
 
 })
