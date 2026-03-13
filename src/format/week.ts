@@ -6,12 +6,12 @@ import { formatDateShortly } from './date'
  *
  * @group Function
  * @category Format
- * @param timestamp
+ * @param value 时间戳
  * @returns
  */
-export function formatWeek(timestamp: number) {
-  const date = new Date(timestamp)
+export function formatWeek(value: number) {
+  const date = new Date(value)
   const offset = -1 * date.getDay()
-  const startTimestamp = timestamp + offset * MS_DAY
+  const startTimestamp = value + offset * MS_DAY
   return `${formatDateShortly(startTimestamp)} 至 ${formatDateShortly(startTimestamp + 6 * MS_DAY)}`
 }

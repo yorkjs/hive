@@ -1,5 +1,4 @@
 import * as NP from 'number-precision'
-import { isInteger } from '../is/number'
 
 /**
 * 精确加法，比如 plusNumber(3, 1) === 4
@@ -95,15 +94,15 @@ export function truncateNumber(value: number, decimals: number = 0) {
 export function shortNumber(value: number, formatUnshort: (value: number) => string) {
   if (value >= 1000000000000) {
     const trillion = divideNumber(value, 1000000000000)
-    return truncateNumber(trillion, isInteger(trillion) ? 0 : 1) + '万亿'
+    return truncateNumber(trillion, hasDecimal(trillion) ? 1 : 0) + '万亿'
   }
   if (value >= 100000000) {
     const billion = divideNumber(value, 100000000)
-    return truncateNumber(billion, isInteger(billion) ? 0 : 1) + '亿'
+    return truncateNumber(billion, hasDecimal(billion) ? 1 : 0) + '亿'
   }
   if (value >= 10000) {
     const tenThousand = divideNumber(value, 10000)
-    return truncateNumber(tenThousand, isInteger(tenThousand) ? 0 : 1) + '万'
+    return truncateNumber(tenThousand, hasDecimal(tenThousand) ? 1 : 0) + '万'
   }
   return formatUnshort(value)
 }
@@ -133,4 +132,20 @@ export function parseInteger(value: string, radix?: number) {
 export function parseNumber(value: string) {
   const result = parseFloat(value)
   return isNaN(result) ? null : result
+}
+
+/**
+ * 数字是否包含小数部分
+ *
+ * @group Function
+ * @category Util
+ * @param value 要校验的值
+ * @returns 是否包含小数
+ */
+export function hasDecimal(value: number): boolean {
+  // 先排除无效数字，它们既不是整数也没有小数
+  if (!Number.isFinite(value)) {
+    return false
+  }
+  return value % 1 !== 0
 }

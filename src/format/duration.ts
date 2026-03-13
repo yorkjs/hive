@@ -1,10 +1,18 @@
 import { normalizeDuration } from '../normalize/duration'
 
-export function formatDuration(milliseconds: number) {
-  
+/**
+ * 格式化时长
+ *
+ * @group Function
+ * @category Format
+ * @param value 时长，单位是毫秒
+ * @returns 格式化后的字符串
+ */
+export function formatDuration(value: number) {
+
   const result: string[] = []
 
-  const data = normalizeDuration(milliseconds)
+  const data = normalizeDuration(value)
   if (data.days > 0) {
     result.push(`${data.days}天`)
   }

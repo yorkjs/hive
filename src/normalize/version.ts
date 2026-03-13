@@ -5,11 +5,13 @@ import { padStringStart } from '../util/string'
  *
  * @group Function
  * @category Normalize
- * @param {string} version 如 '1.2.3'，最多支持三段，每段的子版本号不超过 9999
+ * @param version 版本号，比如 `1.2.3`，最多支持三段，每段的子版本号不超过 `9999`
  * @returns 标准化后的版本号，12 位长度
+ * @example
+ * normalizeVersion('1.0.10') > normalizeVersion('1.0.9') // true
  */
-export function normalizeVersion(version: string) {
-  const tokens = version && version.split('.')
+export function normalizeVersion(value: string) {
+  const tokens = value.split('.')
   switch (tokens.length) {
     case 1:
       return padStringStart(tokens[0], 12)

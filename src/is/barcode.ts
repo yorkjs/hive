@@ -1,10 +1,12 @@
 /**
- * value 是否是标准商品条形码
+ * 是否是标准商品条形码
  *
  * @group Function
  * @category Is
  * @param value 条形码文本
- * @returns
+ * @returns 是否是标准商品条形码
+ * @example
+ * isStandardBarcode('6901234567890') // true
  */
 export function isStandardBarcode(value: string) {
   // EAN 码：通常是69开头，13位数字
@@ -17,12 +19,14 @@ export function isStandardBarcode(value: string) {
 }
 
 /**
- * value 是否是自定义商品条形码
+ * 是否是自定义商品条形码
  *
  * @group Function
  * @category Is
  * @param value 条形码文本
- * @returns
+ * @returns 是否是自定义商品条形码
+ * @example
+ * isStandardBarcode('6901234567890') // false
  */
 export function isCustomBarcode(value: string) {
   // 自定义条码，规则为 大写字母开头跟 10-12 个数字

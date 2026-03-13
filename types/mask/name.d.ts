@@ -1,6 +1,8 @@
 /**
  * 脱敏姓名
  *
+ * @group Function
+ * @category Mask
  * @param name 姓名
  * @returns 脱敏后的姓名
  */

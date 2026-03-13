@@ -1,10 +1,11 @@
 /**
  * 格式化银行卡号
+ *
  * @group Function
  * @category Format
- * @param value
- * @param masked 是否脱敏显示
- * @returns
+ * @param value 银行卡号
+ * @param masked 是否脱敏显示，默认脱敏
+ * @returns 格式化后的字符串
  */
 export function formatBankCardNumber(value: string, masked = true) {
 

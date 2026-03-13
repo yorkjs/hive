@@ -1,5 +1,5 @@
-import { timeToTimeField } from "../convert/time"
-import { padStringStart } from "./string"
+import { timeToTimeField } from '../convert/time'
+import { padStringStart } from './string'
 
 /**
  * 生成指定长度的随机整数

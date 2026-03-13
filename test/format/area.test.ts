@@ -1,7 +1,6 @@
 import {
   formatArea,
-  formatCity,
-} from '../../src/format/area'
+} from '../../src/index'
 
 test('formatArea', () => {
 
@@ -141,8 +140,5 @@ test('formatArea', () => {
       name: '中国台湾'
     },
   })).toBe('中国台湾')
-
-
-  expect(formatCity("中国台湾")).toBe("台湾");
 
 })

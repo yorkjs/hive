@@ -1,6 +1,20 @@
 /**
+ * 解析时间字符串
+ *
+ * @group Function
+ * @category Util
+ * @param str 时间字符串
+ * @param format 时间格式，按该格式解析时间字符串
+ * @returns 解析成功，返回 Date 对象，否则报错
+ * @example
+ * parseTime('2020-01-01', DATE_YEAR_MONTH_DATE) // Date {2020-01-01}
+ */
+export declare function parseTime(str: string, format: string): Error | Date;
+/**
  * 获取某个小时开始时间
  *
+ * @group Function
+ * @category Util
  * @param timestamp 毫秒时间戳
  * @returns 毫秒时间戳
  */
@@ -8,6 +22,8 @@ export declare function startOfHour(timestamp: number): number;
 /**
  * 获取前一个小时开始时间
  *
+ * @group Function
+ * @category Util
  * @param timestamp 毫秒时间戳
  * @returns 毫秒时间戳
  */
@@ -15,6 +31,8 @@ export declare function startOfPrevHour(timestamp: number): number;
 /**
  * 获取下个小时开始时间
  *
+ * @group Function
+ * @category Util
  * @param timestamp 毫秒时间戳
  * @returns 毫秒时间戳
  */
@@ -22,6 +40,8 @@ export declare function startOfNextHour(timestamp: number): number;
 /**
  * 获取某个小时结束时间
  *
+ * @group Function
+ * @category Util
  * @param timestamp 毫秒时间戳
  * @returns 毫秒时间戳
  */
@@ -29,6 +49,8 @@ export declare function endOfHour(timestamp: number): number;
 /**
 * 获取某天的开始时间
 *
+* @group Function
+* @category Util
 * @param timestamp 毫秒时间戳
 * @returns
 */
@@ -36,6 +58,8 @@ export declare function startOfDay(timestamp: number): number;
 /**
 * 获取前一天的开始时间
 *
+* @group Function
+* @category Util
 * @param timestamp 毫秒时间戳
 * @returns
 */
@@ -43,6 +67,8 @@ export declare function startOfPrevDay(timestamp: number): number;
 /**
 * 获取前一天的开始时间
 *
+* @group Function
+* @category Util
 * @param timestamp 毫秒时间戳
 * @returns
 */
@@ -50,6 +76,8 @@ export declare function startOfNextDay(timestamp: number): number;
 /**
 * 获取某天的结束时间
 *
+* @group Function
+* @category Util
 * @param timestamp 毫秒时间戳
 * @returns
 */
@@ -57,6 +85,8 @@ export declare function endOfDay(timestamp: number): number;
 /**
 * 获取某周的开始时间
 *
+* @group Function
+* @category Util
 * @param timestamp 毫秒时间戳
 * @returns
 */
@@ -64,6 +94,8 @@ export declare function startOfWeek(timestamp: number): number;
 /**
 * 获取前一周的开始时间
 *
+* @group Function
+* @category Util
 * @param timestamp 毫秒时间戳
 * @returns
 */
@@ -71,6 +103,8 @@ export declare function startOfPrevWeek(timestamp: number): number;
 /**
 * 获取后一周的开始时间
 *
+* @group Function
+* @category Util
 * @param timestamp 毫秒时间戳
 * @returns
 */
@@ -78,6 +112,8 @@ export declare function startOfNextWeek(timestamp: number): number;
 /**
 * 获取某周的结束时间
 *
+* @group Function
+* @category Util
 * @param timestamp 毫秒时间戳
 * @returns
 */
@@ -85,6 +121,8 @@ export declare function endOfWeek(timestamp: number): number;
 /**
 * 获取某月的开始时间
 *
+* @group Function
+* @category Util
 * @param timestamp 毫秒时间戳
 * @returns
 */
@@ -92,6 +130,8 @@ export declare function startOfMonth(timestamp: number): number;
 /**
 * 获取前一月的开始时间
 *
+* @group Function
+* @category Util
 * @param timestamp 毫秒时间戳
 * @returns
 */
@@ -99,6 +139,8 @@ export declare function startOfPrevMonth(timestamp: number): number;
 /**
 * 获取下一月的开始时间
 *
+* @group Function
+* @category Util
 * @param timestamp 毫秒时间戳
 * @returns
 */
@@ -106,6 +148,8 @@ export declare function startOfNextMonth(timestamp: number): number;
 /**
 * 获取某月的结束时间
 *
+* @group Function
+* @category Util
 * @param timestamp 毫秒时间戳
 * @returns
 */
@@ -120,9 +164,11 @@ interface ITimeRangeOptimizer {
 /**
 * 优化时间范围，尽量归一到某个类型下，无法归一时，才用范围
 *
+* @group Function
+* @category Util
 * @param startTimestamp 开始毫秒时间戳
 * @param endTimestamp 结束毫秒时间戳
-* @param optimizer 优化器，优先走 day/week/month 分支
+* @param optimizer 优化器，优先走 isHour/isDay/isWeek/isMonth 分支
 * @returns
 */
 export declare function optimizeTimeRange(startTimestamp: number, endTimestamp: number, optimizer: ITimeRangeOptimizer): void;

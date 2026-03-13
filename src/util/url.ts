@@ -1,6 +1,8 @@
 /**
  * 编码 URI 组件
  *
+ * @group Function
+ * @category Util
  * @param str 要编码的字符串
  * @returns 编码后的字符串
  */
@@ -11,6 +13,8 @@ export function encodeUriComponent(str: string) {
 /**
  * 解码 URI 组件
  *
+ * @group Function
+ * @category Util
  * @param str 要解码的字符串
  * @returns 解码后的字符串
  */
@@ -23,6 +27,8 @@ const httpProtocolPattern = /^https?:\/\//i
 /**
  * 标准化 URL：确保包含协议部分
  *
+ * @group Function
+ * @category Util
  * @param url 要标准化的 URL
  * @returns 标准化后的 URL
  */
@@ -42,6 +48,8 @@ export function normalizeUrl(url: string) {
 /**
  * 将 URL 转换为协议相对路径（以 // 开头）
  *
+ * @group Function
+ * @category Util
  * @param url 要转换的 URL
  * @returns 协议相对路径
  */

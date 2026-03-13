@@ -6,9 +6,9 @@ import { MONTH_DEFAULT } from '../constant/month'
  *
  * @group Function
  * @category Format
- * @param timestamp 时间戳
+ * @param value 时间戳
  * @returns
  */
-export function formatMonth(timestamp: number) {
-  return dayjs(timestamp).format(MONTH_DEFAULT)
+export function formatMonth(value: number) {
+  return dayjs(value).format(MONTH_DEFAULT)
 }

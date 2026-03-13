@@ -3,8 +3,10 @@
  *
  * @group Function
  * @category Is
- * @param value 要校验的值
+ * @param value 银行卡号
  * @returns 是否为银行卡号码
+ * @example
+ * isBankCardNumber('1234567890123') // false
  */
 export function isBankCardNumber(value: string) {
   // 1. 基础验证：只能是数字
@@ -31,8 +33,6 @@ export function isBankCardNumber(value: string) {
  * 3. 将所有数字相加
  * 4. 如果总和能被10整除，则有效
  *
- * @group Function
- * @category Is
  * @param digits 数字字符串
  * @returns 是否通过校验
  */

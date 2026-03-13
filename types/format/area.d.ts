@@ -5,10 +5,16 @@ interface IArea {
     district?: INode;
     address?: string;
 }
+/**
+ * 格式化地区
+ *
+ * @group Function
+ * @category Format
+ * @param value 地区
+ * @param options 配置项
+ * @returns 格式化后的字符串
+ */
 export declare function formatArea(area: IArea, options?: {
     simplify: boolean;
 }): string;
-export declare function formatProvince(name: string): any;
-export declare function formatCity(name: string): any;
-export declare function formatDistrict(name: string): string;
 export {};

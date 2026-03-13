@@ -4,6 +4,14 @@ interface ICategory {
   category3?: INode
 }
 
+/**
+ * 格式化类目
+ *
+ * @group Function
+ * @category Format
+ * @param value 类目
+ * @returns 格式化后的字符串
+ */
 export function formatCategory(category: ICategory) {
 
   const list: string[] = []

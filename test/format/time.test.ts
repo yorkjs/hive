@@ -1,19 +1,6 @@
 import {
   formatBusinessTimes,
-  formatHourMinutes,
 } from '../../src/format/businessTimes'
-
-test('formatHourMinutes', () => {
-  expect(formatHourMinutes(0)).toBe('00:00')
-  expect(formatHourMinutes(1)).toBe('00:01')
-  expect(formatHourMinutes(59)).toBe('00:59')
-  expect(formatHourMinutes(60)).toBe('01:00')
-  expect(formatHourMinutes(119)).toBe('01:59')
-  expect(formatHourMinutes(120)).toBe('02:00')
-  expect(formatHourMinutes(1439)).toBe('23:59')
-  expect(formatHourMinutes(1440)).toBe('24:00')
-  expect(formatHourMinutes(2881)).toBe('48:01')
-})
 
 test('formatBusinessTimes', () => {
   expect(formatBusinessTimes([])).toBe('')

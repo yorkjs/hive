@@ -7,7 +7,17 @@ interface IDuration {
   seconds: number
 }
 
-export function normalizeDuration(milliseconds: number): IDuration {
+/**
+ * 标准化时长
+ *
+ * @group Function
+ * @category Normalize
+ * @param value 时长，单位是毫秒
+ * @returns 结构化的时长，包含天、小时、分钟、秒信息
+ * @example
+ * normalizeDuration(1000) // { days: 0, hours: 0, minutes: 0, seconds: 1 }
+ */
+export function normalizeDuration(value: number): IDuration {
 
   const result: IDuration = {
     days: 0,
@@ -16,14 +26,14 @@ export function normalizeDuration(milliseconds: number): IDuration {
     seconds: 0,
   }
 
-  if (milliseconds <= 0) {
+  if (value <= 0) {
     return result
   }
 
-  const seconds = Math.ceil(milliseconds / MS_SECOND)
-  const minutes = Math.floor(milliseconds / MS_MINUTE)
-  const hours = Math.floor(milliseconds / MS_HOUR)
-  const days = Math.floor(milliseconds / MS_DAY)
+  const seconds = Math.ceil(value / MS_SECOND)
+  const minutes = Math.floor(value / MS_MINUTE)
+  const hours = Math.floor(value / MS_HOUR)
+  const days = Math.floor(value / MS_DAY)
 
   if (days > 0) {
     result.days = days

@@ -1,4 +1,44 @@
 import { MS_HOUR, MS_DAY, MS_WEEK } from '../constant/millisecond'
+import { DATE_YEAR_MONTH_DATE, DATE_YEAR_MONTH_DATE_DOT, DATE_YEAR_MONTH_DATE_SLASH } from '../constant/date'
+import { DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH } from '../constant/dateTime'
+
+/**
+ * 解析时间字符串
+ *
+ * @group Function
+ * @category Util
+ * @param str 时间字符串
+ * @param format 时间格式，按该格式解析时间字符串
+ * @returns 解析成功，返回 Date 对象，否则报错
+ * @example
+ * parseTime('2020-01-01', DATE_YEAR_MONTH_DATE) // Date {2020-01-01}
+ */
+export function parseTime(str: string, format: string) {
+
+  switch (format) {
+    case DATE_YEAR_MONTH_DATE:
+    case DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE:
+    case DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND:
+      break
+
+    case DATE_YEAR_MONTH_DATE_DOT:
+    case DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT:
+    case DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT:
+      str = str.replace(/\./g, '-')
+      break
+
+    case DATE_YEAR_MONTH_DATE_SLASH:
+    case DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH:
+    case DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH:
+      str = str.replace(/\//g, '-')
+      break
+
+    default:
+      return new Error('format is not supported')
+  }
+
+  return new Date(str)
+}
 
 /**
  * 获取某个小时开始时间
@@ -243,7 +283,7 @@ interface ITimeRangeOptimizer {
 * @category Util
 * @param startTimestamp 开始毫秒时间戳
 * @param endTimestamp 结束毫秒时间戳
-* @param optimizer 优化器，优先走 day/week/month 分支
+* @param optimizer 优化器，优先走 isHour/isDay/isWeek/isMonth 分支
 * @returns
 */
 export function optimizeTimeRange(startTimestamp: number, endTimestamp: number, optimizer: ITimeRangeOptimizer) {

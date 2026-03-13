@@ -1,5 +1,4 @@
-import { isInteger } from '../is/number'
-import { timesNumber, divideNumber } from '../util/number'
+import { timesNumber, divideNumber, hasDecimal } from '../util/number'
 
 /**
  * 米 转换为 千米
@@ -12,7 +11,7 @@ import { timesNumber, divideNumber } from '../util/number'
 export function distanceToDisplay(value: number) {
   const result = divideNumber(value, 1000)
   // 如果小数部分为 0，返回整数部分
-  return isInteger(result) ? Math.floor(result) : result
+  return hasDecimal(result) ? result : Math.floor(result)
 }
 
 /**

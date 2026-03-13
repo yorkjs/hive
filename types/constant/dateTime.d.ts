@@ -1,12 +1,96 @@
+/**
+ * 年月日 时分秒
+ * @type {string}
+ * @group Constant
+ * @category DateTime
+ * @remarks 示例：2020-10-01 10:00:00
+ */
 export declare const DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND = "YYYY-MM-DD HH:mm:ss";
+/**
+ * 年月日 时分
+ * @type {string}
+ * @group Constant
+ * @category DateTime
+ * @remarks 示例：2020-10-01 10:00
+ */
 export declare const DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE = "YYYY-MM-DD HH:mm";
+/**
+ * 月日 时分
+ * @type {string}
+ * @group Constant
+ * @category DateTime
+ * @remarks 示例：10-01 10:00
+ */
 export declare const DATE_TIME_MONTH_DATE_HOUR_MINUTE = "MM-DD HH:mm";
+/**
+ * 年月日 时分秒
+ * @type {string}
+ * @group Constant
+ * @category DateTime
+ * @remarks 示例：2020/10/01 10:00:00
+ */
 export declare const DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH = "YYYY/MM/DD HH:mm:ss";
+/**
+ * 年月日 时分
+ * @type {string}
+ * @group Constant
+ * @category DateTime
+ * @remarks 示例：2020/10/01 10:00
+ */
 export declare const DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH = "YYYY/MM/DD HH:mm";
+/**
+ * 月日 时分
+ * @type {string}
+ * @group Constant
+ * @category DateTime
+ * @remarks 示例：10/01 10:00
+ */
 export declare const DATE_TIME_MONTH_DATE_HOUR_MINUTE_SLASH = "MM/DD HH:mm";
+/**
+ * 年月日 时分秒
+ * @type {string}
+ * @group Constant
+ * @category DateTime
+ * @remarks 示例：2020.10.01 10:00:00
+ */
 export declare const DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT = "YYYY.MM.DD HH:mm:ss";
+/**
+ * 年月日 时分
+ * @type {string}
+ * @group Constant
+ * @category DateTime
+ * @remarks 示例：2020.10.01 10:00
+ */
 export declare const DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT = "YYYY.MM.DD HH:mm";
+/**
+ * 月日 时分
+ * @type {string}
+ * @group Constant
+ * @category DateTime
+ * @remarks 示例：10.01 10:00
+ */
 export declare const DATE_TIME_MONTH_DATE_HOUR_MINUTE_DOT = "MM.DD HH:mm";
+/**
+ * 年月日 时分秒
+ * @type {string}
+ * @group Constant
+ * @category DateTime
+ * @remarks 示例：2020/10/01 10:00:00
+ */
 export declare const DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_CHINESE = "YYYY\u5E74M\u6708D\u65E5 HH:mm:ss";
+/**
+ * 年月日 时分
+ * @type {string}
+ * @group Constant
+ * @category DateTime
+ * @remarks 示例：2020/10/01 10:00
+ */
 export declare const DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_CHINESE = "YYYY\u5E74M\u6708D\u65E5 HH:mm";
+/**
+ * 月日 时分
+ * @type {string}
+ * @group Constant
+ * @category DateTime
+ * @remarks 示例：10/01 10:00
+ */
 export declare const DATE_TIME_MONTH_DATE_HOUR_MINUTE_CHINESE = "M\u6708D\u65E5 HH:mm";

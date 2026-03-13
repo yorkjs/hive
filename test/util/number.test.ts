@@ -6,7 +6,8 @@ import {
   truncateNumber,
   parseInteger,
   parseNumber,
-} from '../../src/util/number'
+  hasDecimal,
+} from '../../src/index'
 
 test('plusNumber', () => {
 
@@ -128,5 +129,13 @@ test('parseNumber', () => {
 
   expect(parseNumber('0xFF')).toBe(0)
   expect(parseNumber('0XFF')).toBe(0)
+
+})
+
+test('hasDecimal', () => {
+
+  expect(hasDecimal(1)).toBe(false)
+  expect(hasDecimal(1.0)).toBe(false)
+  expect(hasDecimal(1.1)).toBe(true)
 
 })

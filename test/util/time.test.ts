@@ -1,4 +1,13 @@
 import {
+  DATE_YEAR_MONTH_DATE,
+  DATE_YEAR_MONTH_DATE_DOT,
+  DATE_YEAR_MONTH_DATE_SLASH,
+  DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE,
+  DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT,
+  DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND,
+  DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT,
+  DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH,
+  DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH,
   startOfHour,
   endOfHour,
   startOfPrevHour,
@@ -16,13 +25,40 @@ import {
   startOfPrevMonth,
   startOfNextMonth,
   optimizeTimeRange,
-} from '../../src/util/time'
-
-import {
+  parseTime,
   formatDateTime,
-} from '../../src/format/dateTime'
+} from '../../src/index'
 
-import { DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND } from '../../src/constant/dateTime'
+test('time_parse', () => {
+
+  let time = parseTime('2020-10-01 10:00:00', DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)
+  expect(formatDateTime((time as Date).getTime(), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2020-10-01 10:00:00')
+
+  time = parseTime('2020-10-01 10:00', DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE)
+  expect(formatDateTime((time as Date).getTime(), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE)).toBe('2020-10-01 10:00')
+
+  time = parseTime('2020-10-01', DATE_YEAR_MONTH_DATE)
+  expect(formatDateTime((time as Date).getTime(), DATE_YEAR_MONTH_DATE)).toBe('2020-10-01')
+
+  time = parseTime('2020.10.01 10:00:00', DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT)
+  expect(formatDateTime((time as Date).getTime(), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2020-10-01 10:00:00')
+
+  time = parseTime('2020.10.01 10:00', DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT)
+  expect(formatDateTime((time as Date).getTime(), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE)).toBe('2020-10-01 10:00')
+
+  time = parseTime('2020.10.01', DATE_YEAR_MONTH_DATE_DOT)
+  expect(formatDateTime((time as Date).getTime(), DATE_YEAR_MONTH_DATE)).toBe('2020-10-01')
+
+  time = parseTime('2020/10/01 10:00:00', DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH)
+  expect(formatDateTime((time as Date).getTime(), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2020-10-01 10:00:00')
+
+  time = parseTime('2020/10/01 10:00', DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH)
+  expect(formatDateTime((time as Date).getTime(), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE)).toBe('2020-10-01 10:00')
+
+  time = parseTime('2020/10/01', DATE_YEAR_MONTH_DATE_SLASH)
+  expect(formatDateTime((time as Date).getTime(), DATE_YEAR_MONTH_DATE)).toBe('2020-10-01')
+
+})
 
 test('time_hour', () => {
 

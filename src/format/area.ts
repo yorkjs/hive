@@ -77,6 +77,15 @@ interface IArea {
   address?: string
 }
 
+/**
+ * 格式化地区
+ *
+ * @group Function
+ * @category Format
+ * @param value 地区
+ * @param options 配置项
+ * @returns 格式化后的字符串
+ */
 export function formatArea(area: IArea, options = { simplify: true }) {
 
   const {
@@ -115,8 +124,8 @@ export function formatArea(area: IArea, options = { simplify: true }) {
 
   if (city) {
     const item = isSimplify ? formatCity(city.name) : city.name
-    if (item 
-      && item !== '市辖区' 
+    if (item
+      && item !== '市辖区'
       && item !== '县'
       && item !== '省直辖'
       && item !== prevItem
@@ -145,7 +154,7 @@ export function formatArea(area: IArea, options = { simplify: true }) {
 
 }
 
-export function formatProvince(name: string) {
+function formatProvince(name: string) {
   if (provinceMap[name]) {
     return provinceMap[name]
   }
@@ -167,7 +176,7 @@ export function formatProvince(name: string) {
   return name
 }
 
-export function formatCity(name: string) {
+function formatCity(name: string) {
 
   // 有时候会把港澳台放到城市这级显示
   if (name.startsWith('中国')) {
@@ -190,8 +199,7 @@ export function formatCity(name: string) {
   return name
 }
 
-
-export function formatDistrict(name: string) {
+function formatDistrict(name: string) {
   if (name === '市辖区') {
     return ''
   }
