@@ -38,6 +38,8 @@ export function timeFieldToTime(t: ITimeField): Date {
 /**
  * 时间对象转成时间戳
  *
+ * @group Function
+ * @category Convert
  * @param time 时间对象
  * @returns 时间戳
  */
@@ -49,6 +51,8 @@ export function timeToTimestamp(t: Date) {
 /**
  * 时间戳转成时间对象
  *
+ * @group Function
+ * @category Convert
  * @param timestamp 时间戳
  * @returns 时间对象
  */
@@ -59,6 +63,8 @@ export function timestampToTime(timestamp: number) {
 /**
  * 时间字符串转成时间对象
  *
+ * @group Function
+ * @category Convert
  * @param str 时间字符串
  * @returns 时间对象
  */

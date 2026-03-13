@@ -4,6 +4,8 @@ import { formatNumberWithComma } from './number'
 /**
  * 格式化数量
  *
+ * @group Function
+ * @category Format
  * @param value
  * @returns
  */
@@ -14,6 +16,8 @@ export function formatCount(value: number, unit = '') {
 /**
  * 格式化数量（以尽可能短的方式显示数量）
  *
+ * @group Function
+ * @category Format
  * @param value
  * @returns
  */

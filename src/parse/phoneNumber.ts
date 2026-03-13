@@ -1,6 +1,13 @@
 import { PHONE_NUMBER_MOBILE, PHONE_NUMBER_LANDLINE, PHONE_NUMBER_400 } from '../constant/phoneNumber'
 
-/// 解析电话号码
+/**
+ * 解析电话号码
+ *
+ * @group Function
+ * @category Parse
+ * @param value
+ * @returns
+ */
 export function parsePhoneNumber(value: string) {
   // 手机号码
   if (/^1\d{10}$/.test(value)) {

@@ -1,0 +1,20 @@
+{
+    "entryPoints": ["src/index.ts"], // 指定文档入口文件（可写多个）
+    "out": "docs", // 文档输出目录
+    "name": "hive util function", // 文档标题
+    "exclude": ["**/node_modules/**", "**/*.test.ts"], // 排除测试文件/依赖
+    "readme": "README.md", // 把项目README作为文档首页
+    "plugin": ["typedoc-material-theme"],
+    "categorizeByGroup": true,
+    "themeColor": "#cb9820",
+    "groupOrder": ["Function", "Constant", "*"],
+    "navigation": {
+      // 按模块（文件/目录）分组
+      "includeCategories": true,
+      // 可选：按元素类型（类、函数、接口等）分组（二选一或叠加）
+      "includeGroups": true
+    },
+    "navigationLinks": { // 自定义导航链接（比如跳转到GitHub）
+      "GitHub": "https://github.com/yorkjs/hive.git"
+    }
+  }

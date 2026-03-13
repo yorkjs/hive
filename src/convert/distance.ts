@@ -4,6 +4,8 @@ import { timesNumber, divideNumber } from '../util/number'
 /**
  * 米 转换为 千米
  *
+ * @group Function
+ * @category Convert
  * @param value 后端的比例值
  * @returns
  */
@@ -16,6 +18,8 @@ export function distanceToDisplay(value: number) {
 /**
  * 千米 转换为 米
  *
+ * @group Function
+ * @category Convert
  * @param value 前端的比例值
  * @returns
  */
@@ -35,6 +39,8 @@ function toRadians(degrees: number) {
 /**
  * 计算两个点之间的距离，返回距离单位是米
  *
+ * @group Function
+ * @category Convert
  * @param longitude1 第一个点的经度
  * @param latitude1 第一个点的纬度
  * @param longitude2 第二个点的经度

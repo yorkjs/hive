@@ -3,6 +3,8 @@ import { truncateNumber } from '../util/number'
 /**
  * 把数字的整数部分格式化为以千为段拆分，以逗号为分隔符
  *
+ * @group Function
+ * @category Format
  * @param value
  * @param decimals
  * @returns

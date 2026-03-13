@@ -4,6 +4,8 @@ import { formatDateShortly } from './date'
 /**
  * 把时间戳格式化为 周开始 ~ 周结束 格式
  *
+ * @group Function
+ * @category Format
  * @param timestamp
  * @returns
  */

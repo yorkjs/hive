@@ -1,6 +1,8 @@
 /**
  * 是否为整数
  *
+ * @group Function
+ * @category Is
  * @param value 要校验的值
  * @returns 是否为整数
  */

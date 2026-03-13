@@ -1,6 +1,13 @@
 import { AUTH_CODE_ALIPAY, AUTH_CODE_WECHAT } from '../constant/authCode'
 
-/// 解析付款码
+/**
+ * 解析付款码
+ *
+ * @group Function
+ * @category Parse
+ * @param value
+ * @returns
+ */
 export function parseAuthCode(value: string) {
 
   // 微信支付通常以 10-15 开头、18 位纯数字

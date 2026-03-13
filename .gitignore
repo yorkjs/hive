@@ -4,3 +4,5 @@ package-lock.json
 *.lock
 tsconfig.tsbuildinfo
 .DS_Store
+docs-api/
+docs/

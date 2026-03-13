@@ -3,6 +3,8 @@ import { MS_HOUR, MS_DAY, MS_WEEK } from '../constant/millisecond'
 /**
  * 获取某个小时开始时间
  *
+ * @group Function
+ * @category Util
  * @param timestamp 毫秒时间戳
  * @returns 毫秒时间戳
  */
@@ -15,6 +17,8 @@ export function startOfHour(timestamp: number) {
 /**
  * 获取前一个小时开始时间
  *
+ * @group Function
+ * @category Util
  * @param timestamp 毫秒时间戳
  * @returns 毫秒时间戳
  */
@@ -25,6 +29,8 @@ export function startOfPrevHour(timestamp: number) {
 /**
  * 获取下个小时开始时间
  *
+ * @group Function
+ * @category Util
  * @param timestamp 毫秒时间戳
  * @returns 毫秒时间戳
  */
@@ -35,6 +41,8 @@ export function startOfNextHour(timestamp: number) {
 /**
  * 获取某个小时结束时间
  *
+ * @group Function
+ * @category Util
  * @param timestamp 毫秒时间戳
  * @returns 毫秒时间戳
  */
@@ -47,6 +55,8 @@ export function endOfHour(timestamp: number) {
 /**
 * 获取某天的开始时间
 *
+* @group Function
+* @category Util
 * @param timestamp 毫秒时间戳
 * @returns
 */
@@ -59,6 +69,8 @@ export function startOfDay(timestamp: number) {
 /**
 * 获取前一天的开始时间
 *
+* @group Function
+* @category Util
 * @param timestamp 毫秒时间戳
 * @returns
 */
@@ -69,6 +81,8 @@ export function startOfPrevDay(timestamp: number) {
 /**
 * 获取前一天的开始时间
 *
+* @group Function
+* @category Util
 * @param timestamp 毫秒时间戳
 * @returns
 */
@@ -79,6 +93,8 @@ export function startOfNextDay(timestamp: number) {
 /**
 * 获取某天的结束时间
 *
+* @group Function
+* @category Util
 * @param timestamp 毫秒时间戳
 * @returns
 */
@@ -91,6 +107,8 @@ export function endOfDay(timestamp: number) {
 /**
 * 获取某周的开始时间
 *
+* @group Function
+* @category Util
 * @param timestamp 毫秒时间戳
 * @returns
 */
@@ -108,6 +126,8 @@ export function startOfWeek(timestamp: number) {
 /**
 * 获取前一周的开始时间
 *
+* @group Function
+* @category Util
 * @param timestamp 毫秒时间戳
 * @returns
 */
@@ -118,6 +138,8 @@ export function startOfPrevWeek(timestamp: number) {
 /**
 * 获取后一周的开始时间
 *
+* @group Function
+* @category Util
 * @param timestamp 毫秒时间戳
 * @returns
 */
@@ -128,6 +150,8 @@ export function startOfNextWeek(timestamp: number) {
 /**
 * 获取某周的结束时间
 *
+* @group Function
+* @category Util
 * @param timestamp 毫秒时间戳
 * @returns
 */
@@ -145,6 +169,8 @@ export function endOfWeek(timestamp: number) {
 /**
 * 获取某月的开始时间
 *
+* @group Function
+* @category Util
 * @param timestamp 毫秒时间戳
 * @returns
 */
@@ -158,6 +184,8 @@ export function startOfMonth(timestamp: number) {
 /**
 * 获取前一月的开始时间
 *
+* @group Function
+* @category Util
 * @param timestamp 毫秒时间戳
 * @returns
 */
@@ -172,6 +200,8 @@ export function startOfPrevMonth(timestamp: number) {
 /**
 * 获取下一月的开始时间
 *
+* @group Function
+* @category Util
 * @param timestamp 毫秒时间戳
 * @returns
 */
@@ -186,6 +216,8 @@ export function startOfNextMonth(timestamp: number) {
 /**
 * 获取某月的结束时间
 *
+* @group Function
+* @category Util
 * @param timestamp 毫秒时间戳
 * @returns
 */
@@ -207,6 +239,8 @@ interface ITimeRangeOptimizer {
 /**
 * 优化时间范围，尽量归一到某个类型下，无法归一时，才用范围
 *
+* @group Function
+* @category Util
 * @param startTimestamp 开始毫秒时间戳
 * @param endTimestamp 结束毫秒时间戳
 * @param optimizer 优化器，优先走 day/week/month 分支

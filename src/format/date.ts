@@ -4,6 +4,8 @@ import { DATE_MONTH_DATE, DATE_YEAR_MONTH_DATE } from '../constant/date'
 /**
  * 把时间戳格式化为 2020-10-01 格式
  *
+ * @group Function
+ * @category Format
  * @param timestamp
  * @returns
  */
@@ -14,6 +16,8 @@ export function formatDate(timestamp: number, format = DATE_YEAR_MONTH_DATE) {
 /**
  * 把时间戳格式化为 2020-10-01 至 2020-10-02 形式
  *
+ * @group Function
+ * @category Format
  * @param timestamp
  * @returns
  */
@@ -24,6 +28,8 @@ export function formatDateRange(startTimestamp: number, endTimestamp: number) {
 /**
  * 把同年份的时间戳格式化为 10-01 格式，不同年份的时间戳格式化成 2020-10-01 格式
  *
+ * @group Function
+ * @category Format
  * @param timestamp
  * @returns
  */

@@ -3,6 +3,8 @@ import { padStringStart } from '../util/string'
 /**
  * 标准化版本号，方便后续进行比较
  *
+ * @group Function
+ * @category Normalize
  * @param {string} version 如 '1.2.3'，最多支持三段，每段的子版本号不超过 9999
  * @returns 标准化后的版本号，12 位长度
  */

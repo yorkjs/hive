@@ -4,6 +4,8 @@ import { MONTH_DEFAULT } from '../constant/month'
 /**
  * 把时间戳格式化为 2020-10 格式
  *
+ * @group Function
+ * @category Format
  * @param timestamp 时间戳
  * @returns
  */

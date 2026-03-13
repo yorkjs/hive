@@ -4,6 +4,8 @@ import { DATE_MONTH_DATE_DOT } from '../constant/date'
 /**
  * 把时间戳格式化为 10.01 格式
  *
+ * @group Function
+ * @category Format
  * @param timestamp
  * @returns
  */

@@ -1,6 +1,7 @@
 /**
  * 格式化银行卡号
- *
+ * @group Function
+ * @category Format
  * @param value
  * @param masked 是否脱敏显示
  * @returns

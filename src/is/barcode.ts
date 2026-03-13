@@ -1,6 +1,8 @@
 /**
  * value 是否是标准商品条形码
  *
+ * @group Function
+ * @category Is
  * @param value 条形码文本
  * @returns
  */
@@ -17,6 +19,8 @@ export function isStandardBarcode(value: string) {
 /**
  * value 是否是自定义商品条形码
  *
+ * @group Function
+ * @category Is
  * @param value 条形码文本
  * @returns
  */

@@ -4,6 +4,8 @@ import { DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE
 /**
  * 把时间戳格式化为 2020-10-01 10:00 格式
  *
+ * @group Function
+ * @category Format
  * @param timestamp
  * @param format
  * @returns
@@ -15,6 +17,8 @@ export function formatDateTime(timestamp: number, format = DATE_TIME_YEAR_MONTH_
 /**
  * 把时间戳格式化为 2020-10-01 00:00 至 2020-10-02 00:00 形式
  *
+ * @group Function
+ * @category Format
  * @param timestamp
  * @returns
  */
@@ -25,6 +29,8 @@ export function formatDateTimeRange(startTimestamp: number, endTimestamp: number
 /**
  * 把同年份的时间戳格式化为 10-01 10:00 格式，不同年份的时间戳格式化成 2020-10-01 10:00 格式
  *
+ * @group Function
+ * @category Format
  * @param timestamp
  * @returns
  */

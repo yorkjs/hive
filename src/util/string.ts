@@ -3,6 +3,8 @@
  *
  * 注意：中文和英文都算 1 个字符
  *
+ * @group Function
+ * @category Util
  * @param str 目标字符串
  * @returns 字符串字符数量
  */
@@ -15,6 +17,8 @@ export function getStringLength(str: string) {
  *
  * 注意：中文算 2 个单位，英文数字算 1 个单位
  *
+ * @group Function
+ * @category Util
  * @param str 目标字符串
  * @returns 字符串宽度
  */
@@ -38,6 +42,8 @@ export function getStringWidth(str: string) {
 /**
  * 移除字符串开头和结尾的空白符
  *
+ * @group Function
+ * @category Util
  * @param str 要截断的字符串
  * @returns 移除空白符后的字符串
  */
@@ -48,6 +54,8 @@ export function trimString(str: string) {
 /**
  * 截取字符串
  *
+ * @group Function
+ * @category Util
  * @param str 要截断的字符串
  * @param start 开始索引
  * @param end 结束索引
@@ -60,6 +68,8 @@ export function sliceString(str: string, start: number, end: number) {
 /**
  * 截断字符串，最多显示 maxLength 个字符，超过部分用省略号表示
  *
+ * @group Function
+ * @category Util
  * @param str 要截断的字符串
  * @param maxLength 最大长度
  * @returns 截断后的字符串
@@ -79,6 +89,8 @@ export function truncateString(str: string, maxLength: number) {
 /**
  * 渲染字符串模板
  *
+ * @group Function
+ * @category Util
  * @param str 字符串模板，例如：'你好，${name}'
  * @param data 数据对象，例如：{ name: '张三' }
  * @returns 渲染后的字符串，例如：'你好，张三'
@@ -95,6 +107,8 @@ export function renderStringTemplate(str: string, data: Record<string, any>) {
 /**
  * 补全字符串开头，不足 length 个字符用 0 填充
  *
+ * @group Function
+ * @category Util
  * @param str 要补全的字符串
  * @param length 目标长度
  * @returns 补全后的字符串
@@ -106,6 +120,8 @@ export function padStringStart(str: string, length: number) {
 /**
  * 判断字符串是否包含特殊字符
  *
+ * @group Function
+ * @category Util
  * @param str 目标字符串
  * @returns 是否包含特殊字符
  */
@@ -119,6 +135,8 @@ export function hasSpecialCharacters(str: string) {
 /**
  * 移除字符串中的特殊字符
  *
+ * @group Function
+ * @category Util
  * @param str 目标字符串
  * @returns 清理后的字符串
  */

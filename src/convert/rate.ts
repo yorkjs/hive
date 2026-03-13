@@ -4,6 +4,8 @@ import { timesNumber, divideNumber } from '../util/number'
 /**
  * 万分比 转换为 百分比
  *
+ * @group Function
+ * @category Convert
  * @param value 后端的比例值
  * @returns
  */
@@ -16,6 +18,8 @@ export function rateToDisplay(value: number) {
 /**
  * 百分比 转换为 万分比
  *
+ * @group Function
+ * @category Convert
  * @param value 前端的比例值
  * @returns
  */
@@ -26,6 +30,8 @@ export function rateToBackend(value: number) {
 /**
  * 计算万分比，即 value1 / value2 得到一个万分比
  *
+ * @group Function
+ * @category Convert
  * @param value1 除数
  * @param value2 被除数
  * @returns 万分比比例
@@ -43,6 +49,8 @@ export function calculateRate(value1: number, value2: number) {
 /**
  * 根据万分比比例计算数值
  *
+ * @group Function
+ * @category Convert
  * @param value - 原始数值
  * @param rate - 万分比比例
  * @returns 计算后的数值，仅返回整数部分
