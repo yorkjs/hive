@@ -60,9 +60,9 @@ export function divideNumber(value1: number, value2: number) {
  *
  * @group Function
  * @category Util
- * @param value
- * @param decimals
- * @returns
+ * @param value 需要截断的数字
+ * @param decimals 截断的小数位数
+ * @returns 截断后的数字
  */
 export function truncateNumber(value: number, decimals: number = 0) {
 

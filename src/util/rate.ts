@@ -5,11 +5,16 @@ import { timesNumber, divideNumber } from './number'
  *
  * value1 / value2 得到一个比例，然后转成万分比返回
  *
+ * 万分比的意思是，10000 为 100%。
+ *
  * @group Function
  * @category Convert
  * @param value1 除数
  * @param value2 被除数
  * @returns 万分比比例
+ * @example
+ * calculateRate(100, 100) // 10000
+ * calculateRate(10, 100) // 1000
  */
 export function calculateRate(value1: number, value2: number) {
   if (!value2) {
@@ -29,6 +34,8 @@ export function calculateRate(value1: number, value2: number) {
  * @param value - 原始数值
  * @param rate - 万分比比例
  * @returns 计算后的数值，仅返回整数部分
+ * @example
+ * applyRate(100, 1000) // 10
  */
 export function applyRate(value: number, rate: number) {
   return Math.floor(

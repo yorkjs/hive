@@ -6,7 +6,7 @@ import { padStringStart } from './string'
  *
  * @group Function
  * @category Util
- * @param length 数字长度
+ * @param length 长度
  * @returns 指定长度的随机整数
  */
 export function randomIntegerByLength(length: number) {
@@ -23,7 +23,7 @@ export function randomIntegerByLength(length: number) {
  * @category Util
  * @param min 最小值（包含）
  * @param max 最大值（不包含）
- * @returns 范围内的随机整数
+ * @returns 指定范围内的随机整数
  */
 export function randomIntegerByRange(min: number, max: number) {
   if (min === max) {
@@ -38,8 +38,8 @@ export function randomIntegerByRange(min: number, max: number) {
  * @group Function
  * @category Util
  * @param length 字符串长度
- * @param chars 随机字符集
- * @returns 随机字符串
+ * @param chars 指定随机字符集（可选参数）
+ * @returns 指定长度的随机字符串
  */
 export function randomStringByLength(length: number, chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789') {
   const result = new Array(length)

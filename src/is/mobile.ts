@@ -6,7 +6,7 @@ import { parsePhoneNumber } from '../parse/phoneNumber'
  *
  * @group Function
  * @category Is
- * @param value 手机号码
+ * @param value 要校验的字符串
  * @returns 是否为手机号码
  * @example
  * isMobile('13512345678') // true

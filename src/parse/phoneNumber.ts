@@ -5,10 +5,10 @@ import { PHONE_NUMBER_MOBILE, PHONE_NUMBER_LANDLINE, PHONE_NUMBER_400 } from '..
  *
  * @group Function
  * @category Parse
- * @param value
- * @returns
+ * @param value 电话号码字符串
+ * @returns 如果是手机号码，返回 PHONE_NUMBER_MOBILE；如果是固定电话，返回 PHONE_NUMBER_LANDLINE；如果是400电话，返回 PHONE_NUMBER_400；否则返回 -1
  */
-export function parsePhoneNumber(value: string) {
+export function parsePhoneNumber(value: string): number {
   // 手机号码
   if (/^1\d{10}$/.test(value)) {
     return PHONE_NUMBER_MOBILE
