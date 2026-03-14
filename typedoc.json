@@ -1,7 +1,7 @@
 {
     "entryPoints": ["src/index.ts"], // 指定文档入口文件（可写多个）
     "out": "docs", // 文档输出目录
-    "name": "hive util function", // 文档标题
+    "name": "Hive", // 文档标题
     "exclude": ["**/node_modules/**", "**/*.test.ts"], // 排除测试文件/依赖
     "readme": "README.md", // 把项目README作为文档首页
     "plugin": ["typedoc-material-theme"],

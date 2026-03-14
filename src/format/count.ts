@@ -8,6 +8,9 @@ import { formatNumberWithComma } from './number'
  * @category Format
  * @param value
  * @returns
+ * @example
+ * formatCount(1000) // 1,000
+ * formatCount(1000, '个') // 1,000个
  */
 export function formatCount(value: number, unit = '') {
   return formatNumberWithComma(value) + unit
@@ -20,6 +23,9 @@ export function formatCount(value: number, unit = '') {
  * @category Format
  * @param value
  * @returns
+ * @example
+ * formatCountShortly(100000) // 10万
+ * formatCountShortly(100000, '个') // 10万个
  */
 export function formatCountShortly(value: number, unit = '') {
   return shortNumber(

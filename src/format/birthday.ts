@@ -6,8 +6,10 @@ import { DATE_MONTH_DATE_DOT } from '../constant/date'
  *
  * @group Function
  * @category Format
- * @param value 生日时间戳
+ * @param value 生日毫秒时间戳
  * @returns 格式化后的字符串
+ * @example
+ * formatBirthday(1773469396771) // 03.14
  */
 export function formatBirthday(value: number) {
   return dayjs(value).format(DATE_MONTH_DATE_DOT)

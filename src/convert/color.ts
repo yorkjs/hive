@@ -91,7 +91,7 @@ export function hexToRgbaString(color: string, alpha: number) {
  * 加深颜色亮度
  *
  * @group Function
- * @category Convert
+ * @category Util
  * @param color HEX 颜色值
  * @param offset 加深幅度，取值范围 0-1
  * @returns 新的 hex 颜色
@@ -104,7 +104,7 @@ export function darkenColor(color: string, offset: number) {
  * 减淡颜色亮度
  *
  * @group Function
- * @category Convert
+ * @category Util
  * @param color HEX 颜色值
  * @param offset 减淡幅度，取值范围 0-1
  * @returns 新的 hex 颜色

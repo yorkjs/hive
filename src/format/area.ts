@@ -82,7 +82,7 @@ interface IArea {
  *
  * @group Function
  * @category Format
- * @param value 地区
+ * @param value 地区对象
  * @param options 配置项
  * @returns 格式化后的字符串
  */

@@ -36,15 +36,15 @@ function toRadians(degrees: number) {
 }
 
 /**
- * 计算两个点之间的距离，返回距离单位是米
+ * 计算两个坐标点之间的距离
  *
  * @group Function
- * @category Convert
+ * @category Util
  * @param longitude1 第一个点的经度
  * @param latitude1 第一个点的纬度
  * @param longitude2 第二个点的经度
  * @param latitude2 第二个点的纬度
- * @returns
+ * @returns 两点之间的距离，单位是米
  */
 export function calculateDistance(
   longitude1: number,

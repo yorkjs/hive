@@ -8,11 +8,11 @@ import { formatNumberWithComma } from './number'
  *
  * @group Function
  * @category Format
- * @param value
+ * @param value 单位是分的金额
+ * @returns 格式化后的字符串
  * @example
- * const amount = formatAmount(1000, '元'),
- * print(amount) // 输出：10元
- * @returns
+ * formatAmount(1000) // 10.00元
+ * formatAmount(1000, '') // 10.00
  */
 export function formatAmount(value: number, unit = '元') {
   return formatNumberWithComma(moneyToDisplay(value), 2) + unit
@@ -23,8 +23,11 @@ export function formatAmount(value: number, unit = '元') {
  *
  * @group Function
  * @category Format
- * @param value
- * @returns
+ * @param value 单位是厘的金额
+ * @returns 格式化后的字符串
+ * @example
+ * formatPenny(10000) // 10.000元
+ * formatPenny(10000, '') // 10.000
  */
 export function formatPenny(value: number, unit = '元') {
   return formatNumberWithComma(moneyToDisplay(value, MONEY_YUAN_TO_PENNY), 3) + unit
@@ -35,8 +38,11 @@ export function formatPenny(value: number, unit = '元') {
  *
  * @group Function
  * @category Format
- * @param value
- * @returns
+ * @param value 单位是分的金额
+ * @returns 格式化后的字符串
+ * @example
+ * formatAmountShortly(10000000) // 10万元
+ * formatAmountShortly(10000000, '') // 10万
  */
 export function formatAmountShortly(value: number, unit = '元') {
   return shortNumber(
