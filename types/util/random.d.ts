@@ -3,7 +3,7 @@
  *
  * @group Function
  * @category Util
- * @param length 数字长度
+ * @param length 长度
  * @returns 指定长度的随机整数
  */
 export declare function randomIntegerByLength(length: number): number;
@@ -14,7 +14,7 @@ export declare function randomIntegerByLength(length: number): number;
  * @category Util
  * @param min 最小值（包含）
  * @param max 最大值（不包含）
- * @returns 范围内的随机整数
+ * @returns 指定范围内的随机整数
  */
 export declare function randomIntegerByRange(min: number, max: number): number;
 /**
@@ -23,8 +23,8 @@ export declare function randomIntegerByRange(min: number, max: number): number;
  * @group Function
  * @category Util
  * @param length 字符串长度
- * @param chars 随机字符集
- * @returns 随机字符串
+ * @param chars 指定随机字符集（可选参数）
+ * @returns 指定长度的随机字符串
  */
 export declare function randomStringByLength(length: number, chars?: string): string;
 /**

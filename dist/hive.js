@@ -1,5 +1,5 @@
 /**
- * hive.js v0.4.6
+ * hive.js v0.4.7
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -427,323 +427,6 @@
    */
   var SIZE_GB = 1024 * SIZE_MB;
 
-  /**
-   * 获取字符串字符数量
-   *
-   * 注意：中文和英文都算 1 个字符
-   *
-   * @group Function
-   * @category Util
-   * @param str 目标字符串
-   * @returns 字符串字符数量
-   */
-  function getStringLength(str) {
-    return str.length;
-  }
-  /**
-   * 获取字符串宽度，此函数常用于排版辅助计算
-   *
-   * 注意：中文算 2 个单位，英文数字算 1 个单位
-   *
-   * @group Function
-   * @category Util
-   * @param str 目标字符串
-   * @returns 字符串宽度
-   */
-  function getStringWidth(str) {
-    if (!str) {
-      return 0;
-    }
-    // 匹配所有宽字符（中文字符、全角标点等）
-    var wideCharRegex = /[^\x00-\xff]|[｡-ﾟ]/g;
-    var wideMatches = str.match(wideCharRegex);
-    // 宽字符数量
-    var wideCount = wideMatches ? wideMatches.length : 0;
-    // 窄字符数量
-    var narrowCount = str.length - wideCount;
-    return wideCount * 2 + narrowCount;
-  }
-  /**
-   * 移除字符串开头和结尾的空白符
-   *
-   * @group Function
-   * @category Util
-   * @param str 要截断的字符串
-   * @returns 移除空白符后的字符串
-   */
-  function trimString(str) {
-    return str.trim();
-  }
-  /**
-   * 截取字符串
-   *
-   * @group Function
-   * @category Util
-   * @param str 要截断的字符串
-   * @param start 开始索引
-   * @param end 结束索引
-   * @returns 截取后的字符串
-   */
-  function sliceString(str, start, end) {
-    return str.slice(start, end);
-  }
-  /**
-   * 截断字符串，最多显示 maxLength 个字符，超过部分用省略号表示
-   *
-   * @group Function
-   * @category Util
-   * @param str 要截断的字符串
-   * @param maxLength 最大长度
-   * @returns 截断后的字符串
-   */
-  function truncateString(str, maxLength) {
-    if (str.length <= maxLength) {
-      return str;
-    }
-    if (maxLength <= 3) {
-      return str.slice(0, maxLength);
-    }
-    return str.slice(0, maxLength - 3) + '...';
-  }
-  /**
-   * 渲染字符串模板
-   *
-   * @group Function
-   * @category Util
-   * @param str 字符串模板，例如：'你好，${name}'
-   * @param data 数据对象，例如：{ name: '张三' }
-   * @returns 渲染后的字符串，例如：'你好，张三'
-   */
-  function renderStringTemplate(str, data) {
-    return str.replace(/\${(.*?)}/g, function (match, key) {
-      // 去除变量名两端的空白
-      var value = data[trimString(key)];
-      // 如果找不到对应的值，返回原字符串
-      return value !== undefined ? String(value) : match;
-    });
-  }
-  /**
-   * 补全字符串开头，不足 length 个字符用 0 填充
-   *
-   * @group Function
-   * @category Util
-   * @param str 要补全的字符串
-   * @param length 目标长度
-   * @returns 补全后的字符串
-   */
-  function padStringStart(str, length) {
-    return str.padStart(length, '0');
-  }
-  /**
-   * 判断字符串是否包含特殊字符
-   *
-   * @group Function
-   * @category Util
-   * @param str 目标字符串
-   * @returns 是否包含特殊字符
-   */
-  function hasSpecialCharacters(str) {
-    if (!str) {
-      return false;
-    }
-    return /[^ \u4e00-\u9fa5a-zA-Z0-9，。、；：！“”‘’（）【】《》？～·—…\.,;:!?"'()\[\]{}<>@#&%￥$_\-]/g.test(str);
-  }
-  /**
-   * 移除字符串中的特殊字符
-   *
-   * @group Function
-   * @category Util
-   * @param str 目标字符串
-   * @returns 清理后的字符串
-   */
-  function removeSpecialCharacters(str) {
-    if (!str) {
-      return '';
-    }
-    return str.replace(/[^ \u4e00-\u9fa5a-zA-Z0-9，。、；：！“”‘’（）【】《》？～·—…\.,;:!?"'()\[\]{}<>@#&%￥$_\-]/g, '');
-  }
-
-  /**
-   * 将 HEX 颜色转换为 RGBA 对象
-   *
-   * @group Function
-   * @category Convert
-   * @param color HEX 颜色值
-   * @returns RGBA 颜色对象
-   */
-  function hexToRgbaObject(color) {
-    // 移除 # 号
-    var hex = color.replace('#', '');
-    // 处理简写格式 (#rgb 或 #rgba)
-    if (hex.length === 3 || hex.length === 4) {
-      hex = hex.split('').map(function (_char) {
-        return _char + _char;
-      }).join('');
-    }
-    // 验证hex长度
-    if (hex.length !== 6 && hex.length !== 8) {
-      throw new Error('无效的HEX颜色格式');
-    }
-    var result = {
-      red: parseInt(hex.substring(0, 2), 16),
-      green: parseInt(hex.substring(2, 4), 16),
-      blue: parseInt(hex.substring(4, 6), 16),
-      alpha: 1
-    };
-    if (hex.length === 8) {
-      result.alpha = parseInt(hex.substring(6, 8), 16) / 255;
-    }
-    return result;
-  }
-  /**
-   * 将 HEX 颜色转换为 HSL 对象
-   *
-   * @group Function
-   * @category Convert
-   * @param color HEX 颜色值
-   * @returns HSL 颜色对象
-   */
-  function hexToHslObject(color) {
-    return rgbToHsl(hexToRgbaObject(color));
-  }
-  /**
-   * 将 HEX 颜色转换为 RGBA 格式
-   *
-   * @group Function
-   * @category Convert
-   * @param color HEX 颜色值
-   * @param alpha 透明度，取值范围 0-1
-   * @returns RGBA 颜色字符串
-   */
-  function hexToRgbaString(color, alpha) {
-    var rgba = hexToRgbaObject(color);
-    return "rgba(".concat(rgba.red, ",").concat(rgba.green, ",").concat(rgba.blue, ",").concat(alpha, ")");
-  }
-  /**
-   * 加深颜色亮度
-   *
-   * @group Function
-   * @category Convert
-   * @param color HEX 颜色值
-   * @param offset 加深幅度，取值范围 0-1
-   * @returns 新的 hex 颜色
-   */
-  function darkenColor(color, offset) {
-    return adjustColorBrightness(color, -offset);
-  }
-  /**
-   * 减淡颜色亮度
-   *
-   * @group Function
-   * @category Convert
-   * @param color HEX 颜色值
-   * @param offset 减淡幅度，取值范围 0-1
-   * @returns 新的 hex 颜色
-   */
-  function lightenColor(color, offset) {
-    return adjustColorBrightness(color, offset);
-  }
-  /**
-   * 调整颜色亮度
-   *
-   * @group Function
-   * @category Convert
-   * @param hex 原始颜色
-   * @param offset 取值范围 0-1
-   * @returns 新的 hex 颜色字符串
-   */
-  function adjustColorBrightness(hex, offset) {
-    var rgba = hexToRgbaObject(hex);
-    var hsl = rgbToHsl(rgba);
-    // 调整亮度，限制在 0-100 之间
-    var newL = hsl.lightness + offset * 100;
-    hsl.lightness = Math.max(0, Math.min(100, newL));
-    var newRgb = hslToRgb(hsl);
-    // 如果原颜色有透明度，返回值保留该透明度
-    var result = "#".concat(toHex(newRgb.red)).concat(toHex(newRgb.green)).concat(toHex(newRgb.blue));
-    if (rgba.alpha < 1) {
-      result += toHex(rgba.alpha * 255);
-    }
-    return result;
-  }
-  /**
-   * 将 RGB 转换为 HSL
-   * r, g, b: 0-255
-   * 返回 h: 0-360, s: 0-100, l: 0-100
-   */
-  function rgbToHsl(rgb) {
-    var r = rgb.red / 255;
-    var g = rgb.green / 255;
-    var b = rgb.blue / 255;
-    var max = Math.max(r, g, b);
-    var min = Math.min(r, g, b);
-    var h = 0;
-    var s = 0;
-    var l = (max + min) / 2;
-    if (max !== min) {
-      var d = max - min;
-      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-      switch (max) {
-        case r:
-          h = (g - b) / d + (g < b ? 6 : 0);
-          break;
-        case g:
-          h = (b - r) / d + 2;
-          break;
-        case b:
-          h = (r - g) / d + 4;
-          break;
-      }
-      h *= 60;
-    }
-    return {
-      hue: h,
-      saturation: s * 100,
-      lightness: l * 100
-    };
-  }
-  /**
-   * 将 HSL 转换为 RGB
-   * 返回 r, g, b: 0-255
-   */
-  function hslToRgb(hsl) {
-    var h = hsl.hue / 360;
-    var s = hsl.saturation / 100;
-    var l = hsl.lightness / 100;
-    var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-    var p = 2 * l - q;
-    var r = hue2rgb(p, q, h + 1 / 3);
-    var g = hue2rgb(p, q, h);
-    var b = hue2rgb(p, q, h - 1 / 3);
-    return {
-      red: Math.round(r * 255),
-      green: Math.round(g * 255),
-      blue: Math.round(b * 255),
-      alpha: 1
-    };
-  }
-  function hue2rgb(p, q, t) {
-    if (t < 0) {
-      t += 1;
-    }
-    if (t > 1) {
-      t -= 1;
-    }
-    if (t < 1 / 6) {
-      return p + (q - p) * 6 * t;
-    }
-    if (t < 1 / 2) {
-      return q;
-    }
-    if (t < 2 / 3) {
-      return p + (q - p) * (2 / 3 - t) * 6;
-    }
-    return p;
-  }
-  function toHex(color) {
-    return padStringStart(color.toString(16), 2);
-  }
-
   function _arrayLikeToArray(r, a) {
     (null == a || a > r.length) && (a = r.length);
     for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
@@ -791,49 +474,65 @@
   }
 
   /**
-  * 精确加法，比如 plusNumber(3, 1) === 4
+  * 精确加法
+  *
+  * > 设计此函数的目的是为了解决浮点数四则运算的精度问题，如果参与运算的两个数值是整数，可不用此函数
   *
   * @group Function
   * @category Util
-  * @param value1 第一个值
-  * @param value2 第二个值
-  * @returns 和
+  * @param value1 第一个数值
+  * @param value2 第二个数值
+  * @returns 相加的结果
+  * @example
+  * plusNumber(3, 1) // 4
   */
   function plusNumber(value1, value2) {
     return NP__namespace.plus(value1, value2);
   }
   /**
-  * 精确减法，比如 minusNumber(3, 1) === 2
+  * 精确减法
+  *
+  * > 设计此函数的目的是为了解决浮点数四则运算的精度问题，如果参与运算的两个数值是整数，可不用此函数
   *
   * @group Function
   * @category Util
-  * @param value1 被减数
-  * @param value2 减数
-  * @returns 差
+  * @param value1 第一个数值
+  * @param value2 第二个数值
+  * @returns 相减的结果
+  * @example
+  * minusNumber(3, 1) // 2
   */
   function minusNumber(value1, value2) {
     return NP__namespace.minus(value1, value2);
   }
   /**
-   * 精确乘法，比如 timesNumber(3, 2) === 6
+   * 精确乘法
+   *
+   * > 设计此函数的目的是为了解决浮点数四则运算的精度问题，如果参与运算的两个数值是整数，可不用此函数
    *
    * @group Function
    * @category Util
-   * @param value1 第一个值
-   * @param value2 第二个值
-   * @returns 乘积结果
+   * @param value1 第一个数值
+   * @param value2 第二个数值
+   * @returns 相乘结果
+   * @example
+   * timesNumber(3, 2) // 6
    */
   function timesNumber(value1, value2) {
     return NP__namespace.times(value1, value2);
   }
   /**
-  * 精确除法，比如 divideNumber(6, 2) === 3
+  * 精确除法
+  *
+  * > 设计此函数的目的是为了解决浮点数四则运算的精度问题，如果参与运算的两个数值是整数，可不用此函数
   *
   * @group Function
   * @category Util
   * @param value1 被除数
   * @param value2 除数
-  * @returns 商
+  * @returns 相除的结果
+  * @example
+  * divideNumber(6, 2) // 3
   */
   function divideNumber(value1, value2) {
     if (value2 === 0) {
@@ -842,13 +541,17 @@
     return NP__namespace.divide(value1, value2);
   }
   /**
-   * 截断数字，解决 1.983.toFixed(1) 为 2.0 的问题
+   * 截断数字
+   *
+   * > 解决 1.983.toFixed(1) 为 2.0 的问题
    *
    * @group Function
    * @category Util
-   * @param value
-   * @param decimals
-   * @returns
+   * @param value 需要截断的数字
+   * @param decimals 截断的小数位数
+   * @returns 截断后的数字字符串
+   * @example
+   * truncateNumber(1.983, 1) // 1.9
    */
   function truncateNumber(value) {
     var decimals = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
@@ -866,31 +569,9 @@
     return "".concat(integerPart, ".").concat(truncatedDecimal);
   }
   /**
-   * 以较短的方式返回数字，避免 UI 层显示不下所有数字
-   *
-   * @group Function
-   * @category Util
-   * @param value
-   * @param decimals
-   * @returns
-   */
-  function shortNumber(value, formatUnshort) {
-    if (value >= 1000000000000) {
-      var trillion = divideNumber(value, 1000000000000);
-      return truncateNumber(trillion, hasDecimal(trillion) ? 1 : 0) + '万亿';
-    }
-    if (value >= 100000000) {
-      var billion = divideNumber(value, 100000000);
-      return truncateNumber(billion, hasDecimal(billion) ? 1 : 0) + '亿';
-    }
-    if (value >= 10000) {
-      var tenThousand = divideNumber(value, 10000);
-      return truncateNumber(tenThousand, hasDecimal(tenThousand) ? 1 : 0) + '万';
-    }
-    return formatUnshort(value);
-  }
-  /**
    * 内部使用原生 parseInt 函数解析字符串中的整数
+   *
+   * > 设计此函数的目的是为了在 hive-dart、hive-go 中对齐相同的函数
    *
    * @group Function
    * @category Util
@@ -904,6 +585,8 @@
   }
   /**
    * 内部使用原生 parseFloat 函数解析字符串中的浮点数
+   *
+   * > 设计此函数的目的是为了在 hive-dart、hive-go 中对齐相同的函数
    *
    * @group Function
    * @category Util
@@ -921,6 +604,10 @@
    * @category Util
    * @param value 要校验的值
    * @returns 是否包含小数
+   * @example
+   * hasDecimal(1) // false
+   * hasDecimal(1.0) // false
+   * hasDecimal(1.5) // true
    */
   function hasDecimal(value) {
     // 先排除无效数字，它们既不是整数也没有小数
@@ -979,38 +666,6 @@
    */
   function distanceToBackend(value) {
     return Math.floor(timesNumber(value, 1000));
-  }
-  // 定义地球半径（单位：米）
-  var EARTH_RADIUS_M = 6371 * 1000;
-  // 将角度转换为弧度
-  function toRadians(degrees) {
-    return degrees * Math.PI / 180;
-  }
-  /**
-   * 计算两个点之间的距离，返回距离单位是米
-   *
-   * @group Function
-   * @category Convert
-   * @param longitude1 第一个点的经度
-   * @param latitude1 第一个点的纬度
-   * @param longitude2 第二个点的经度
-   * @param latitude2 第二个点的纬度
-   * @returns
-   */
-  function calculateDistance(longitude1, latitude1, longitude2, latitude2) {
-    // 将经纬度转换为弧度
-    var lat1 = toRadians(latitude1);
-    var lon1 = toRadians(longitude1);
-    var lat2 = toRadians(latitude2);
-    var lon2 = toRadians(longitude2);
-    // 计算差值
-    var dLat = lat2 - lat1;
-    var dLon = lon2 - lon1;
-    // Haversine 公式
-    var a = Math.pow(Math.sin(dLat / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dLon / 2), 2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    // 计算距离
-    return Math.floor(EARTH_RADIUS_M * c);
   }
 
   /**
@@ -1225,7 +880,7 @@
    *
    * @group Function
    * @category Format
-   * @param value 地区
+   * @param value 地区对象
    * @param options 配置项
    * @returns 格式化后的字符串
    */
@@ -1350,11 +1005,37 @@
    *
    * @group Function
    * @category Format
-   * @param value 生日时间戳
+   * @param value 生日毫秒时间戳
    * @returns 格式化后的字符串
+   * @example
+   * formatBirthday(1773469396771) // 03.14
    */
   function formatBirthday(value) {
     return dayjs__default.default(value).format(DATE_MONTH_DATE_DOT);
+  }
+
+  // 此文件的函数仅在内部使用，不对外暴露
+  /**
+   * 以较短的方式返回数字，避免 UI 层显示不下所有数字
+   *
+   * @param value
+   * @param decimals
+   * @returns
+   */
+  function shortNumber(value, formatUnshort) {
+    if (value >= 1000000000000) {
+      var trillion = divideNumber(value, 1000000000000);
+      return truncateNumber(trillion, hasDecimal(trillion) ? 1 : 0) + '万亿';
+    }
+    if (value >= 100000000) {
+      var billion = divideNumber(value, 100000000);
+      return truncateNumber(billion, hasDecimal(billion) ? 1 : 0) + '亿';
+    }
+    if (value >= 10000) {
+      var tenThousand = divideNumber(value, 10000);
+      return truncateNumber(tenThousand, hasDecimal(tenThousand) ? 1 : 0) + '万';
+    }
+    return formatUnshort(value);
   }
 
   /**
@@ -1410,6 +1091,9 @@
    * @category Format
    * @param value
    * @returns
+   * @example
+   * formatCount(1000) // 1,000
+   * formatCount(1000, '个') // 1,000个
    */
   function formatCount(value) {
     var unit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
@@ -1422,6 +1106,9 @@
    * @category Format
    * @param value
    * @returns
+   * @example
+   * formatCountShortly(100000) // 10万
+   * formatCountShortly(100000, '个') // 10万个
    */
   function formatCountShortly(value) {
     var unit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
@@ -1666,11 +1353,11 @@
    *
    * @group Function
    * @category Format
-   * @param value
+   * @param value 单位是分的金额
+   * @returns 格式化后的字符串
    * @example
-   * const amount = formatAmount(1000, '元'),
-   * print(amount) // 输出：10元
-   * @returns
+   * formatAmount(1000) // 10.00元
+   * formatAmount(1000, '') // 10.00
    */
   function formatAmount(value) {
     var unit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '元';
@@ -1681,8 +1368,11 @@
    *
    * @group Function
    * @category Format
-   * @param value
-   * @returns
+   * @param value 单位是厘的金额
+   * @returns 格式化后的字符串
+   * @example
+   * formatPenny(10000) // 10.000元
+   * formatPenny(10000, '') // 10.000
    */
   function formatPenny(value) {
     var unit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '元';
@@ -1693,8 +1383,11 @@
    *
    * @group Function
    * @category Format
-   * @param value
-   * @returns
+   * @param value 单位是分的金额
+   * @returns 格式化后的字符串
+   * @example
+   * formatAmountShortly(10000000) // 10万元
+   * formatAmountShortly(10000000, '') // 10万
    */
   function formatAmountShortly(value) {
     var unit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '元';
@@ -1804,6 +1497,144 @@
     return "".concat(value, "B");
   }
 
+  /**
+   * 获取字符串字符数量
+   *
+   * 注意：中文和英文都算 1 个字符
+   *
+   * @group Function
+   * @category Util
+   * @param str 目标字符串
+   * @returns 字符串字符数量
+   */
+  function getStringLength(str) {
+    return str.length;
+  }
+  /**
+   * 获取字符串宽度，此函数常用于排版辅助计算
+   *
+   * 注意：中文算 2 个单位，英文数字算 1 个单位
+   *
+   * @group Function
+   * @category Util
+   * @param str 目标字符串
+   * @returns 字符串宽度
+   */
+  function getStringWidth(str) {
+    if (!str) {
+      return 0;
+    }
+    // 匹配所有宽字符（中文字符、全角标点等）
+    var wideCharRegex = /[^\x00-\xff]|[｡-ﾟ]/g;
+    var wideMatches = str.match(wideCharRegex);
+    // 宽字符数量
+    var wideCount = wideMatches ? wideMatches.length : 0;
+    // 窄字符数量
+    var narrowCount = str.length - wideCount;
+    return wideCount * 2 + narrowCount;
+  }
+  /**
+   * 移除字符串开头和结尾的空白符
+   *
+   * @group Function
+   * @category Util
+   * @param str 要截断的字符串
+   * @returns 移除空白符后的字符串
+   */
+  function trimString(str) {
+    return str.trim();
+  }
+  /**
+   * 截取字符串
+   *
+   * @group Function
+   * @category Util
+   * @param str 要截断的字符串
+   * @param start 开始索引
+   * @param end 结束索引
+   * @returns 截取后的字符串
+   */
+  function sliceString(str, start, end) {
+    return str.slice(start, end);
+  }
+  /**
+   * 截断字符串，最多显示 maxLength 个字符，超过部分用省略号表示
+   *
+   * 注意：中文和英文都算 1 个字符
+   *
+   * @group Function
+   * @category Util
+   * @param str 要截断的字符串
+   * @param maxLength 最大长度
+   * @returns 截断后的字符串
+   */
+  function truncateString(str, maxLength) {
+    if (str.length <= maxLength) {
+      return str;
+    }
+    if (maxLength <= 3) {
+      return str.slice(0, maxLength);
+    }
+    return str.slice(0, maxLength - 3) + '...';
+  }
+  /**
+   * 渲染字符串模板
+   *
+   * @group Function
+   * @category Util
+   * @param str 字符串模板，例如：'你好，${name}'
+   * @param data 数据对象，例如：{ name: '张三' }
+   * @returns 渲染后的字符串，例如：'你好，张三'
+   */
+  function renderStringTemplate(str, data) {
+    return str.replace(/\${(.*?)}/g, function (match, key) {
+      // 去除变量名两端的空白
+      var value = data[trimString(key)];
+      // 如果找不到对应的值，返回原字符串
+      return value !== undefined ? String(value) : match;
+    });
+  }
+  /**
+   * 补全字符串开头，不足 length 个字符用 0 填充
+   *
+   * @group Function
+   * @category Util
+   * @param str 要补全的字符串
+   * @param length 目标长度
+   * @returns 补全后的字符串
+   */
+  function padStringStart(str, length) {
+    return str.padStart(length, '0');
+  }
+  /**
+   * 判断字符串是否包含特殊字符
+   *
+   * @group Function
+   * @category Util
+   * @param str 目标字符串
+   * @returns 是否包含特殊字符
+   */
+  function hasSpecialCharacter(str) {
+    if (!str) {
+      return false;
+    }
+    return /[^ \u4e00-\u9fa5a-zA-Z0-9，。、；：！“”‘’（）【】《》？～·—…\.,;:!?"'()\[\]{}<>@#&%￥$_\-]/g.test(str);
+  }
+  /**
+   * 移除字符串中的特殊字符
+   *
+   * @group Function
+   * @category Util
+   * @param str 目标字符串
+   * @returns 清理后的字符串
+   */
+  function removeSpecialCharacter(str) {
+    if (!str) {
+      return '';
+    }
+    return str.replace(/[^ \u4e00-\u9fa5a-zA-Z0-9，。、；：！“”‘’（）【】《》？～·—…\.,;:!?"'()\[\]{}<>@#&%￥$_\-]/g, '');
+  }
+
   function formatHourMinutes(value) {
     var hours = Math.floor(value / 60);
     var minutes = value % 60;
@@ -1851,7 +1682,7 @@
    *
    * @group Function
    * @category Is
-   * @param value 银行卡号
+   * @param value 要校验的字符串
    * @returns 是否为银行卡号码
    * @example
    * isBankCardNumber('1234567890123') // false
@@ -1905,7 +1736,7 @@
    *
    * @group Function
    * @category Is
-   * @param value 条形码文本
+   * @param value 要校验的字符串
    * @returns 是否是标准商品条形码
    * @example
    * isStandardBarcode('6901234567890') // true
@@ -1924,7 +1755,7 @@
    *
    * @group Function
    * @category Is
-   * @param value 条形码文本
+   * @param value 要校验的字符串
    * @returns 是否是自定义商品条形码
    * @example
    * isStandardBarcode('6901234567890') // false
@@ -1943,7 +1774,7 @@
    *
    * @group Function
    * @category Is
-   * @param value 对公账户号码
+   * @param value 要校验的字符串
    * @returns 是否为对公账户
    * @example
    * isCorporateAccountNumber('654654565464') // true
@@ -1958,7 +1789,7 @@
    *
    * @group Function
    * @category Is
-   * @param value 邮箱
+   * @param value 要校验的字符串
    * @returns 是否为邮箱
    * @example
    * isEmail('test@example.com') // true
@@ -1972,8 +1803,10 @@
    *
    * @group Function
    * @category Is
-   * @param value 要校验的值
+   * @param value 要校验的字符串
    * @returns 是否为身份证号码
+   * @example
+   * isIdentityCardNumber('312456123548741235') // false
    */
   function isIdentityCardNumber(value) {
     if (!value || !/^\d{6}(18|19|20)?\d{2}(0[1-9]|1[012])(0[1-9]|[12]\d|3[01])\d{3}(\d|X)$/i.test(value)) {
@@ -2050,8 +1883,8 @@
    *
    * @group Function
    * @category Parse
-   * @param value
-   * @returns
+   * @param value 电话号码字符串
+   * @returns 如果是手机号码，返回 PHONE_NUMBER_MOBILE；如果是固定电话，返回 PHONE_NUMBER_LANDLINE；如果是400电话，返回 PHONE_NUMBER_400；否则返回 -1
    */
   function parsePhoneNumber(value) {
     // 手机号码
@@ -2074,7 +1907,7 @@
    *
    * @group Function
    * @category Is
-   * @param value 手机号码
+   * @param value 要校验的字符串
    * @returns 是否为手机号码
    * @example
    * isMobile('13512345678') // true
@@ -2089,20 +1922,26 @@
    *
    * @group Function
    * @category Is
-   * @param value 要校验的值
+   * @param value 要校验的字符串
    * @returns 是否为价格
+   * @example
+   * isPrice('10.05') // true
    */
   function isPrice(value) {
     return /^(?:[1-9]\d*|0)(?:\.\d{1,2})?$/.test(value);
   }
 
   /**
-   * 是否为 URL
+   * 是否为 URL，仅支持 http、https 协议
    *
    * @group Function
    * @category Is
-   * @param value 要校验的值
+   * @param value 要校验的字符串
    * @returns 是否为 URL
+   * @example
+   * isUrl('http://www.baidu.com') // true
+   * isUrl('https://www.baidu.com') // true
+   * isUrl('www.baidu.com') // false
    */
   function isUrl(value) {
     try {
@@ -2119,8 +1958,10 @@
    *
    * @group Function
    * @category Is
-   * @param value
-   * @returns
+   * @param value 要校验的字符串
+   * @returns 是否为验证码
+   * @example
+   * isUrl('112233') // true
    */
   function isVerifyCode(value) {
     return /^\d{6}$/.test(value);
@@ -2133,6 +1974,8 @@
    * @category Mask
    * @param mobile 邮箱
    * @returns 脱敏后的邮箱
+   * @example
+   * maskEmail('test@example.com') // '***t@example.com'
    */
   function maskEmail(email) {
     var atIndex = email.indexOf('@');
@@ -2154,6 +1997,8 @@
    * @category Mask
    * @param mobile 手机号
    * @returns 脱敏后的手机号
+   * @example
+   * maskMobile('13800138000') // '138****8000'
    */
   function maskMobile(mobile) {
     if (mobile.length === 11) {
@@ -2169,6 +2014,8 @@
    * @category Mask
    * @param name 姓名
    * @returns 脱敏后的姓名
+   * @example
+   * maskName('张三') // '***三'
    */
   function maskName(name) {
     var length = getStringLength(name);
@@ -2206,8 +2053,8 @@
    *
    * @group Function
    * @category Parse
-   * @param value
-   * @returns
+   * @param value 付款码字符串
+   * @returns 如果是微信付款码，返回 AUTH_CODE_WECHAT；如果是支付宝付款码，返回 AUTH_CODE_ALIPAY；否则返回 -1
    */
   function parseAuthCode(value) {
     // 微信支付通常以 10-15 开头、18 位纯数字
@@ -2222,11 +2069,241 @@
   }
 
   /**
+   * 将 HEX 颜色转换为 RGBA 对象
+   *
+   * @group Function
+   * @category Util
+   * @param color HEX 颜色值
+   * @returns RGBA 颜色对象
+   * @example
+   * hexToRgbaObject('#FF0000') // { red: 255, green: 0, blue: 0, alpha: 1 }
+   * hexToRgbaObject('#FF000000') // { red: 255, green: 0, blue: 0, alpha: 0 }
+   */
+  function hexToRgbaObject(color) {
+    // 移除 # 号
+    var hex = color.replace('#', '');
+    // 处理简写格式 (#rgb 或 #rgba)
+    if (hex.length === 3 || hex.length === 4) {
+      hex = hex.split('').map(function (_char) {
+        return _char + _char;
+      }).join('');
+    }
+    // 验证hex长度
+    if (hex.length !== 6 && hex.length !== 8) {
+      throw new Error('无效的HEX颜色格式');
+    }
+    var result = {
+      red: parseInt(hex.substring(0, 2), 16),
+      green: parseInt(hex.substring(2, 4), 16),
+      blue: parseInt(hex.substring(4, 6), 16),
+      alpha: 1
+    };
+    if (hex.length === 8) {
+      result.alpha = parseInt(hex.substring(6, 8), 16) / 255;
+    }
+    return result;
+  }
+  /**
+   * 将 HEX 颜色转换为 HSL 对象
+   *
+   * @group Function
+   * @category Util
+   * @param color HEX 颜色值
+   * @returns HSL 颜色对象
+   * @example
+   * hexToHslObject('#FF0000') // { hue: 0, saturation: 100, lightness: 50 }
+   */
+  function hexToHslObject(color) {
+    return rgbToHsl(hexToRgbaObject(color));
+  }
+  /**
+   * 将 HEX 颜色转换为 RGBA 字符串格式
+   *
+   * 使用场景是给颜色应用一个新的透明度
+   *
+   * @group Function
+   * @category Util
+   * @param color HEX 颜色值
+   * @param alpha 透明度，取值范围 [0, 1]
+   * @returns RGBA 颜色字符串
+   * @example
+   * hexToRgbaString('#FF0000', 0.5) // rgba(255,0,0,0.5)
+   */
+  function hexToRgbaString(color, alpha) {
+    var rgba = hexToRgbaObject(color);
+    return "rgba(".concat(rgba.red, ",").concat(rgba.green, ",").concat(rgba.blue, ",").concat(alpha, ")");
+  }
+  /**
+   * 加深颜色亮度
+   *
+   * @group Function
+   * @category Util
+   * @param color HEX 颜色值
+   * @param offset 加深幅度，取值范围 [0, 1]
+   * @returns 新的 hex 颜色
+   * @example
+   * darkenColor('#999999', 0.1) // #808080
+   * darkenColor('#999999', 0.2) // #666666
+   */
+  function darkenColor(color, offset) {
+    return adjustColorBrightness(color, -offset);
+  }
+  /**
+   * 减淡颜色亮度
+   *
+   * @group Function
+   * @category Util
+   * @param color HEX 颜色值
+   * @param offset 减淡幅度，取值范围 [0, 1]
+   * @returns 新的 hex 颜色
+   * @example
+   * lightenColor('#999999', 0.1) // #B3B3B3
+   * lightenColor('#999999', 0.2) // #CCCCCC
+   */
+  function lightenColor(color, offset) {
+    return adjustColorBrightness(color, offset);
+  }
+  /**
+   * 调整颜色亮度
+   *
+   * @param hex 原始颜色
+   * @param offset 取值范围 [0, 1]
+   * @returns 新的 hex 颜色字符串
+   */
+  function adjustColorBrightness(hex, offset) {
+    var rgba = hexToRgbaObject(hex);
+    var hsl = rgbToHsl(rgba);
+    // 调整亮度，限制在 0-100 之间
+    var newL = hsl.lightness + offset * 100;
+    hsl.lightness = Math.max(0, Math.min(100, newL));
+    var newRgb = hslToRgb(hsl);
+    // 如果原颜色有透明度，返回值保留该透明度
+    var result = "#".concat(toHex(newRgb.red)).concat(toHex(newRgb.green)).concat(toHex(newRgb.blue));
+    if (rgba.alpha < 1) {
+      result += toHex(rgba.alpha * 255);
+    }
+    return result;
+  }
+  /**
+   * 将 RGB 转换为 HSL
+   * r, g, b: 0-255
+   * 返回 h: 0-360, s: 0-100, l: 0-100
+   */
+  function rgbToHsl(rgb) {
+    var r = rgb.red / 255;
+    var g = rgb.green / 255;
+    var b = rgb.blue / 255;
+    var max = Math.max(r, g, b);
+    var min = Math.min(r, g, b);
+    var h = 0;
+    var s = 0;
+    var l = (max + min) / 2;
+    if (max !== min) {
+      var d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r:
+          h = (g - b) / d + (g < b ? 6 : 0);
+          break;
+        case g:
+          h = (b - r) / d + 2;
+          break;
+        case b:
+          h = (r - g) / d + 4;
+          break;
+      }
+      h *= 60;
+    }
+    return {
+      hue: h,
+      saturation: s * 100,
+      lightness: l * 100
+    };
+  }
+  /**
+   * 将 HSL 转换为 RGB
+   * 返回 r, g, b: 0-255
+   */
+  function hslToRgb(hsl) {
+    var h = hsl.hue / 360;
+    var s = hsl.saturation / 100;
+    var l = hsl.lightness / 100;
+    var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    var p = 2 * l - q;
+    var r = hue2rgb(p, q, h + 1 / 3);
+    var g = hue2rgb(p, q, h);
+    var b = hue2rgb(p, q, h - 1 / 3);
+    return {
+      red: Math.round(r * 255),
+      green: Math.round(g * 255),
+      blue: Math.round(b * 255),
+      alpha: 1
+    };
+  }
+  function hue2rgb(p, q, t) {
+    if (t < 0) {
+      t += 1;
+    }
+    if (t > 1) {
+      t -= 1;
+    }
+    if (t < 1 / 6) {
+      return p + (q - p) * 6 * t;
+    }
+    if (t < 1 / 2) {
+      return q;
+    }
+    if (t < 2 / 3) {
+      return p + (q - p) * (2 / 3 - t) * 6;
+    }
+    return p;
+  }
+  function toHex(color) {
+    return padStringStart(color.toString(16).toUpperCase(), 2);
+  }
+
+  // 定义地球半径（单位：米）
+  var EARTH_RADIUS_M = 6371 * 1000;
+  // 将角度转换为弧度
+  function toRadians(degrees) {
+    return degrees * Math.PI / 180;
+  }
+  /**
+   * 计算两个坐标点之间的距离，距离的单位是米
+   *
+   * @group Function
+   * @category Util
+   * @param longitude1 第一个坐标点的经度
+   * @param latitude1 第一个坐标点的纬度
+   * @param longitude2 第二个坐标点的经度
+   * @param latitude2 第二个坐标点的纬度
+   * @returns 两个坐标点之间的距离，单位是米
+   * @example
+   * // 计算北京到上海的距离，约 1067 公里
+   * calculateDistance(116.4074, 39.9042, 121.4737, 31.2304) // 1067310
+   */
+  function calculateDistance(longitude1, latitude1, longitude2, latitude2) {
+    // 将经纬度转换为弧度
+    var lat1 = toRadians(latitude1);
+    var lon1 = toRadians(longitude1);
+    var lat2 = toRadians(latitude2);
+    var lon2 = toRadians(longitude2);
+    // 计算差值
+    var dLat = lat2 - lat1;
+    var dLon = lon2 - lon1;
+    // Haversine 公式
+    var a = Math.pow(Math.sin(dLat / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dLon / 2), 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    // 计算距离
+    return Math.floor(EARTH_RADIUS_M * c);
+  }
+
+  /**
    * 生成指定长度的随机整数
    *
    * @group Function
    * @category Util
-   * @param length 数字长度
+   * @param length 长度
    * @returns 指定长度的随机整数
    */
   function randomIntegerByLength(length) {
@@ -2241,7 +2318,7 @@
    * @category Util
    * @param min 最小值（包含）
    * @param max 最大值（不包含）
-   * @returns 范围内的随机整数
+   * @returns 指定范围内的随机整数
    */
   function randomIntegerByRange(min, max) {
     if (min === max) {
@@ -2255,8 +2332,8 @@
    * @group Function
    * @category Util
    * @param length 字符串长度
-   * @param chars 随机字符集
-   * @returns 随机字符串
+   * @param chars 指定随机字符集（可选参数）
+   * @returns 指定长度的随机字符串
    */
   function randomStringByLength(length) {
     var chars = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -2295,13 +2372,18 @@
   /**
    * 计算万分比
    *
-   * value1 / value2 得到一个比例，然后转成万分比返回
+   * 通过 value1 除以 value2 得到一个比例，然后转成万分比
+   *
+   * > 万分比的意思是，10000 为 100%，需注意必须是整数
    *
    * @group Function
-   * @category Convert
+   * @category Util
    * @param value1 除数
    * @param value2 被除数
-   * @returns 万分比比例
+   * @returns 万分比（0-10000之间的整数）
+   * @example
+   * calculateRate(100, 100) // 10000
+   * calculateRate(10, 100) // 1000
    */
   function calculateRate(value1, value2) {
     if (!value2) {
@@ -2311,16 +2393,49 @@
     return Math.floor(divideNumber(timesNumber(value1, 10000), value2));
   }
   /**
-   * 根据万分比计算数值
+   * 通过万分比计算数值，策略是向下取整
    *
    * @group Function
-   * @category Convert
+   * @category Util
    * @param value - 原始数值
-   * @param rate - 万分比比例
-   * @returns 计算后的数值，仅返回整数部分
+   * @param rate - 万分比（0-10000之间的整数）
+   * @returns 计算后的数值
+   * @example
+   * applyRateFloor(1000, 1000) // 100，等价于百分比运算 1000 * 0.1 = 100
+   * applyRateFloor(1000, 105) // 10，等价于百分比运算 1000 * 0.0105 = 10.5，向下取整得 10
    */
-  function applyRate(value, rate) {
+  function applyRateFloor(value, rate) {
     return Math.floor(divideNumber(timesNumber(value, rate), 10000));
+  }
+  /**
+   * 通过万分比计算数值，策略是向上取整
+   *
+   * @group Function
+   * @category Util
+   * @param value - 原始数值
+   * @param rate - 万分比（0-10000之间的整数）
+   * @returns 计算后的数值
+   * @example
+   * applyRateCeil(1000, 1000) // 100，等价于百分比运算 1000 * 0.1 = 100
+   * applyRateCeil(1000, 105) // 11，等价于百分比运算 1000 * 0.0105 = 10.5，向上取整得 11
+   */
+  function applyRateCeil(value, rate) {
+    return Math.ceil(divideNumber(timesNumber(value, rate), 10000));
+  }
+  /**
+   * 通过万分比计算数值，策略是四舍五入
+   *
+   * @group Function
+   * @category Util
+   * @param value - 原始数值
+   * @param rate - 万分比（0-10000之间的整数）
+   * @returns 计算后的数值
+   * @example
+   * applyRateRound(1000, 1000) // 100，等价于百分比运算 1000 * 0.1 = 100
+   * applyRateRound(1000, 105) // 11，等价于百分比运算 1000 * 0.0105 = 10.5，四舍五入得 11
+   */
+  function applyRateRound(value, rate) {
+    return Math.round(divideNumber(timesNumber(value, rate), 10000));
   }
 
   /**
@@ -2409,7 +2524,7 @@
   * @group Function
   * @category Util
   * @param timestamp 毫秒时间戳
-  * @returns
+  * @returns 毫秒时间戳
   */
   function startOfDay(timestamp) {
     var date = new Date(timestamp);
@@ -2422,7 +2537,7 @@
   * @group Function
   * @category Util
   * @param timestamp 毫秒时间戳
-  * @returns
+  * @returns 毫秒时间戳
   */
   function startOfPrevDay(timestamp) {
     return startOfDay(timestamp - MS_DAY);
@@ -2433,7 +2548,7 @@
   * @group Function
   * @category Util
   * @param timestamp 毫秒时间戳
-  * @returns
+  * @returns 毫秒时间戳
   */
   function startOfNextDay(timestamp) {
     return startOfDay(timestamp + MS_DAY);
@@ -2444,7 +2559,7 @@
   * @group Function
   * @category Util
   * @param timestamp 毫秒时间戳
-  * @returns
+  * @returns 毫秒时间戳
   */
   function endOfDay(timestamp) {
     var date = new Date(timestamp);
@@ -2457,7 +2572,7 @@
   * @group Function
   * @category Util
   * @param timestamp 毫秒时间戳
-  * @returns
+  * @returns 毫秒时间戳
   */
   function startOfWeek(timestamp) {
     var date = new Date(timestamp);
@@ -2473,7 +2588,7 @@
   * @group Function
   * @category Util
   * @param timestamp 毫秒时间戳
-  * @returns
+  * @returns 毫秒时间戳
   */
   function startOfPrevWeek(timestamp) {
     return startOfWeek(timestamp - MS_WEEK);
@@ -2484,7 +2599,7 @@
   * @group Function
   * @category Util
   * @param timestamp 毫秒时间戳
-  * @returns
+  * @returns 毫秒时间戳
   */
   function startOfNextWeek(timestamp) {
     return startOfWeek(timestamp + MS_WEEK);
@@ -2495,7 +2610,7 @@
   * @group Function
   * @category Util
   * @param timestamp 毫秒时间戳
-  * @returns
+  * @returns 毫秒时间戳
   */
   function endOfWeek(timestamp) {
     var date = new Date(timestamp);
@@ -2511,7 +2626,7 @@
   * @group Function
   * @category Util
   * @param timestamp 毫秒时间戳
-  * @returns
+  * @returns 毫秒时间戳
   */
   function startOfMonth(timestamp) {
     var date = new Date(timestamp);
@@ -2525,7 +2640,7 @@
   * @group Function
   * @category Util
   * @param timestamp 毫秒时间戳
-  * @returns
+  * @returns 毫秒时间戳
   */
   function startOfPrevMonth(timestamp) {
     var date = new Date(timestamp);
@@ -2540,7 +2655,7 @@
   * @group Function
   * @category Util
   * @param timestamp 毫秒时间戳
-  * @returns
+  * @returns 毫秒时间戳
   */
   function startOfNextMonth(timestamp) {
     var date = new Date(timestamp);
@@ -2555,7 +2670,7 @@
   * @group Function
   * @category Util
   * @param timestamp 毫秒时间戳
-  * @returns
+  * @returns 毫秒时间戳
   */
   function endOfMonth(timestamp) {
     var date = new Date(timestamp);
@@ -2566,12 +2681,13 @@
   /**
   * 优化时间范围，尽量归一到某个类型下，无法归一时，才用范围
   *
+  * 后端常用，前端几乎用不上
+  *
   * @group Function
   * @category Util
   * @param startTimestamp 开始毫秒时间戳
   * @param endTimestamp 结束毫秒时间戳
   * @param optimizer 优化器，优先走 isHour/isDay/isWeek/isMonth 分支
-  * @returns
   */
   function optimizeTimeRange(startTimestamp, endTimestamp, optimizer) {
     var startHour = startOfHour(startTimestamp);
@@ -2596,7 +2712,9 @@
   }
 
   /**
-   * 编码 URI 组件
+   * 编码 URI 组件，内部使用原生 encodeURIComponent 实现
+   *
+   * > 设计此函数的目的是为了在 hive-dart、hive-go 中对齐相同的函数
    *
    * @group Function
    * @category Util
@@ -2607,7 +2725,9 @@
     return encodeURIComponent(str);
   }
   /**
-   * 解码 URI 组件
+   * 解码 URI 组件，内部使用原生 decodeURIComponent 实现
+   *
+   * > 设计此函数的目的是为了在 hive-dart、hive-go 中对齐相同的函数
    *
    * @group Function
    * @category Util
@@ -2619,14 +2739,19 @@
   }
   var httpProtocolPattern = /^https?:\/\//i;
   /**
-   * 标准化 URL：确保包含协议部分
+   * 把 URL 转成 http 协议，优先使用 https 协议
    *
    * @group Function
    * @category Util
    * @param url 要标准化的 URL
-   * @returns 标准化后的 URL
+   * @returns 加上 http 协议的 URL
+   * @example
+   * toHttpProtocolUrl('www.baidu.com') // 'https://www.baidu.com'
+   * toHttpProtocolUrl('//www.baidu.com') // 'https://www.baidu.com'
+   * toHttpProtocolUrl('http://www.baidu.com') // 'http://www.baidu.com'
+   * toHttpProtocolUrl('https://www.baidu.com') // 'https://www.baidu.com'
    */
-  function normalizeUrl(url) {
+  function toHttpProtocolUrl(url) {
     if (!url) {
       return '';
     }
@@ -2639,14 +2764,18 @@
     return "https://".concat(url);
   }
   /**
-   * 将 URL 转换为协议相对路径（以 // 开头）
+   * 将 URL 转换为相对协议（以 // 开头）
    *
    * @group Function
    * @category Util
    * @param url 要转换的 URL
    * @returns 协议相对路径
+   * @example
+   * toRelativeProtocolUrl('http://www.baidu.com') // '//www.baidu.com'
+   * toRelativeProtocolUrl('https://www.baidu.com') // '//www.baidu.com'
+   * toRelativeProtocolUrl('www.baidu.com') // '//www.baidu.com'
    */
-  function toProtocolRelativeUrl(url) {
+  function toRelativeProtocolUrl(url) {
     if (!url) {
       return '';
     }
@@ -2707,7 +2836,9 @@
   exports.SIZE_MB = SIZE_MB;
   exports.YEAR_CHINESE = YEAR_CHINESE;
   exports.YEAR_DEFAULT = YEAR_DEFAULT;
-  exports.applyRate = applyRate;
+  exports.applyRateCeil = applyRateCeil;
+  exports.applyRateFloor = applyRateFloor;
+  exports.applyRateRound = applyRateRound;
   exports.calculateDistance = calculateDistance;
   exports.calculateRate = calculateRate;
   exports.darkenColor = darkenColor;
@@ -2751,7 +2882,7 @@
   exports.getStringLength = getStringLength;
   exports.getStringWidth = getStringWidth;
   exports.hasDecimal = hasDecimal;
-  exports.hasSpecialCharacters = hasSpecialCharacters;
+  exports.hasSpecialCharacter = hasSpecialCharacter;
   exports.hexToHslObject = hexToHslObject;
   exports.hexToRgbaObject = hexToRgbaObject;
   exports.hexToRgbaString = hexToRgbaString;
@@ -2774,7 +2905,6 @@
   exports.moneyToDisplay = moneyToDisplay;
   exports.normalizeDuration = normalizeDuration;
   exports.normalizeShelfLife = normalizeShelfLife;
-  exports.normalizeUrl = normalizeUrl;
   exports.normalizeVersion = normalizeVersion;
   exports.optimizeTimeRange = optimizeTimeRange;
   exports.padStringStart = padStringStart;
@@ -2790,9 +2920,8 @@
   exports.randomStringByLength = randomStringByLength;
   exports.rateToBackend = rateToBackend;
   exports.rateToDisplay = rateToDisplay;
-  exports.removeSpecialCharacters = removeSpecialCharacters;
+  exports.removeSpecialCharacter = removeSpecialCharacter;
   exports.renderStringTemplate = renderStringTemplate;
-  exports.shortNumber = shortNumber;
   exports.sliceString = sliceString;
   exports.startOfDay = startOfDay;
   exports.startOfHour = startOfHour;
@@ -2811,7 +2940,8 @@
   exports.timeToTimestamp = timeToTimestamp;
   exports.timesNumber = timesNumber;
   exports.timestampToTime = timestampToTime;
-  exports.toProtocolRelativeUrl = toProtocolRelativeUrl;
+  exports.toHttpProtocolUrl = toHttpProtocolUrl;
+  exports.toRelativeProtocolUrl = toRelativeProtocolUrl;
   exports.trimString = trimString;
   exports.truncateNumber = truncateNumber;
   exports.truncateString = truncateString;

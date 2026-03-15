@@ -3,7 +3,9 @@
  *
  * @group Function
  * @category Is
- * @param value
- * @returns
+ * @param value 要校验的字符串
+ * @returns 是否为验证码
+ * @example
+ * isUrl('112233') // true
  */
 export declare function isVerifyCode(value: string): boolean;

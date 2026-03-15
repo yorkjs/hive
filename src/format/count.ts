@@ -1,4 +1,4 @@
-import { shortNumber, } from '../util/number'
+import { shortNumber, } from '../util/internal'
 import { formatNumberWithComma } from './number'
 
 /**

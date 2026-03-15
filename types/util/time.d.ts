@@ -52,7 +52,7 @@ export declare function endOfHour(timestamp: number): number;
 * @group Function
 * @category Util
 * @param timestamp 毫秒时间戳
-* @returns
+* @returns 毫秒时间戳
 */
 export declare function startOfDay(timestamp: number): number;
 /**
@@ -61,7 +61,7 @@ export declare function startOfDay(timestamp: number): number;
 * @group Function
 * @category Util
 * @param timestamp 毫秒时间戳
-* @returns
+* @returns 毫秒时间戳
 */
 export declare function startOfPrevDay(timestamp: number): number;
 /**
@@ -70,7 +70,7 @@ export declare function startOfPrevDay(timestamp: number): number;
 * @group Function
 * @category Util
 * @param timestamp 毫秒时间戳
-* @returns
+* @returns 毫秒时间戳
 */
 export declare function startOfNextDay(timestamp: number): number;
 /**
@@ -79,7 +79,7 @@ export declare function startOfNextDay(timestamp: number): number;
 * @group Function
 * @category Util
 * @param timestamp 毫秒时间戳
-* @returns
+* @returns 毫秒时间戳
 */
 export declare function endOfDay(timestamp: number): number;
 /**
@@ -88,7 +88,7 @@ export declare function endOfDay(timestamp: number): number;
 * @group Function
 * @category Util
 * @param timestamp 毫秒时间戳
-* @returns
+* @returns 毫秒时间戳
 */
 export declare function startOfWeek(timestamp: number): number;
 /**
@@ -97,7 +97,7 @@ export declare function startOfWeek(timestamp: number): number;
 * @group Function
 * @category Util
 * @param timestamp 毫秒时间戳
-* @returns
+* @returns 毫秒时间戳
 */
 export declare function startOfPrevWeek(timestamp: number): number;
 /**
@@ -106,7 +106,7 @@ export declare function startOfPrevWeek(timestamp: number): number;
 * @group Function
 * @category Util
 * @param timestamp 毫秒时间戳
-* @returns
+* @returns 毫秒时间戳
 */
 export declare function startOfNextWeek(timestamp: number): number;
 /**
@@ -115,7 +115,7 @@ export declare function startOfNextWeek(timestamp: number): number;
 * @group Function
 * @category Util
 * @param timestamp 毫秒时间戳
-* @returns
+* @returns 毫秒时间戳
 */
 export declare function endOfWeek(timestamp: number): number;
 /**
@@ -124,7 +124,7 @@ export declare function endOfWeek(timestamp: number): number;
 * @group Function
 * @category Util
 * @param timestamp 毫秒时间戳
-* @returns
+* @returns 毫秒时间戳
 */
 export declare function startOfMonth(timestamp: number): number;
 /**
@@ -133,7 +133,7 @@ export declare function startOfMonth(timestamp: number): number;
 * @group Function
 * @category Util
 * @param timestamp 毫秒时间戳
-* @returns
+* @returns 毫秒时间戳
 */
 export declare function startOfPrevMonth(timestamp: number): number;
 /**
@@ -142,7 +142,7 @@ export declare function startOfPrevMonth(timestamp: number): number;
 * @group Function
 * @category Util
 * @param timestamp 毫秒时间戳
-* @returns
+* @returns 毫秒时间戳
 */
 export declare function startOfNextMonth(timestamp: number): number;
 /**
@@ -151,7 +151,7 @@ export declare function startOfNextMonth(timestamp: number): number;
 * @group Function
 * @category Util
 * @param timestamp 毫秒时间戳
-* @returns
+* @returns 毫秒时间戳
 */
 export declare function endOfMonth(timestamp: number): number;
 interface ITimeRangeOptimizer {
@@ -164,12 +164,13 @@ interface ITimeRangeOptimizer {
 /**
 * 优化时间范围，尽量归一到某个类型下，无法归一时，才用范围
 *
+* 后端常用，前端几乎用不上
+*
 * @group Function
 * @category Util
 * @param startTimestamp 开始毫秒时间戳
 * @param endTimestamp 结束毫秒时间戳
 * @param optimizer 优化器，优先走 isHour/isDay/isWeek/isMonth 分支
-* @returns
 */
 export declare function optimizeTimeRange(startTimestamp: number, endTimestamp: number, optimizer: ITimeRangeOptimizer): void;
 export {};

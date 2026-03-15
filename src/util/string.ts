@@ -68,6 +68,8 @@ export function sliceString(str: string, start: number, end: number) {
 /**
  * 截断字符串，最多显示 maxLength 个字符，超过部分用省略号表示
  *
+ * 注意：中文和英文都算 1 个字符
+ *
  * @group Function
  * @category Util
  * @param str 要截断的字符串
@@ -125,7 +127,7 @@ export function padStringStart(str: string, length: number) {
  * @param str 目标字符串
  * @returns 是否包含特殊字符
  */
-export function hasSpecialCharacters(str: string) {
+export function hasSpecialCharacter(str: string) {
   if (!str) {
     return false
   }
@@ -140,7 +142,7 @@ export function hasSpecialCharacters(str: string) {
  * @param str 目标字符串
  * @returns 清理后的字符串
  */
-export function removeSpecialCharacters(str: string) {
+export function removeSpecialCharacter(str: string) {
   if (!str) {
     return ''
   }

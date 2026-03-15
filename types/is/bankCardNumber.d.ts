@@ -3,7 +3,7 @@
  *
  * @group Function
  * @category Is
- * @param value 银行卡号
+ * @param value 要校验的字符串
  * @returns 是否为银行卡号码
  * @example
  * isBankCardNumber('1234567890123') // false

@@ -43,6 +43,8 @@ export declare function sliceString(str: string, start: number, end: number): st
 /**
  * 截断字符串，最多显示 maxLength 个字符，超过部分用省略号表示
  *
+ * 注意：中文和英文都算 1 个字符
+ *
  * @group Function
  * @category Util
  * @param str 要截断的字符串
@@ -78,7 +80,7 @@ export declare function padStringStart(str: string, length: number): string;
  * @param str 目标字符串
  * @returns 是否包含特殊字符
  */
-export declare function hasSpecialCharacters(str: string): boolean;
+export declare function hasSpecialCharacter(str: string): boolean;
 /**
  * 移除字符串中的特殊字符
  *
@@ -87,4 +89,4 @@ export declare function hasSpecialCharacters(str: string): boolean;
  * @param str 目标字符串
  * @returns 清理后的字符串
  */
-export declare function removeSpecialCharacters(str: string): string;
+export declare function removeSpecialCharacter(str: string): string;

@@ -1,8 +1,8 @@
 import {
   encodeUriComponent,
   decodeUriComponent,
-  normalizeUrl,
-  toProtocolRelativeUrl,
+  toHttpProtocolUrl,
+  toRelativeProtocolUrl,
 } from '../../src/index'
 
 test('encodeUriComponent', () => {
@@ -13,16 +13,16 @@ test('decodeUriComponent', () => {
   expect(decodeUriComponent(`key%3D123%20%E5%95%8A%E5%95%8A%2B-*%2F_.!~()'`)).toBe(`key=123 啊啊+-*/_.!~()'`)
 })
 
-test('normalizeUrl', () => {
-  expect(normalizeUrl('http://example.com')).toBe('http://example.com')
-  expect(normalizeUrl('https://example.com')).toBe('https://example.com')
-  expect(normalizeUrl('//example.com')).toBe('https://example.com')
-  expect(normalizeUrl('example.com')).toBe('https://example.com')
+test('toHttpProtocolUrl', () => {
+  expect(toHttpProtocolUrl('http://example.com')).toBe('http://example.com')
+  expect(toHttpProtocolUrl('https://example.com')).toBe('https://example.com')
+  expect(toHttpProtocolUrl('//example.com')).toBe('https://example.com')
+  expect(toHttpProtocolUrl('example.com')).toBe('https://example.com')
 })
 
-test('toProtocolRelativeUrl', () => {
-  expect(toProtocolRelativeUrl('http://example.com')).toBe('//example.com')
-  expect(toProtocolRelativeUrl('https://example.com')).toBe('//example.com')
-  expect(toProtocolRelativeUrl('//example.com')).toBe('//example.com')
-  expect(toProtocolRelativeUrl('example.com')).toBe('//example.com')
+test('toRelativeProtocolUrl', () => {
+  expect(toRelativeProtocolUrl('http://example.com')).toBe('//example.com')
+  expect(toRelativeProtocolUrl('https://example.com')).toBe('//example.com')
+  expect(toRelativeProtocolUrl('//example.com')).toBe('//example.com')
+  expect(toRelativeProtocolUrl('example.com')).toBe('//example.com')
 })

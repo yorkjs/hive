@@ -1,5 +1,7 @@
 /**
- * 编码 URI 组件
+ * 编码 URI 组件，内部使用原生 encodeURIComponent 实现
+ *
+ * > 设计此函数的目的是为了在 hive-dart、hive-go 中对齐相同的函数
  *
  * @group Function
  * @category Util
@@ -11,7 +13,9 @@ export function encodeUriComponent(str: string) {
 }
 
 /**
- * 解码 URI 组件
+ * 解码 URI 组件，内部使用原生 decodeURIComponent 实现
+ *
+ * > 设计此函数的目的是为了在 hive-dart、hive-go 中对齐相同的函数
  *
  * @group Function
  * @category Util
@@ -25,14 +29,19 @@ export function decodeUriComponent(str: string) {
 const httpProtocolPattern = /^https?:\/\//i
 
 /**
- * 标准化 URL：确保包含协议部分
+ * 把 URL 转成 http 协议，优先使用 https 协议
  *
  * @group Function
  * @category Util
  * @param url 要标准化的 URL
- * @returns 标准化后的 URL
+ * @returns 加上 http 协议的 URL
+ * @example
+ * toHttpProtocolUrl('www.baidu.com') // 'https://www.baidu.com'
+ * toHttpProtocolUrl('//www.baidu.com') // 'https://www.baidu.com'
+ * toHttpProtocolUrl('http://www.baidu.com') // 'http://www.baidu.com'
+ * toHttpProtocolUrl('https://www.baidu.com') // 'https://www.baidu.com'
  */
-export function normalizeUrl(url: string) {
+export function toHttpProtocolUrl(url: string) {
   if (!url) {
     return ''
   }
@@ -46,14 +55,18 @@ export function normalizeUrl(url: string) {
 }
 
 /**
- * 将 URL 转换为协议相对路径（以 // 开头）
+ * 将 URL 转换为相对协议（以 // 开头）
  *
  * @group Function
  * @category Util
  * @param url 要转换的 URL
  * @returns 协议相对路径
+ * @example
+ * toRelativeProtocolUrl('http://www.baidu.com') // '//www.baidu.com'
+ * toRelativeProtocolUrl('https://www.baidu.com') // '//www.baidu.com'
+ * toRelativeProtocolUrl('www.baidu.com') // '//www.baidu.com'
  */
-export function toProtocolRelativeUrl(url: string) {
+export function toRelativeProtocolUrl(url: string) {
   if (!url) {
     return ''
   }

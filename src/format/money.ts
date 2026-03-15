@@ -1,6 +1,7 @@
 import { MONEY_YUAN_TO_PENNY } from '../constant/money'
 import { moneyToDisplay } from '../convert/money'
-import { shortNumber, truncateNumber, } from '../util/number'
+import { shortNumber } from '../util/internal'
+import { truncateNumber } from '../util/number'
 import { formatNumberWithComma } from './number'
 
 /**

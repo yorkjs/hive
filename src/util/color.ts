@@ -1,10 +1,7 @@
-import { padStringStart } from '../util/string'
+import { padStringStart } from './string'
 
 /**
  * RGBA 对象
- * @group Class
- * @category Convert
- * @remarks 该类为通用工具类，无业务耦合
  */
 interface IRgba {
   red: number
@@ -14,9 +11,6 @@ interface IRgba {
 }
 /**
  * HSL 对象
- * @group Class
- * @category Convert
- * @remarks 该类为通用工具类，无业务耦合
  */
 interface IHsl {
   hue: number
@@ -28,9 +22,12 @@ interface IHsl {
  * 将 HEX 颜色转换为 RGBA 对象
  *
  * @group Function
- * @category Convert
+ * @category Util
  * @param color HEX 颜色值
  * @returns RGBA 颜色对象
+ * @example
+ * hexToRgbaObject('#FF0000') // { red: 255, green: 0, blue: 0, alpha: 1 }
+ * hexToRgbaObject('#FF000000') // { red: 255, green: 0, blue: 0, alpha: 0 }
  */
 export function hexToRgbaObject(color: string) {
   // 移除 # 号
@@ -65,22 +62,28 @@ export function hexToRgbaObject(color: string) {
  * 将 HEX 颜色转换为 HSL 对象
  *
  * @group Function
- * @category Convert
+ * @category Util
  * @param color HEX 颜色值
  * @returns HSL 颜色对象
+ * @example
+ * hexToHslObject('#FF0000') // { hue: 0, saturation: 100, lightness: 50 }
  */
 export function hexToHslObject(color: string) {
   return rgbToHsl(hexToRgbaObject(color))
 }
 
 /**
- * 将 HEX 颜色转换为 RGBA 格式
+ * 将 HEX 颜色转换为 RGBA 字符串格式
+ *
+ * 使用场景是给颜色应用一个新的透明度
  *
  * @group Function
- * @category Convert
+ * @category Util
  * @param color HEX 颜色值
- * @param alpha 透明度，取值范围 0-1
+ * @param alpha 透明度，取值范围 [0, 1]
  * @returns RGBA 颜色字符串
+ * @example
+ * hexToRgbaString('#FF0000', 0.5) // rgba(255,0,0,0.5)
  */
 export function hexToRgbaString(color: string, alpha: number) {
   const rgba = hexToRgbaObject(color)
@@ -93,8 +96,11 @@ export function hexToRgbaString(color: string, alpha: number) {
  * @group Function
  * @category Util
  * @param color HEX 颜色值
- * @param offset 加深幅度，取值范围 0-1
+ * @param offset 加深幅度，取值范围 [0, 1]
  * @returns 新的 hex 颜色
+ * @example
+ * darkenColor('#999999', 0.1) // #808080
+ * darkenColor('#999999', 0.2) // #666666
  */
 export function darkenColor(color: string, offset: number) {
   return adjustColorBrightness(color, -offset)
@@ -106,8 +112,11 @@ export function darkenColor(color: string, offset: number) {
  * @group Function
  * @category Util
  * @param color HEX 颜色值
- * @param offset 减淡幅度，取值范围 0-1
+ * @param offset 减淡幅度，取值范围 [0, 1]
  * @returns 新的 hex 颜色
+ * @example
+ * lightenColor('#999999', 0.1) // #B3B3B3
+ * lightenColor('#999999', 0.2) // #CCCCCC
  */
 export function lightenColor(color: string, offset: number) {
   return adjustColorBrightness(color, offset)
@@ -116,10 +125,8 @@ export function lightenColor(color: string, offset: number) {
 /**
  * 调整颜色亮度
  *
- * @group Function
- * @category Convert
  * @param hex 原始颜色
- * @param offset 取值范围 0-1
+ * @param offset 取值范围 [0, 1]
  * @returns 新的 hex 颜色字符串
  */
 function adjustColorBrightness(hex: string, offset: number) {
@@ -223,5 +230,5 @@ function hue2rgb(p: number, q: number, t: number) {
 }
 
 function toHex(color: number) {
-  return padStringStart(color.toString(16), 2)
+  return padStringStart(color.toString(16).toUpperCase(), 2)
 }

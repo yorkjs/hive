@@ -3,12 +3,16 @@ import {
   lightenColor,
   hexToRgbaObject,
   hexToRgbaString,
-} from '../../src/convert/color'
+  hexToHslObject,
+} from '../../src/index'
 
 test('color_convert', () => {
 
   expect(hexToRgbaString("#F00", 0.5)).toBe("rgba(255,0,0,0.5)")
   expect(hexToRgbaString("#FF0000", 0.5)).toBe("rgba(255,0,0,0.5)")
+  expect(hexToRgbaString("#f00", 0.5)).toBe("rgba(255,0,0,0.5)")
+  expect(hexToRgbaString("#ff0000", 0.5)).toBe("rgba(255,0,0,0.5)")
+
   expect(hexToRgbaString("#0F0", 0.7)).toBe("rgba(0,255,0,0.7)")
   expect(hexToRgbaString("#00FF00", 0.7)).toBe("rgba(0,255,0,0.7)")
   expect(hexToRgbaString("#00F", 0.9)).toBe("rgba(0,0,255,0.9)")
@@ -50,10 +54,15 @@ test('color_convert', () => {
     blue: 0,
     alpha: 1,
   })
+  expect(hexToHslObject("#F00")).toEqual({
+    hue: 0,
+    saturation: 100,
+    lightness: 50,
+  })
 
   expect(darkenColor("#ff0000", 0.2)).toBe("#990000")
-  expect(lightenColor("#ff0000", 0.2)).toBe("#ff6666")
-  expect(lightenColor("#ff000000", 0.2)).toBe("#ff666600")
-  expect(lightenColor("#ff0000FF", 0.2)).toBe("#ff6666")
+  expect(lightenColor("#ff0000", 0.2)).toBe("#FF6666")
+  expect(lightenColor("#ff000000", 0.2)).toBe("#FF666600")
+  expect(lightenColor("#ff0000FF", 0.2)).toBe("#FF6666")
 
 })

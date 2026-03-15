@@ -5,8 +5,8 @@ import {
   sliceString,
   truncateString,
   padStringStart,
-  hasSpecialCharacters,
-  removeSpecialCharacters,
+  hasSpecialCharacter,
+  removeSpecialCharacter,
   renderStringTemplate,
 } from '../../src/index'
 
@@ -98,21 +98,21 @@ test('padStringStart', () => {
 
 })
 
-test('hasSpecialCharacters', () => {
+test('hasSpecialCharacter', () => {
 
-  expect(hasSpecialCharacters('abc,[1]23. 你好，【世界】！')).toBe(false)
-  expect(hasSpecialCharacters('abc,123. \t\n')).toBe(true)
-  expect(hasSpecialCharacters('abc,123.☺️')).toBe(true)
-  expect(hasSpecialCharacters(' abc,  123. ')).toBe(false)
+  expect(hasSpecialCharacter('abc,[1]23. 你好，【世界】！')).toBe(false)
+  expect(hasSpecialCharacter('abc,123. \t\n')).toBe(true)
+  expect(hasSpecialCharacter('abc,123.☺️')).toBe(true)
+  expect(hasSpecialCharacter(' abc,  123. ')).toBe(false)
 
 })
 
-test('removeSpecialCharacters', () => {
+test('removeSpecialCharacter', () => {
 
-  expect(removeSpecialCharacters('abc,[1]23. 你好，【世界】！')).toBe('abc,[1]23. 你好，【世界】！')
-  expect(removeSpecialCharacters('abc,123.\t\n')).toBe('abc,123.')
-  expect(removeSpecialCharacters('a☺️bc,☺️123.^456☺️%')).toBe('abc,123.456%')
-  expect(removeSpecialCharacters('a☺️bc，123。☺️')).toBe('abc，123。')
-  expect(removeSpecialCharacters(' abc,  123. ')).toBe(' abc,  123. ')
+  expect(removeSpecialCharacter('abc,[1]23. 你好，【世界】！')).toBe('abc,[1]23. 你好，【世界】！')
+  expect(removeSpecialCharacter('abc,123.\t\n')).toBe('abc,123.')
+  expect(removeSpecialCharacter('a☺️bc,☺️123.^456☺️%')).toBe('abc,123.456%')
+  expect(removeSpecialCharacter('a☺️bc，123。☺️')).toBe('abc，123。')
+  expect(removeSpecialCharacter(' abc,  123. ')).toBe(' abc,  123. ')
 
 })
