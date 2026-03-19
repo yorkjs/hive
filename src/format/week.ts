@@ -6,7 +6,7 @@ import { formatDateShortly } from './date'
  *
  * @group Function
  * @category Format
- * @param value 时间戳
+ * @param value 毫秒时间戳
  * @returns
  */
 export function formatWeek(value: number) {

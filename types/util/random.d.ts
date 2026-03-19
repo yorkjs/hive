@@ -3,7 +3,7 @@
  *
  * @group Function
  * @category Util
- * @param length 长度
+ * @param length 生成的随机整数长度，比如 3 表示生成 [100, 999] 的整数
  * @returns 指定长度的随机整数
  */
 export declare function randomIntegerByLength(length: number): number;
@@ -22,11 +22,11 @@ export declare function randomIntegerByRange(min: number, max: number): number;
  *
  * @group Function
  * @category Util
- * @param length 字符串长度
- * @param chars 指定随机字符集（可选参数）
+ * @param length 生成的随机字符串长度
+ * @param charset 指定随机字符集（可选参数）
  * @returns 指定长度的随机字符串
  */
-export declare function randomStringByLength(length: number, chars?: string): string;
+export declare function randomStringByLength(length: number, charset?: string): string;
 /**
  * 根据当前时间生成随机字符串，可通过 tailLength 控制重复的概率
  *

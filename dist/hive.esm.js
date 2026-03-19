@@ -1,5 +1,5 @@
 /**
- * hive.js v0.4.7
+ * hive.js v0.4.8
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -38,39 +38,43 @@ const YEAR_DEFAULT = 'YYYY';
 const YEAR_CHINESE = 'YYYY年';
 
 /**
- * 年月
+ * 月份，包含年月
+ *
  * @type {string}
  * @group Constant
  * @category Month
- * @remarks 示例：2020-10
- * @default 'YYYY-MM'
+ * @example
+ * 示例：2020-10
  */
 const MONTH_DEFAULT = 'YYYY-MM';
 /**
- * 只有月
+ * 月份，只有月
+ *
  * @type {string}
  * @group Constant
  * @category Month
- * @remarks 示例：10
- * @default 'MM'
+ * @example
+ * 示例：10
  */
 const MONTH_ONLY = 'MM';
 /**
- * 中文版年月
+ * 月份，中文版年月
+ *
  * @type {string}
  * @group Constant
  * @category Month
- * @remarks 示例：2020年10月
- * @default 'YYYY年M月'
+ * @example
+ * 示例：2020年10月
  */
 const MONTH_CHINESE = 'YYYY年M月';
 /**
- * 中文版只有月
+ * 月份，中文版只有月
+ *
  * @type {string}
  * @group Constant
  * @category Month
- * @remarks 示例：10月
- * @default 'M月'
+ * @example
+ * 示例：10月
  */
 const MONTH_ONLY_CHINESE = 'M月';
 
@@ -328,28 +332,61 @@ const AMOUNT_TEN_THOUSAND_YUAN = 10000 * AMOUNT_ONE_YUAN;
 
 /**
  * 手机号类型
+ *
  * @type {number}
  * @group Constant
  * @category PhoneNumber
- * @remarks 1. 手机号 2. 固定电话 2. 400 电话
  */
 const PHONE_NUMBER_MOBILE = 1;
 /**
  * 手机号类型
+ *
  * @type {number}
  * @group Constant
  * @category PhoneNumber
- * @remarks 1. 手机号 2. 固定电话 2. 400 电话
  */
 const PHONE_NUMBER_LANDLINE = 2;
 /**
  * 手机号类型
+ *
  * @type {number}
  * @group Constant
  * @category PhoneNumber
- * @remarks 1. 手机号 2. 固定电话 2. 400 电话
  */
 const PHONE_NUMBER_400 = 3;
+
+/**
+ * 随机字符，包含所有数字
+ *
+ * @type {string}
+ * @group Constant
+ * @category RandomCharset
+ */
+const RANDOM_CHARSET_NUMERIC = '0123456789';
+/**
+ * 随机字符，仅含大写字母
+ *
+ * @type {string}
+ * @group Constant
+ * @category RandomCharset
+ */
+const RANDOM_CHARSET_ALPHA_UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+/**
+ * 随机字符，仅含小写字母
+ *
+ * @type {string}
+ * @group Constant
+ * @category RandomCharset
+ */
+const RANDOM_CHARSET_ALPHA_LOWER = 'abcdefghijklmnopqrstuvwxyz';
+/**
+ * 随机字符，所有所有字母和数字
+ *
+ * @type {string}
+ * @group Constant
+ * @category RandomCharset
+ */
+const RANDOM_CHARSET_ALPHA_NUMERIC = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
 /**
  * 保质期(日)
@@ -913,6 +950,9 @@ function formatDistrict(name) {
  * @param value 银行卡号
  * @param masked 是否脱敏显示，默认脱敏
  * @returns 格式化后的字符串
+ * @example
+ * formatBankCardNumber('1111222233334444') // **** **** **** 4444
+ * formatBankCardNumber('1111222233334444', false) // 1111 2222 3333 4444
  */
 function formatBankCardNumber(value, masked = true) {
     const { length } = value;
@@ -935,12 +975,13 @@ function formatBankCardNumber(value, masked = true) {
  * @group Function
  * @category Format
  * @param value 生日毫秒时间戳
+ * @param format 格式，默认是 DATE_MONTH_DATE_DOT
  * @returns 格式化后的字符串
  * @example
  * formatBirthday(1773469396771) // 03.14
  */
-function formatBirthday(value) {
-    return dayjs(value).format(DATE_MONTH_DATE_DOT);
+function formatBirthday(value, format = DATE_MONTH_DATE_DOT) {
+    return dayjs(value).format(format);
 }
 
 // 此文件的函数仅在内部使用，不对外暴露
@@ -1050,6 +1091,8 @@ function formatCountShortly(value, unit = '') {
  * @category Format
  * @param value 类目
  * @returns 格式化后的字符串
+ * @example
+ * formatCategory({ category1: { name: '手机' }, category2: { name: '手机通讯' }, category3: { name: '手机通讯' } }) // 手机/手机通讯/手机通讯
  */
 function formatCategory(category) {
     const list = [];
@@ -1066,24 +1109,30 @@ function formatCategory(category) {
 }
 
 /**
- * 把万分比格式化为折扣
+ * 把万分比格式化为常见的折扣显示格式
  *
  * @group Function
  * @category Format
- * @param value
+ * @param value 万分比
  * @returns
+ * @example
+ * formatDiscount(8000) // 8折
+ * formatDiscount(8800) // 8.8折
  */
 function formatDiscount(value) {
     return discountToDisplay(value) + '折';
 }
 
 /**
- * 把距离格式化为千米单位
+ * 把距离格式化为公里（公里比千米更符合国内用户认知）
  *
  * @group Function
  * @category Format
- * @param distance
+ * @param distance 距离，单位是米
  * @returns
+ * @example
+ * formatDistance(1000) // 1公里
+ * formatDistance(10000) // 10公里
  */
 function formatDistance(distance) {
     return distanceToDisplay(distance) + '公里';
@@ -1135,6 +1184,10 @@ function normalizeDuration(value) {
  * @category Format
  * @param value 时长，单位是毫秒
  * @returns 格式化后的字符串
+ * @example
+ * formatDuration(1000) // 1秒
+ * formatDuration(60000) // 1分钟
+ * formatDuration(3600000) // 1小时
  */
 function formatDuration(value) {
     const result = [];
@@ -1159,7 +1212,8 @@ function formatDuration(value) {
  *
  * @group Function
  * @category Format
- * @param timestamp
+ * @param timestamp 毫秒时间戳
+ * @param format 格式，默认值为 DATE_YEAR_MONTH_DATE
  * @returns
  */
 function formatDate(timestamp, format = DATE_YEAR_MONTH_DATE) {
@@ -1170,7 +1224,8 @@ function formatDate(timestamp, format = DATE_YEAR_MONTH_DATE) {
  *
  * @group Function
  * @category Format
- * @param timestamp
+ * @param startTimestamp 开始时间的毫秒时间戳
+ * @param endTimestamp 结束时间的毫秒时间戳
  * @returns
  */
 function formatDateRange(startTimestamp, endTimestamp) {
@@ -1181,7 +1236,7 @@ function formatDateRange(startTimestamp, endTimestamp) {
  *
  * @group Function
  * @category Format
- * @param timestamp
+ * @param timestamp 毫秒时间戳
  * @returns
  */
 function formatDateShortly(timestamp) {
@@ -1198,8 +1253,8 @@ function formatDateShortly(timestamp) {
  *
  * @group Function
  * @category Format
- * @param timestamp
- * @param format
+ * @param timestamp 毫秒时间戳
+ * @param format 格式，默认值为 DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE
  * @returns
  */
 function formatDateTime(timestamp, format = DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE) {
@@ -1210,7 +1265,8 @@ function formatDateTime(timestamp, format = DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUT
  *
  * @group Function
  * @category Format
- * @param timestamp
+ * @param startTimestamp 开始时间的毫秒时间戳
+ * @param endTimestamp 结束时间的毫秒时间戳
  * @returns
  */
 function formatDateTimeRange(startTimestamp, endTimestamp) {
@@ -1221,7 +1277,7 @@ function formatDateTimeRange(startTimestamp, endTimestamp) {
  *
  * @group Function
  * @category Format
- * @param timestamp
+ * @param timestamp 毫秒时间戳
  * @returns
  */
 function formatDateTimeShortly(timestamp) {
@@ -1238,7 +1294,7 @@ function formatDateTimeShortly(timestamp) {
  *
  * @group Function
  * @category Format
- * @param value 时间戳
+ * @param value 毫秒时间戳
  * @returns
  */
 function formatWeek(value) {
@@ -1249,27 +1305,33 @@ function formatWeek(value) {
 }
 
 /**
- * 把时间戳格式化为 2020-10 格式
+ * 把时间戳格式化为月份（包含年和月）
  *
  * @group Function
  * @category Format
- * @param value 时间戳
+ * @param value 毫秒时间戳
+ * @param format 格式，默认是 yyyy-MM，如果不符合要求，从 MONTH_XX 常量选择
  * @returns
+ * @example
+ * formatMonth(1601513800000) // 2020-10
  */
-function formatMonth(value) {
-    return dayjs(value).format(MONTH_DEFAULT);
+function formatMonth(value, format = MONTH_DEFAULT) {
+    return dayjs(value).format(format);
 }
 
 /**
- * 把时间戳格式化为 2020 格式
+ * 把时间戳格式化为显示格式
  *
  * @group Function
  * @category Format
- * @param timestamp
- * @returns
+ * @param timestamp 毫秒时间戳
+ * @param format 格式，默认值为 YEAR_DEFAULT
+ * @returns 格式化后的字符串
+ * @example
+ * formatYear(1773932460475) // 2026
  */
-function formatYear(timestamp) {
-    return dayjs(timestamp).format(YEAR_DEFAULT);
+function formatYear(timestamp, format = YEAR_DEFAULT) {
+    return dayjs(timestamp).format(format);
 }
 
 /**
@@ -1322,8 +1384,11 @@ function formatAmountShortly(value, unit = '元') {
  *
  * @group Function
  * @category Format
- * @param value
- * @returns
+ * @param value 万分比
+ * @returns 格式化后的百分比字符串
+ * @example
+ * formatRatePercent(8000) // 80%
+ * formatRatePercent(8800) // 88%
  */
 function formatRatePercent(value) {
     return rateToDisplay(value) + '%';
@@ -1377,6 +1442,10 @@ function normalizeShelfLife(value) {
  * @category Format
  * @param value 有效期，单位是小时
  * @returns 格式化后的字符串
+ * @example
+ * formatShelfLife(24) // 1天
+ * formatShelfLife(48) // 2天
+ * formatShelfLife(365 * 24) // 1年
  */
 function formatShelfLife(value) {
     const result = [];
@@ -1403,6 +1472,10 @@ function formatShelfLife(value) {
  * @category Format
  * @param value 文件大小，单位是字节
  * @returns 格式化后的字符串
+ * @example
+ * formatSize(1024) // 1KB
+ * formatSize(1024 * 1024) // 1MB
+ * formatSize(1024 * 1024 * 1024) // 1GB
  */
 function formatSize(value) {
     if (value >= SIZE_GB) {
@@ -1570,6 +1643,8 @@ function formatHourMinutes(value) {
  * @category Format
  * @param value 营业时间时段范围为 [0, 2880] 可跨天, 0-1440 为当天，1440-2880 为次日
  * @returns 格式化后的字符串
+ * @example
+ * formatBusinessTimes([0, 1440]) // 全天
  */
 function formatBusinessTimes(value) {
     const len = value.length;
@@ -2230,7 +2305,7 @@ function calculateDistance(longitude1, latitude1, longitude2, latitude2) {
  *
  * @group Function
  * @category Util
- * @param length 长度
+ * @param length 生成的随机整数长度，比如 3 表示生成 [100, 999] 的整数
  * @returns 指定长度的随机整数
  */
 function randomIntegerByLength(length) {
@@ -2258,16 +2333,16 @@ function randomIntegerByRange(min, max) {
  *
  * @group Function
  * @category Util
- * @param length 字符串长度
- * @param chars 指定随机字符集（可选参数）
+ * @param length 生成的随机字符串长度
+ * @param charset 指定随机字符集（可选参数）
  * @returns 指定长度的随机字符串
  */
-function randomStringByLength(length, chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789') {
+function randomStringByLength(length, charset = RANDOM_CHARSET_ALPHA_NUMERIC) {
     const result = new Array(length);
-    const charLength = chars.length;
+    const charLength = charset.length;
     for (let i = 0; i < length; i++) {
         const randomIndex = Math.floor(Math.random() * charLength);
-        result[i] = chars[randomIndex];
+        result[i] = charset[randomIndex];
     }
     return result.join('');
 }
@@ -2718,5 +2793,5 @@ function toRelativeProtocolUrl(url) {
     return url;
 }
 
-export { AMOUNT_ONE_YUAN, AMOUNT_TEN_THOUSAND_YUAN, AUTH_CODE_ALIPAY, AUTH_CODE_WECHAT, DATE_MONTH_DATE, DATE_MONTH_DATE_CHINESE, DATE_MONTH_DATE_DOT, DATE_MONTH_DATE_SLASH, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_YEAR_MONTH_DATE, DATE_YEAR_MONTH_DATE_CHINESE, DATE_YEAR_MONTH_DATE_DOT, DATE_YEAR_MONTH_DATE_SLASH, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MONEY_YUAN_TO_PENNY, MONTH_CHINESE, MONTH_DEFAULT, MONTH_ONLY, MONTH_ONLY_CHINESE, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, PHONE_NUMBER_400, PHONE_NUMBER_LANDLINE, PHONE_NUMBER_MOBILE, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, YEAR_CHINESE, YEAR_DEFAULT, applyRateCeil, applyRateFloor, applyRateRound, calculateDistance, calculateRate, darkenColor, decodeUriComponent, discountToBackend, discountToDisplay, distanceToBackend, distanceToDisplay, divideNumber, encodeUriComponent, endOfDay, endOfHour, endOfMonth, endOfWeek, formatAmount, formatAmountShortly, formatArea, formatBankCardNumber, formatBirthday, formatBusinessTimes, formatCategory, formatCount, formatCountShortly, formatDate, formatDateRange, formatDateShortly, formatDateTime, formatDateTimeRange, formatDateTimeShortly, formatDiscount, formatDistance, formatDuration, formatMonth, formatNumberWithComma, formatPenny, formatRatePercent, formatShelfLife, formatSize, formatWeek, formatYear, getStringLength, getStringWidth, hasDecimal, hasSpecialCharacter, hexToHslObject, hexToRgbaObject, hexToRgbaString, isBankCardNumber, isCorporateAccountNumber, isCustomBarcode, isEmail, isIdentityCardNumber, isMobile, isPrice, isStandardBarcode, isUrl, isVerifyCode, lightenColor, maskEmail, maskMobile, maskName, minusNumber, moneyToBackend, moneyToDisplay, normalizeDuration, normalizeShelfLife, normalizeVersion, optimizeTimeRange, padStringStart, parseAuthCode, parseInteger, parseNumber, parsePhoneNumber, parseTime, plusNumber, randomIntegerByLength, randomIntegerByRange, randomStringByCurrentTime, randomStringByLength, rateToBackend, rateToDisplay, removeSpecialCharacter, renderStringTemplate, sliceString, startOfDay, startOfHour, startOfMonth, startOfNextDay, startOfNextHour, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevHour, startOfPrevMonth, startOfPrevWeek, startOfWeek, timeFieldToTime, timeToTimeField, timeToTimestamp, timesNumber, timestampToTime, toHttpProtocolUrl, toRelativeProtocolUrl, trimString, truncateNumber, truncateString, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
+export { AMOUNT_ONE_YUAN, AMOUNT_TEN_THOUSAND_YUAN, AUTH_CODE_ALIPAY, AUTH_CODE_WECHAT, DATE_MONTH_DATE, DATE_MONTH_DATE_CHINESE, DATE_MONTH_DATE_DOT, DATE_MONTH_DATE_SLASH, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_YEAR_MONTH_DATE, DATE_YEAR_MONTH_DATE_CHINESE, DATE_YEAR_MONTH_DATE_DOT, DATE_YEAR_MONTH_DATE_SLASH, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MONEY_YUAN_TO_PENNY, MONTH_CHINESE, MONTH_DEFAULT, MONTH_ONLY, MONTH_ONLY_CHINESE, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, PHONE_NUMBER_400, PHONE_NUMBER_LANDLINE, PHONE_NUMBER_MOBILE, RANDOM_CHARSET_ALPHA_LOWER, RANDOM_CHARSET_ALPHA_NUMERIC, RANDOM_CHARSET_ALPHA_UPPER, RANDOM_CHARSET_NUMERIC, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, YEAR_CHINESE, YEAR_DEFAULT, applyRateCeil, applyRateFloor, applyRateRound, calculateDistance, calculateRate, darkenColor, decodeUriComponent, discountToBackend, discountToDisplay, distanceToBackend, distanceToDisplay, divideNumber, encodeUriComponent, endOfDay, endOfHour, endOfMonth, endOfWeek, formatAmount, formatAmountShortly, formatArea, formatBankCardNumber, formatBirthday, formatBusinessTimes, formatCategory, formatCount, formatCountShortly, formatDate, formatDateRange, formatDateShortly, formatDateTime, formatDateTimeRange, formatDateTimeShortly, formatDiscount, formatDistance, formatDuration, formatMonth, formatNumberWithComma, formatPenny, formatRatePercent, formatShelfLife, formatSize, formatWeek, formatYear, getStringLength, getStringWidth, hasDecimal, hasSpecialCharacter, hexToHslObject, hexToRgbaObject, hexToRgbaString, isBankCardNumber, isCorporateAccountNumber, isCustomBarcode, isEmail, isIdentityCardNumber, isMobile, isPrice, isStandardBarcode, isUrl, isVerifyCode, lightenColor, maskEmail, maskMobile, maskName, minusNumber, moneyToBackend, moneyToDisplay, normalizeDuration, normalizeShelfLife, normalizeVersion, optimizeTimeRange, padStringStart, parseAuthCode, parseInteger, parseNumber, parsePhoneNumber, parseTime, plusNumber, randomIntegerByLength, randomIntegerByRange, randomStringByCurrentTime, randomStringByLength, rateToBackend, rateToDisplay, removeSpecialCharacter, renderStringTemplate, sliceString, startOfDay, startOfHour, startOfMonth, startOfNextDay, startOfNextHour, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevHour, startOfPrevMonth, startOfPrevWeek, startOfWeek, timeFieldToTime, timeToTimeField, timeToTimestamp, timesNumber, timestampToTime, toHttpProtocolUrl, toRelativeProtocolUrl, trimString, truncateNumber, truncateString, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
 //# sourceMappingURL=hive.esm.js.map

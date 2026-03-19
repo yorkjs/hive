@@ -6,6 +6,7 @@ export * from './constant/dateTime';
 export * from './constant/millisecond';
 export * from './constant/money';
 export * from './constant/phoneNumber';
+export * from './constant/randomCharset';
 export * from './constant/shelfLife';
 export * from './constant/size';
 export * from './convert/discount';

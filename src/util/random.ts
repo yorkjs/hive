@@ -1,3 +1,4 @@
+import { RANDOM_CHARSET_ALPHA_NUMERIC } from '../constant/randomCharset'
 import { timeToTimeField } from '../convert/time'
 import { padStringStart } from './string'
 
@@ -6,7 +7,7 @@ import { padStringStart } from './string'
  *
  * @group Function
  * @category Util
- * @param length 长度
+ * @param length 生成的随机整数长度，比如 3 表示生成 [100, 999] 的整数
  * @returns 指定长度的随机整数
  */
 export function randomIntegerByLength(length: number) {
@@ -37,16 +38,16 @@ export function randomIntegerByRange(min: number, max: number) {
  *
  * @group Function
  * @category Util
- * @param length 字符串长度
- * @param chars 指定随机字符集（可选参数）
+ * @param length 生成的随机字符串长度
+ * @param charset 指定随机字符集（可选参数）
  * @returns 指定长度的随机字符串
  */
-export function randomStringByLength(length: number, chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789') {
+export function randomStringByLength(length: number, charset = RANDOM_CHARSET_ALPHA_NUMERIC) {
   const result = new Array(length)
-  const charLength = chars.length
+  const charLength = charset.length
   for (let i = 0; i < length; i++) {
     const randomIndex = Math.floor(Math.random() * charLength)
-    result[i] = chars[randomIndex]
+    result[i] = charset[randomIndex]
   }
   return result.join('')
 }

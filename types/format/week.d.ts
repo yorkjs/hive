@@ -3,7 +3,7 @@
  *
  * @group Function
  * @category Format
- * @param value 时间戳
+ * @param value 毫秒时间戳
  * @returns
  */
 export declare function formatWeek(value: number): string;
