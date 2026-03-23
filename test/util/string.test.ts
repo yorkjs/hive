@@ -104,6 +104,9 @@ test('hasSpecialCharacter', () => {
   expect(hasSpecialCharacter('abc,123. \t\n')).toBe(true)
   expect(hasSpecialCharacter('abc,123.☺️')).toBe(true)
   expect(hasSpecialCharacter(' abc,  123. ')).toBe(false)
+  expect(hasSpecialCharacter('a+b')).toBe(false)
+  expect(hasSpecialCharacter('a-b')).toBe(false)
+  expect(hasSpecialCharacter('a/b')).toBe(false)
 
 })
 
