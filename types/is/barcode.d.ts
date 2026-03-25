@@ -17,6 +17,6 @@ export declare function isStandardBarcode(value: string): boolean;
  * @param value 要校验的字符串
  * @returns 是否是自定义商品条形码
  * @example
- * isStandardBarcode('6901234567890') // false
+ * isCustomBarcode('6901234567890') // false
  */
 export declare function isCustomBarcode(value: string): boolean;

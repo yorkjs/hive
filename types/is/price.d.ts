@@ -7,5 +7,6 @@
  * @returns 是否为价格
  * @example
  * isPrice('10.05') // true
+ * isPrice('10.055') // false
  */
 export declare function isPrice(value: string): boolean;
