@@ -107,6 +107,7 @@ test('hasSpecialCharacter', () => {
   expect(hasSpecialCharacter('a+b')).toBe(false)
   expect(hasSpecialCharacter('a-b')).toBe(false)
   expect(hasSpecialCharacter('a/b')).toBe(false)
+  expect(hasSpecialCharacter('a*b')).toBe(false)
 
 })
 
@@ -117,5 +118,6 @@ test('removeSpecialCharacter', () => {
   expect(removeSpecialCharacter('a☺️bc,☺️123.^456☺️%')).toBe('abc,123.456%')
   expect(removeSpecialCharacter('a☺️bc，123。☺️')).toBe('abc，123。')
   expect(removeSpecialCharacter(' abc,  123. ')).toBe(' abc,  123. ')
+  expect(removeSpecialCharacter(' +-*/ ')).toBe(' +-*/ ')
 
 })
