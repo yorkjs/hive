@@ -1,5 +1,5 @@
 /**
- * hive.js v0.5.1
+ * hive.js v0.5.2
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -1614,7 +1614,7 @@ function hasSpecialCharacter(str) {
     if (!str) {
         return false;
     }
-    return /[^ \u4e00-\u9fa5a-zA-Z0-9，。、；：！“”‘’（）【】《》？～·—…\.,;:!?"'()\[\]{}<>@#&%￥$_\+/*-]/g.test(str);
+    return /[^ \u4e00-\u9fa5a-zA-Z0-9，。、；：！π“”‘’（）【】《》？～·—…\.,;:!?"'()\[\]{}<>@#&%￥$_\+/*-]/g.test(str);
 }
 /**
  * 移除字符串中的特殊字符
@@ -1628,7 +1628,7 @@ function removeSpecialCharacter(str) {
     if (!str) {
         return '';
     }
-    return str.replace(/[^ \u4e00-\u9fa5a-zA-Z0-9，。、；：！“”‘’（）【】《》？～·—…\.,;:!?"'()\[\]{}<>@#&%￥$_\+/*-]/g, '');
+    return str.replace(/[^ \u4e00-\u9fa5a-zA-Z0-9，。、；：！π“”‘’（）【】《》？～·—…\.,;:!?"'()\[\]{}<>@#&%￥$_\+/*-]/g, '');
 }
 
 function formatHourMinutes(value) {
