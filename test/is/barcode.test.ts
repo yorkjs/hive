@@ -1,7 +1,7 @@
 import {
   isStandardBarcode,
   isCustomBarcode,
-} from '../../src/is/barcode'
+} from '../../src/index'
 
 test('isStandardBarcode', () => {
 

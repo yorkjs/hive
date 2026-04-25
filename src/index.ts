@@ -39,6 +39,7 @@ export * from './format/businessTimes'
 
 export * from './is/bankCardNumber'
 export * from './is/barcode'
+export * from './is/color'
 export * from './is/corporateAccountNumber'
 export * from './is/email'
 export * from './is/identityCardNumber'
