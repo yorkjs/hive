@@ -109,6 +109,7 @@ test('hasSpecialCharacter', () => {
   expect(hasSpecialCharacter('a/b')).toBe(false)
   expect(hasSpecialCharacter('a*b')).toBe(false)
   expect(hasSpecialCharacter('茶π')).toBe(false)
+  expect(hasSpecialCharacter('𰻝𰻝面')).toBe(false)
 
 })
 
@@ -121,5 +122,6 @@ test('removeSpecialCharacter', () => {
   expect(removeSpecialCharacter(' abc,  123. ')).toBe(' abc,  123. ')
   expect(removeSpecialCharacter(' +-*/ ')).toBe(' +-*/ ')
   expect(removeSpecialCharacter('茶π')).toBe('茶π')
+  expect(removeSpecialCharacter('𰻝𰻝面')).toBe('𰻝𰻝面')
 
 })

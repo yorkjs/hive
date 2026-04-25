@@ -131,7 +131,7 @@ export function hasSpecialCharacter(str: string) {
   if (!str) {
     return false
   }
-  return /[^ \u4e00-\u9fa5a-zA-Z0-9，。、；：！π“”‘’（）【】《》？～·—…\.,;:!?"'()\[\]{}<>@#&%￥$_\+/*-]/g.test(str)
+  return /[^\p{L}\p{N}\p{P}\p{Z}\p{Sm}]/u.test(str)
 }
 
 /**
@@ -146,5 +146,5 @@ export function removeSpecialCharacter(str: string) {
   if (!str) {
     return ''
   }
-  return str.replace(/[^ \u4e00-\u9fa5a-zA-Z0-9，。、；：！π“”‘’（）【】《》？～·—…\.,;:!?"'()\[\]{}<>@#&%￥$_\+/*-]/g, '')
+  return str.replace(/[^\p{L}\p{N}\p{P}\p{Z}\p{Sm}]/gu, '')
 }
