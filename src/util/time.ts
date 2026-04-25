@@ -268,6 +268,146 @@ export function endOfMonth(timestamp: number) {
   return date.getTime()
 }
 
+/**
+ * 获取某年的开始时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export function startOfYear(timestamp: number) {
+  const date = new Date(timestamp)
+  date.setMonth(0, 1)        // 1 月 1 日
+  date.setHours(0, 0, 0, 0)
+  return date.getTime()
+}
+
+/**
+ * 获取前一年的开始时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export function startOfPrevYear(timestamp: number) {
+  const date = new Date(timestamp)
+  date.setFullYear(date.getFullYear() - 1, 0, 1) // 去年 1 月 1 日
+  date.setHours(0, 0, 0, 0)
+  return date.getTime()
+}
+
+/**
+ * 获取下一年的开始时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export function startOfNextYear(timestamp: number) {
+  const date = new Date(timestamp)
+  date.setFullYear(date.getFullYear() + 1, 0, 1) // 明年 1 月 1 日
+  date.setHours(0, 0, 0, 0)
+  return date.getTime()
+}
+
+/**
+ * 获取某年的结束时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export function endOfYear(timestamp: number) {
+  const date = new Date(timestamp)
+  date.setMonth(11, 31)     // 12 月 31 日
+  date.setHours(23, 59, 59, 999)
+  return date.getTime()
+}
+
+/**
+ * 获取昨天的同时刻
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export function sameOfPrevDay(timestamp: number) {
+  return timestamp - MS_DAY
+}
+
+/**
+ * 获取前一周的同时刻
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export function sameOfPrevWeek(timestamp: number) {
+  return timestamp - MS_WEEK
+}
+
+/**
+ * 获取上个月的同时刻
+ * 如果传入的时间戳大于上个月的最后一天，则返回上个月的最后时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export function sameOfPrevMonth(timestamp: number): number {
+  const date = new Date(timestamp)
+  const year = date.getFullYear()
+  const month = date.getMonth()
+  const day = date.getDate()
+
+  const prevMonthStart = new Date(year, month - 1, 1, 0, 0, 0, 0)
+  const prevMonthEnd = new Date(year, month, 0, 23, 59, 59, 999);
+
+  if (day > prevMonthEnd.getDate()) {
+    return prevMonthEnd.getTime()
+  }
+
+  date.setFullYear(prevMonthStart.getFullYear(), prevMonthStart.getMonth(), day)
+
+  return date.getTime()
+}
+
+/**
+ * 获取去年的同时刻
+ * 如果传入的时间戳大于去年该月的最后一天，则返回去年该月的最后时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export function sameOfPrevYear(timestamp: number): number {
+  const date = new Date(timestamp)
+  const month = date.getMonth()
+  const day = date.getDate()
+
+  const prevYearMonthStart = new Date(date.getFullYear() - 1, month, 1, 0, 0, 0, 0)
+  const prevYearMonthEnd = new Date(prevYearMonthStart.getFullYear(), month + 1, 0, 23, 59, 59, 999)
+
+  if (day > prevYearMonthEnd.getDate()) {
+    return prevYearMonthEnd.getTime()
+  }
+
+  date.setFullYear(date.getFullYear() - 1, month, day)
+
+  return date.getTime()
+}
+
+
+
+
 interface ITimeRangeOptimizer {
   isHour?: (hour: number) => void
   isDay?: (day: number) => void

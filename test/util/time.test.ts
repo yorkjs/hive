@@ -24,6 +24,17 @@ import {
   startOfNextWeek,
   startOfPrevMonth,
   startOfNextMonth,
+
+  startOfYear,
+  endOfYear,
+  startOfPrevYear,
+  startOfNextYear,
+
+  sameOfPrevDay,
+  sameOfPrevWeek,
+  sameOfPrevMonth,
+  sameOfPrevYear,
+
   optimizeTimeRange,
   parseTime,
   formatDateTime,
@@ -167,6 +178,56 @@ test('time_month', () => {
   expect(formatDateTime(startOfPrevMonth(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2024-12-01 00:00:00')
   expect(formatDateTime(startOfNextMonth(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2025-02-01 00:00:00')
   expect(formatDateTime(endOfMonth(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2025-01-31 23:59:59')
+
+})
+
+test('time_year', () => {
+
+  let date = new Date('2025-02-10 10:01:01')
+
+  expect(formatDateTime(startOfYear(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2025-01-01 00:00:00')
+  expect(formatDateTime(startOfPrevYear(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2024-01-01 00:00:00')
+  expect(formatDateTime(startOfNextYear(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2026-01-01 00:00:00')
+  expect(formatDateTime(endOfYear(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2025-12-31 23:59:59')
+
+})
+
+test('time_same', () => {
+
+  let date = new Date('2025-10-10 10:01:01')
+
+  expect(formatDateTime(sameOfPrevDay(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2025-10-09 10:01:01')
+  expect(formatDateTime(sameOfPrevWeek(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2025-10-03 10:01:01')
+  expect(formatDateTime(sameOfPrevMonth(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2025-09-10 10:01:01')
+  expect(formatDateTime(sameOfPrevYear(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2024-10-10 10:01:01')
+
+  date = new Date('2025-03-31 10:01:01')
+
+  expect(formatDateTime(sameOfPrevDay(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2025-03-30 10:01:01')
+  expect(formatDateTime(sameOfPrevWeek(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2025-03-24 10:01:01')
+  expect(formatDateTime(sameOfPrevMonth(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2025-02-28 23:59:59')
+  expect(formatDateTime(sameOfPrevYear(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2024-03-31 10:01:01')
+
+  date = new Date('2024-02-29 10:01:01')
+
+  expect(formatDateTime(sameOfPrevDay(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2024-02-28 10:01:01')
+  expect(formatDateTime(sameOfPrevWeek(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2024-02-22 10:01:01')
+  expect(formatDateTime(sameOfPrevMonth(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2024-01-29 10:01:01')
+  expect(formatDateTime(sameOfPrevYear(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2023-02-28 23:59:59')
+
+  date = new Date('2024-03-31 10:01:01')
+
+  expect(formatDateTime(sameOfPrevDay(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2024-03-30 10:01:01')
+  expect(formatDateTime(sameOfPrevWeek(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2024-03-24 10:01:01')
+  expect(formatDateTime(sameOfPrevMonth(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2024-02-29 23:59:59')
+  expect(formatDateTime(sameOfPrevYear(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2023-03-31 10:01:01')
+
+  date = new Date('2024-01-31 10:01:01')
+
+  expect(formatDateTime(sameOfPrevDay(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2024-01-30 10:01:01')
+  expect(formatDateTime(sameOfPrevWeek(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2024-01-24 10:01:01')
+  expect(formatDateTime(sameOfPrevMonth(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2023-12-31 10:01:01')
+  expect(formatDateTime(sameOfPrevYear(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2023-01-31 10:01:01')
 
 })
 
