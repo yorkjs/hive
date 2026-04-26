@@ -51,7 +51,7 @@ export declare const DATE_MONTH_DATE_DOT = "MM.DD";
  * @type {string}
  * @category Date
  * @group Constant
- * @remarks 示D日'
+ * @remarks 示例：2020年10月1日
  */
 export declare const DATE_YEAR_MONTH_DATE_CHINESE = "YYYY\u5E74M\u6708D\u65E5";
 /**

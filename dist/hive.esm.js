@@ -1,5 +1,5 @@
 /**
- * hive.js v0.5.2
+ * hive.js v0.5.3
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -131,7 +131,7 @@ const DATE_MONTH_DATE_DOT = 'MM.DD';
  * @type {string}
  * @category Date
  * @group Constant
- * @remarks 示D日'
+ * @remarks 示例：2020年10月1日
  */
 const DATE_YEAR_MONTH_DATE_CHINESE = 'YYYY年M月D日';
 /**
@@ -239,6 +239,23 @@ const DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_CHINESE = 'YYYY年M月D日 HH:mm';
  * @remarks 示例：10/01 10:00
  */
 const DATE_TIME_MONTH_DATE_HOUR_MINUTE_CHINESE = 'M月D日 HH:mm';
+
+/**
+ * 时分秒
+ * @type {string}
+ * @group Constant
+ * @category Time
+ * @remarks 示例：10:00:00
+ */
+const TIME_DEFAULT = 'HH:mm:ss';
+/**
+ * 时分
+ * @type {string}
+ * @group Constant
+ * @category Time
+ * @remarks 示例：10:00
+ */
+const TIME_HOUR_MINUTE = 'HH:mm';
 
 /**
  * 毫秒数：秒
@@ -1494,6 +1511,21 @@ function formatSize(value) {
 }
 
 /**
+ * 把时间戳格式化为显示格式
+ *
+ * @group Function
+ * @category Format
+ * @param timestamp 毫秒时间戳
+ * @param format 格式，默认值为 TIME_DEFAULT
+ * @returns 格式化后的字符串
+ * @example
+ * formatTime(1773932460475) // 23:01:00
+ */
+function formatTime(timestamp, format = TIME_DEFAULT) {
+    return dayjs(timestamp).format(format);
+}
+
+/**
  * 获取字符串字符数量
  *
  * 注意：中文和英文都算 1 个字符
@@ -1614,7 +1646,7 @@ function hasSpecialCharacter(str) {
     if (!str) {
         return false;
     }
-    return /[^ \u4e00-\u9fa5a-zA-Z0-9，。、；：！π“”‘’（）【】《》？～·—…\.,;:!?"'()\[\]{}<>@#&%￥$_\+/*-]/g.test(str);
+    return /[^\p{L}\p{N}\p{P}\p{Z}\p{Sm}]/u.test(str);
 }
 /**
  * 移除字符串中的特殊字符
@@ -1628,7 +1660,7 @@ function removeSpecialCharacter(str) {
     if (!str) {
         return '';
     }
-    return str.replace(/[^ \u4e00-\u9fa5a-zA-Z0-9，。、；：！π“”‘’（）【】《》？～·—…\.,;:!?"'()\[\]{}<>@#&%￥$_\+/*-]/g, '');
+    return str.replace(/[^\p{L}\p{N}\p{P}\p{Z}\p{Sm}]/gu, '');
 }
 
 function formatHourMinutes(value) {
@@ -1765,6 +1797,223 @@ function isCustomBarcode(value) {
     }
     // 这里留给以后加其他规则
     return false;
+}
+
+/**
+ * 将 HEX 颜色转换为 RGBA 对象
+ *
+ * @group Function
+ * @category Util
+ * @param color HEX 颜色值
+ * @returns RGBA 颜色对象
+ * @example
+ * hexToRgbaObject('#FF0000') // { red: 255, green: 0, blue: 0, alpha: 1 }
+ * hexToRgbaObject('#FF000000') // { red: 255, green: 0, blue: 0, alpha: 0 }
+ */
+function hexToRgbaObject(color) {
+    // 移除 # 号
+    let hex = color.replace('#', '');
+    // 处理简写格式 (#rgb 或 #rgba)
+    if (hex.length === 3 || hex.length === 4) {
+        hex = hex.split('').map(function (char) { return char + char; }).join('');
+    }
+    // 验证hex长度
+    if (hex.length !== 6 && hex.length !== 8) {
+        throw new Error('无效的HEX颜色格式');
+    }
+    const result = {
+        red: parseInt(hex.substring(0, 2), 16),
+        green: parseInt(hex.substring(2, 4), 16),
+        blue: parseInt(hex.substring(4, 6), 16),
+        alpha: 1,
+    };
+    if (hex.length === 8) {
+        result.alpha = parseInt(hex.substring(6, 8), 16) / 255;
+    }
+    return result;
+}
+/**
+ * 将 HEX 颜色转换为 HSL 对象
+ *
+ * @group Function
+ * @category Util
+ * @param color HEX 颜色值
+ * @returns HSL 颜色对象
+ * @example
+ * hexToHslObject('#FF0000') // { hue: 0, saturation: 100, lightness: 50 }
+ */
+function hexToHslObject(color) {
+    return rgbToHsl(hexToRgbaObject(color));
+}
+/**
+ * 将 HEX 颜色转换为 RGBA 字符串格式
+ *
+ * 使用场景是给颜色应用一个新的透明度
+ *
+ * @group Function
+ * @category Util
+ * @param color HEX 颜色值
+ * @param alpha 透明度，取值范围 [0, 1]
+ * @returns RGBA 颜色字符串
+ * @example
+ * hexToRgbaString('#FF0000', 0.5) // rgba(255,0,0,0.5)
+ */
+function hexToRgbaString(color, alpha) {
+    const rgba = hexToRgbaObject(color);
+    return `rgba(${rgba.red},${rgba.green},${rgba.blue},${alpha})`;
+}
+/**
+ * 加深颜色亮度
+ *
+ * @group Function
+ * @category Util
+ * @param color HEX 颜色值
+ * @param offset 加深幅度，取值范围 [0, 1]
+ * @returns 新的 hex 颜色
+ * @example
+ * darkenColor('#999999', 0.1) // #808080
+ * darkenColor('#999999', 0.2) // #666666
+ */
+function darkenColor(color, offset) {
+    return adjustColorBrightness(color, -offset);
+}
+/**
+ * 减淡颜色亮度
+ *
+ * @group Function
+ * @category Util
+ * @param color HEX 颜色值
+ * @param offset 减淡幅度，取值范围 [0, 1]
+ * @returns 新的 hex 颜色
+ * @example
+ * lightenColor('#999999', 0.1) // #B3B3B3
+ * lightenColor('#999999', 0.2) // #CCCCCC
+ */
+function lightenColor(color, offset) {
+    return adjustColorBrightness(color, offset);
+}
+/**
+ * 调整颜色亮度
+ *
+ * @param hex 原始颜色
+ * @param offset 取值范围 [0, 1]
+ * @returns 新的 hex 颜色字符串
+ */
+function adjustColorBrightness(hex, offset) {
+    const rgba = hexToRgbaObject(hex);
+    const hsl = rgbToHsl(rgba);
+    // 调整亮度，限制在 0-100 之间
+    const newL = hsl.lightness + (offset * 100);
+    hsl.lightness = Math.max(0, Math.min(100, newL));
+    const newRgb = hslToRgb(hsl);
+    // 如果原颜色有透明度，返回值保留该透明度
+    let result = `#${toHex(newRgb.red)}${toHex(newRgb.green)}${toHex(newRgb.blue)}`;
+    if (rgba.alpha < 1) {
+        result += toHex(rgba.alpha * 255);
+    }
+    return result;
+}
+/**
+ * 将 RGB 转换为 HSL
+ * r, g, b: 0-255
+ * 返回 h: 0-360, s: 0-100, l: 0-100
+ */
+function rgbToHsl(rgb) {
+    const r = rgb.red / 255;
+    const g = rgb.green / 255;
+    const b = rgb.blue / 255;
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    let h = 0;
+    let s = 0;
+    let l = (max + min) / 2;
+    if (max !== min) {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+            case r:
+                h = (g - b) / d + (g < b ? 6 : 0);
+                break;
+            case g:
+                h = (b - r) / d + 2;
+                break;
+            case b:
+                h = (r - g) / d + 4;
+                break;
+        }
+        h *= 60;
+    }
+    return {
+        hue: h,
+        saturation: s * 100,
+        lightness: l * 100,
+    };
+}
+/**
+ * 将 HSL 转换为 RGB
+ * 返回 r, g, b: 0-255
+ */
+function hslToRgb(hsl) {
+    const h = hsl.hue / 360;
+    const s = hsl.saturation / 100;
+    const l = hsl.lightness / 100;
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    const r = hue2rgb(p, q, h + 1 / 3);
+    const g = hue2rgb(p, q, h);
+    const b = hue2rgb(p, q, h - 1 / 3);
+    return {
+        red: Math.round(r * 255),
+        green: Math.round(g * 255),
+        blue: Math.round(b * 255),
+        alpha: 1,
+    };
+}
+function hue2rgb(p, q, t) {
+    if (t < 0) {
+        t += 1;
+    }
+    if (t > 1) {
+        t -= 1;
+    }
+    if (t < 1 / 6) {
+        return p + (q - p) * 6 * t;
+    }
+    if (t < 1 / 2) {
+        return q;
+    }
+    if (t < 2 / 3) {
+        return p + (q - p) * (2 / 3 - t) * 6;
+    }
+    return p;
+}
+function toHex(color) {
+    return padStringStart(color.toString(16).toUpperCase(), 2);
+}
+
+/**
+ * 是否为十六进制颜色
+ *
+ * @group Function
+ * @category Is
+ * @param value 要校验的字符串
+ * @returns 是否为十六进制颜色
+ * @example
+ * isHexColor('#666') // true
+ * isHexColor('#666666') // true
+ * isHexColor('#66666666') // true 注意，这是一个 RGBA 颜色
+ */
+function isHexColor(value) {
+    if (value.indexOf('#') !== 0) {
+        return false;
+    }
+    try {
+        hexToRgbaObject(value);
+        return true;
+    }
+    catch {
+        return false;
+    }
 }
 
 /**
@@ -2094,198 +2343,6 @@ function parseAuthCode(value) {
         return AUTH_CODE_ALIPAY;
     }
     return -1;
-}
-
-/**
- * 将 HEX 颜色转换为 RGBA 对象
- *
- * @group Function
- * @category Util
- * @param color HEX 颜色值
- * @returns RGBA 颜色对象
- * @example
- * hexToRgbaObject('#FF0000') // { red: 255, green: 0, blue: 0, alpha: 1 }
- * hexToRgbaObject('#FF000000') // { red: 255, green: 0, blue: 0, alpha: 0 }
- */
-function hexToRgbaObject(color) {
-    // 移除 # 号
-    let hex = color.replace('#', '');
-    // 处理简写格式 (#rgb 或 #rgba)
-    if (hex.length === 3 || hex.length === 4) {
-        hex = hex.split('').map(function (char) { return char + char; }).join('');
-    }
-    // 验证hex长度
-    if (hex.length !== 6 && hex.length !== 8) {
-        throw new Error('无效的HEX颜色格式');
-    }
-    const result = {
-        red: parseInt(hex.substring(0, 2), 16),
-        green: parseInt(hex.substring(2, 4), 16),
-        blue: parseInt(hex.substring(4, 6), 16),
-        alpha: 1,
-    };
-    if (hex.length === 8) {
-        result.alpha = parseInt(hex.substring(6, 8), 16) / 255;
-    }
-    return result;
-}
-/**
- * 将 HEX 颜色转换为 HSL 对象
- *
- * @group Function
- * @category Util
- * @param color HEX 颜色值
- * @returns HSL 颜色对象
- * @example
- * hexToHslObject('#FF0000') // { hue: 0, saturation: 100, lightness: 50 }
- */
-function hexToHslObject(color) {
-    return rgbToHsl(hexToRgbaObject(color));
-}
-/**
- * 将 HEX 颜色转换为 RGBA 字符串格式
- *
- * 使用场景是给颜色应用一个新的透明度
- *
- * @group Function
- * @category Util
- * @param color HEX 颜色值
- * @param alpha 透明度，取值范围 [0, 1]
- * @returns RGBA 颜色字符串
- * @example
- * hexToRgbaString('#FF0000', 0.5) // rgba(255,0,0,0.5)
- */
-function hexToRgbaString(color, alpha) {
-    const rgba = hexToRgbaObject(color);
-    return `rgba(${rgba.red},${rgba.green},${rgba.blue},${alpha})`;
-}
-/**
- * 加深颜色亮度
- *
- * @group Function
- * @category Util
- * @param color HEX 颜色值
- * @param offset 加深幅度，取值范围 [0, 1]
- * @returns 新的 hex 颜色
- * @example
- * darkenColor('#999999', 0.1) // #808080
- * darkenColor('#999999', 0.2) // #666666
- */
-function darkenColor(color, offset) {
-    return adjustColorBrightness(color, -offset);
-}
-/**
- * 减淡颜色亮度
- *
- * @group Function
- * @category Util
- * @param color HEX 颜色值
- * @param offset 减淡幅度，取值范围 [0, 1]
- * @returns 新的 hex 颜色
- * @example
- * lightenColor('#999999', 0.1) // #B3B3B3
- * lightenColor('#999999', 0.2) // #CCCCCC
- */
-function lightenColor(color, offset) {
-    return adjustColorBrightness(color, offset);
-}
-/**
- * 调整颜色亮度
- *
- * @param hex 原始颜色
- * @param offset 取值范围 [0, 1]
- * @returns 新的 hex 颜色字符串
- */
-function adjustColorBrightness(hex, offset) {
-    const rgba = hexToRgbaObject(hex);
-    const hsl = rgbToHsl(rgba);
-    // 调整亮度，限制在 0-100 之间
-    const newL = hsl.lightness + (offset * 100);
-    hsl.lightness = Math.max(0, Math.min(100, newL));
-    const newRgb = hslToRgb(hsl);
-    // 如果原颜色有透明度，返回值保留该透明度
-    let result = `#${toHex(newRgb.red)}${toHex(newRgb.green)}${toHex(newRgb.blue)}`;
-    if (rgba.alpha < 1) {
-        result += toHex(rgba.alpha * 255);
-    }
-    return result;
-}
-/**
- * 将 RGB 转换为 HSL
- * r, g, b: 0-255
- * 返回 h: 0-360, s: 0-100, l: 0-100
- */
-function rgbToHsl(rgb) {
-    const r = rgb.red / 255;
-    const g = rgb.green / 255;
-    const b = rgb.blue / 255;
-    const max = Math.max(r, g, b);
-    const min = Math.min(r, g, b);
-    let h = 0;
-    let s = 0;
-    let l = (max + min) / 2;
-    if (max !== min) {
-        const d = max - min;
-        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-        switch (max) {
-            case r:
-                h = (g - b) / d + (g < b ? 6 : 0);
-                break;
-            case g:
-                h = (b - r) / d + 2;
-                break;
-            case b:
-                h = (r - g) / d + 4;
-                break;
-        }
-        h *= 60;
-    }
-    return {
-        hue: h,
-        saturation: s * 100,
-        lightness: l * 100,
-    };
-}
-/**
- * 将 HSL 转换为 RGB
- * 返回 r, g, b: 0-255
- */
-function hslToRgb(hsl) {
-    const h = hsl.hue / 360;
-    const s = hsl.saturation / 100;
-    const l = hsl.lightness / 100;
-    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-    const p = 2 * l - q;
-    const r = hue2rgb(p, q, h + 1 / 3);
-    const g = hue2rgb(p, q, h);
-    const b = hue2rgb(p, q, h - 1 / 3);
-    return {
-        red: Math.round(r * 255),
-        green: Math.round(g * 255),
-        blue: Math.round(b * 255),
-        alpha: 1,
-    };
-}
-function hue2rgb(p, q, t) {
-    if (t < 0) {
-        t += 1;
-    }
-    if (t > 1) {
-        t -= 1;
-    }
-    if (t < 1 / 6) {
-        return p + (q - p) * 6 * t;
-    }
-    if (t < 1 / 2) {
-        return q;
-    }
-    if (t < 2 / 3) {
-        return p + (q - p) * (2 / 3 - t) * 6;
-    }
-    return p;
-}
-function toHex(color) {
-    return padStringStart(color.toString(16).toUpperCase(), 2);
 }
 
 // 定义地球半径（单位：米）
@@ -2706,6 +2763,126 @@ function endOfMonth(timestamp) {
     return date.getTime();
 }
 /**
+ * 获取某年的开始时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+function startOfYear(timestamp) {
+    const date = new Date(timestamp);
+    date.setMonth(0, 1); // 1 月 1 日
+    date.setHours(0, 0, 0, 0);
+    return date.getTime();
+}
+/**
+ * 获取前一年的开始时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+function startOfPrevYear(timestamp) {
+    const date = new Date(timestamp);
+    date.setFullYear(date.getFullYear() - 1, 0, 1); // 去年 1 月 1 日
+    date.setHours(0, 0, 0, 0);
+    return date.getTime();
+}
+/**
+ * 获取下一年的开始时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+function startOfNextYear(timestamp) {
+    const date = new Date(timestamp);
+    date.setFullYear(date.getFullYear() + 1, 0, 1); // 明年 1 月 1 日
+    date.setHours(0, 0, 0, 0);
+    return date.getTime();
+}
+/**
+ * 获取某年的结束时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+function endOfYear(timestamp) {
+    const date = new Date(timestamp);
+    date.setMonth(11, 31); // 12 月 31 日
+    date.setHours(23, 59, 59, 999);
+    return date.getTime();
+}
+/**
+ * 获取昨天的同时刻
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+function sameOfPrevDay(timestamp) {
+    return timestamp - MS_DAY;
+}
+/**
+ * 获取前一周的同时刻
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+function sameOfPrevWeek(timestamp) {
+    return timestamp - MS_WEEK;
+}
+/**
+ * 获取上个月的同时刻
+ * 如果传入的时间戳大于上个月的最后一天，则返回上个月的最后时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+function sameOfPrevMonth(timestamp) {
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const day = date.getDate();
+    const prevMonthStart = new Date(year, month - 1, 1, 0, 0, 0, 0);
+    const prevMonthEnd = new Date(year, month, 0, 23, 59, 59, 999);
+    if (day > prevMonthEnd.getDate()) {
+        return prevMonthEnd.getTime();
+    }
+    date.setFullYear(prevMonthStart.getFullYear(), prevMonthStart.getMonth(), day);
+    return date.getTime();
+}
+/**
+ * 获取去年的同时刻
+ * 如果传入的时间戳大于去年该月的最后一天，则返回去年该月的最后时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+function sameOfPrevYear(timestamp) {
+    const date = new Date(timestamp);
+    const month = date.getMonth();
+    const day = date.getDate();
+    const prevYearMonthEnd = new Date(date.getFullYear() - 1, month + 1, 0, 23, 59, 59, 999);
+    if (day > prevYearMonthEnd.getDate()) {
+        return prevYearMonthEnd.getTime();
+    }
+    date.setFullYear(date.getFullYear() - 1, month, day);
+    return date.getTime();
+}
+/**
 * 优化时间范围，尽量归一到某个类型下，无法归一时，才用范围
 *
 * 后端常用，前端几乎用不上
@@ -2819,5 +2996,5 @@ function toRelativeProtocolUrl(url) {
     return url;
 }
 
-export { AMOUNT_ONE_YUAN, AMOUNT_TEN_THOUSAND_YUAN, AUTH_CODE_ALIPAY, AUTH_CODE_WECHAT, DATE_MONTH_DATE, DATE_MONTH_DATE_CHINESE, DATE_MONTH_DATE_DOT, DATE_MONTH_DATE_SLASH, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_YEAR_MONTH_DATE, DATE_YEAR_MONTH_DATE_CHINESE, DATE_YEAR_MONTH_DATE_DOT, DATE_YEAR_MONTH_DATE_SLASH, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MONEY_YUAN_TO_PENNY, MONTH_CHINESE, MONTH_DEFAULT, MONTH_ONLY, MONTH_ONLY_CHINESE, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, PHONE_NUMBER_400, PHONE_NUMBER_LANDLINE, PHONE_NUMBER_MOBILE, RANDOM_CHARSET_ALPHA_LOWER, RANDOM_CHARSET_ALPHA_NUMERIC, RANDOM_CHARSET_ALPHA_UPPER, RANDOM_CHARSET_NUMERIC, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, YEAR_CHINESE, YEAR_DEFAULT, applyRateCeil, applyRateFloor, applyRateRound, calculateDistance, calculateRate, darkenColor, decodeUriComponent, discountToBackend, discountToDisplay, distanceToBackend, distanceToDisplay, divideNumber, encodeUriComponent, endOfDay, endOfHour, endOfMonth, endOfWeek, formatAmount, formatAmountShortly, formatArea, formatBankCardNumber, formatBirthday, formatBusinessTimes, formatCategory, formatCount, formatCountShortly, formatDate, formatDateRange, formatDateShortly, formatDateTime, formatDateTimeRange, formatDateTimeShortly, formatDiscount, formatDistance, formatDuration, formatMonth, formatNumberWithComma, formatPenny, formatRatePercent, formatShelfLife, formatSize, formatWeek, formatYear, getStringLength, getStringWidth, hasDecimal, hasSpecialCharacter, hexToHslObject, hexToRgbaObject, hexToRgbaString, isBankCardNumber, isCorporateAccountNumber, isCustomBarcode, isEmail, isIdentityCardNumber, isLocationInChina, isMobile, isPrice, isStandardBarcode, isUrl, isVerifyCode, lightenColor, maskEmail, maskMobile, maskName, minusNumber, moneyToBackend, moneyToDisplay, normalizeDuration, normalizeShelfLife, normalizeVersion, optimizeTimeRange, padStringStart, parseAuthCode, parseInteger, parseNumber, parsePhoneNumber, parseTime, plusNumber, randomIntegerByLength, randomIntegerByRange, randomStringByCurrentTime, randomStringByLength, rateToBackend, rateToDisplay, removeSpecialCharacter, renderStringTemplate, sliceString, startOfDay, startOfHour, startOfMonth, startOfNextDay, startOfNextHour, startOfNextMonth, startOfNextWeek, startOfPrevDay, startOfPrevHour, startOfPrevMonth, startOfPrevWeek, startOfWeek, timeFieldToTime, timeToTimeField, timeToTimestamp, timesNumber, timestampToTime, toHttpProtocolUrl, toRelativeProtocolUrl, trimString, truncateNumber, truncateString, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
+export { AMOUNT_ONE_YUAN, AMOUNT_TEN_THOUSAND_YUAN, AUTH_CODE_ALIPAY, AUTH_CODE_WECHAT, DATE_MONTH_DATE, DATE_MONTH_DATE_CHINESE, DATE_MONTH_DATE_DOT, DATE_MONTH_DATE_SLASH, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_YEAR_MONTH_DATE, DATE_YEAR_MONTH_DATE_CHINESE, DATE_YEAR_MONTH_DATE_DOT, DATE_YEAR_MONTH_DATE_SLASH, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MONEY_YUAN_TO_PENNY, MONTH_CHINESE, MONTH_DEFAULT, MONTH_ONLY, MONTH_ONLY_CHINESE, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, PHONE_NUMBER_400, PHONE_NUMBER_LANDLINE, PHONE_NUMBER_MOBILE, RANDOM_CHARSET_ALPHA_LOWER, RANDOM_CHARSET_ALPHA_NUMERIC, RANDOM_CHARSET_ALPHA_UPPER, RANDOM_CHARSET_NUMERIC, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, TIME_DEFAULT, TIME_HOUR_MINUTE, YEAR_CHINESE, YEAR_DEFAULT, applyRateCeil, applyRateFloor, applyRateRound, calculateDistance, calculateRate, darkenColor, decodeUriComponent, discountToBackend, discountToDisplay, distanceToBackend, distanceToDisplay, divideNumber, encodeUriComponent, endOfDay, endOfHour, endOfMonth, endOfWeek, endOfYear, formatAmount, formatAmountShortly, formatArea, formatBankCardNumber, formatBirthday, formatBusinessTimes, formatCategory, formatCount, formatCountShortly, formatDate, formatDateRange, formatDateShortly, formatDateTime, formatDateTimeRange, formatDateTimeShortly, formatDiscount, formatDistance, formatDuration, formatMonth, formatNumberWithComma, formatPenny, formatRatePercent, formatShelfLife, formatSize, formatTime, formatWeek, formatYear, getStringLength, getStringWidth, hasDecimal, hasSpecialCharacter, hexToHslObject, hexToRgbaObject, hexToRgbaString, isBankCardNumber, isCorporateAccountNumber, isCustomBarcode, isEmail, isHexColor, isIdentityCardNumber, isLocationInChina, isMobile, isPrice, isStandardBarcode, isUrl, isVerifyCode, lightenColor, maskEmail, maskMobile, maskName, minusNumber, moneyToBackend, moneyToDisplay, normalizeDuration, normalizeShelfLife, normalizeVersion, optimizeTimeRange, padStringStart, parseAuthCode, parseInteger, parseNumber, parsePhoneNumber, parseTime, plusNumber, randomIntegerByLength, randomIntegerByRange, randomStringByCurrentTime, randomStringByLength, rateToBackend, rateToDisplay, removeSpecialCharacter, renderStringTemplate, sameOfPrevDay, sameOfPrevMonth, sameOfPrevWeek, sameOfPrevYear, sliceString, startOfDay, startOfHour, startOfMonth, startOfNextDay, startOfNextHour, startOfNextMonth, startOfNextWeek, startOfNextYear, startOfPrevDay, startOfPrevHour, startOfPrevMonth, startOfPrevWeek, startOfPrevYear, startOfWeek, startOfYear, timeFieldToTime, timeToTimeField, timeToTimestamp, timesNumber, timestampToTime, toHttpProtocolUrl, toRelativeProtocolUrl, trimString, truncateNumber, truncateString, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
 //# sourceMappingURL=hive.esm.js.map

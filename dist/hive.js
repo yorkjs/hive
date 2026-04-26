@@ -1,5 +1,5 @@
 /**
- * hive.js v0.5.2
+ * hive.js v0.5.3
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -157,7 +157,7 @@
    * @type {string}
    * @category Date
    * @group Constant
-   * @remarks 示D日'
+   * @remarks 示例：2020年10月1日
    */
   var DATE_YEAR_MONTH_DATE_CHINESE = 'YYYY年M月D日';
   /**
@@ -265,6 +265,23 @@
    * @remarks 示例：10/01 10:00
    */
   var DATE_TIME_MONTH_DATE_HOUR_MINUTE_CHINESE = 'M月D日 HH:mm';
+
+  /**
+   * 时分秒
+   * @type {string}
+   * @group Constant
+   * @category Time
+   * @remarks 示例：10:00:00
+   */
+  var TIME_DEFAULT = 'HH:mm:ss';
+  /**
+   * 时分
+   * @type {string}
+   * @group Constant
+   * @category Time
+   * @remarks 示例：10:00
+   */
+  var TIME_HOUR_MINUTE = 'HH:mm';
 
   /**
    * 毫秒数：秒
@@ -1574,6 +1591,22 @@
   }
 
   /**
+   * 把时间戳格式化为显示格式
+   *
+   * @group Function
+   * @category Format
+   * @param timestamp 毫秒时间戳
+   * @param format 格式，默认值为 TIME_DEFAULT
+   * @returns 格式化后的字符串
+   * @example
+   * formatTime(1773932460475) // 23:01:00
+   */
+  function formatTime(timestamp) {
+    var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : TIME_DEFAULT;
+    return dayjs__default.default(timestamp).format(format);
+  }
+
+  /**
    * 获取字符串字符数量
    *
    * 注意：中文和英文都算 1 个字符
@@ -1694,7 +1727,7 @@
     if (!str) {
       return false;
     }
-    return /[^ \u4e00-\u9fa5a-zA-Z0-9，。、；：！π“”‘’（）【】《》？～·—…\.,;:!?"'()\[\]{}<>@#&%￥$_\+/*-]/g.test(str);
+    return /(?:[\0-\x1F\$\^`\x7F-\x9F\xA2-\xA6\xA8\xA9\xAD-\xB0\xB4\xB8\u02C2-\u02C5\u02D2-\u02DF\u02E5-\u02EB\u02ED\u02EF-\u036F\u0375\u0378\u0379\u0380-\u0385\u038B\u038D\u03A2\u0482-\u0489\u0530\u0557\u0558\u058B-\u05BD\u05BF\u05C1\u05C2\u05C4\u05C5\u05C7-\u05CF\u05EB-\u05EE\u05F5-\u0605\u060B\u060E-\u061A\u061C\u064B-\u065F\u0670\u06D6-\u06E4\u06E7-\u06ED\u06FD\u06FE\u070E\u070F\u0711\u0730-\u074C\u07A6-\u07B0\u07B2-\u07BF\u07EB-\u07F3\u07F6\u07FB-\u07FF\u0816-\u0819\u081B-\u0823\u0825-\u0827\u0829-\u082F\u083F\u0859-\u085D\u085F\u086B-\u086F\u0888\u088F-\u089F\u08CA-\u0903\u093A-\u093C\u093E-\u094F\u0951-\u0957\u0962\u0963\u0981-\u0984\u098D\u098E\u0991\u0992\u09A9\u09B1\u09B3-\u09B5\u09BA-\u09BC\u09BE-\u09CD\u09CF-\u09DB\u09DE\u09E2-\u09E5\u09F2\u09F3\u09FA\u09FB\u09FE-\u0A04\u0A0B-\u0A0E\u0A11\u0A12\u0A29\u0A31\u0A34\u0A37\u0A3A-\u0A58\u0A5D\u0A5F-\u0A65\u0A70\u0A71\u0A75\u0A77-\u0A84\u0A8E\u0A92\u0AA9\u0AB1\u0AB4\u0ABA-\u0ABC\u0ABE-\u0ACF\u0AD1-\u0ADF\u0AE2-\u0AE5\u0AF1-\u0AF8\u0AFA-\u0B04\u0B0D\u0B0E\u0B11\u0B12\u0B29\u0B31\u0B34\u0B3A-\u0B3C\u0B3E-\u0B5B\u0B5E\u0B62-\u0B65\u0B70\u0B78-\u0B82\u0B84\u0B8B-\u0B8D\u0B91\u0B96-\u0B98\u0B9B\u0B9D\u0BA0-\u0BA2\u0BA5-\u0BA7\u0BAB-\u0BAD\u0BBA-\u0BCF\u0BD1-\u0BE5\u0BF3-\u0C04\u0C0D\u0C11\u0C29\u0C3A-\u0C3C\u0C3E-\u0C57\u0C5B\u0C5C\u0C5E\u0C5F\u0C62-\u0C65\u0C70-\u0C76\u0C7F\u0C81-\u0C83\u0C8D\u0C91\u0CA9\u0CB4\u0CBA-\u0CBC\u0CBE-\u0CDC\u0CDF\u0CE2-\u0CE5\u0CF0\u0CF3-\u0D03\u0D0D\u0D11\u0D3B\u0D3C\u0D3E-\u0D4D\u0D4F-\u0D53\u0D57\u0D62-\u0D65\u0D79\u0D80-\u0D84\u0D97-\u0D99\u0DB2\u0DBC\u0DBE\u0DBF\u0DC7-\u0DE5\u0DF0-\u0DF3\u0DF5-\u0E00\u0E31\u0E34-\u0E3F\u0E47-\u0E4E\u0E5C-\u0E80\u0E83\u0E85\u0E8B\u0EA4\u0EA6\u0EB1\u0EB4-\u0EBC\u0EBE\u0EBF\u0EC5\u0EC7-\u0ECF\u0EDA\u0EDB\u0EE0-\u0EFF\u0F01-\u0F03\u0F13\u0F15-\u0F1F\u0F34-\u0F39\u0F3E\u0F3F\u0F48\u0F6D-\u0F84\u0F86\u0F87\u0F8D-\u0FCF\u0FD5-\u0FD8\u0FDB-\u0FFF\u102B-\u103E\u1056-\u1059\u105E-\u1060\u1062-\u1064\u1067-\u106D\u1071-\u1074\u1082-\u108D\u108F\u109A-\u109F\u10C6\u10C8-\u10CC\u10CE\u10CF\u1249\u124E\u124F\u1257\u1259\u125E\u125F\u1289\u128E\u128F\u12B1\u12B6\u12B7\u12BF\u12C1\u12C6\u12C7\u12D7\u1311\u1316\u1317\u135B-\u135F\u137D-\u137F\u1390-\u139F\u13F6\u13F7\u13FE\u13FF\u166D\u169D-\u169F\u16F9-\u16FF\u1712-\u171E\u1732-\u1734\u1737-\u173F\u1752-\u175F\u176D\u1771-\u177F\u17B4-\u17D3\u17DB\u17DD-\u17DF\u17EA-\u17EF\u17FA-\u17FF\u180B-\u180F\u181A-\u181F\u1879-\u187F\u1885\u1886\u18A9\u18AB-\u18AF\u18F6-\u18FF\u191F-\u1943\u196E\u196F\u1975-\u197F\u19AC-\u19AF\u19CA-\u19CF\u19DB-\u19FF\u1A17-\u1A1D\u1A55-\u1A7F\u1A8A-\u1A8F\u1A9A-\u1A9F\u1AAE-\u1B04\u1B34-\u1B44\u1B4D\u1B61-\u1B7C\u1B80-\u1B82\u1BA1-\u1BAD\u1BE6-\u1BFB\u1C24-\u1C3A\u1C4A-\u1C4C\u1C8B-\u1C8F\u1CBB\u1CBC\u1CC8-\u1CD2\u1CD4-\u1CE8\u1CED\u1CF4\u1CF7-\u1CF9\u1CFB-\u1CFF\u1DC0-\u1DFF\u1F16\u1F17\u1F1E\u1F1F\u1F46\u1F47\u1F4E\u1F4F\u1F58\u1F5A\u1F5C\u1F5E\u1F7E\u1F7F\u1FB5\u1FBD\u1FBF-\u1FC1\u1FC5\u1FCD-\u1FCF\u1FD4\u1FD5\u1FDC-\u1FDF\u1FED-\u1FF1\u1FF5\u1FFD-\u1FFF\u200B-\u200F\u202A-\u202E\u2060-\u206F\u2072\u2073\u208F\u209D-\u2101\u2103-\u2106\u2108\u2109\u2114\u2116\u2117\u211E-\u2123\u2125\u2127\u2129\u212E\u213A\u213B\u214A\u214C\u214D\u214F\u218A-\u218F\u2195-\u2199\u219C-\u219F\u21A1\u21A2\u21A4\u21A5\u21A7-\u21AD\u21AF-\u21CD\u21D0\u21D1\u21D3\u21D5-\u21F3\u2300-\u2307\u230C-\u231F\u2322-\u2328\u232B-\u237B\u237D-\u239A\u23B4-\u23DB\u23E2-\u245F\u249C-\u24E9\u2500-\u25B6\u25B8-\u25C0\u25C2-\u25F7\u2600-\u266E\u2670-\u2767\u2794-\u27BF\u2800-\u28FF\u2B00-\u2B2F\u2B45\u2B46\u2B4D-\u2BFF\u2CE5-\u2CEA\u2CEF-\u2CF1\u2CF4-\u2CF8\u2D26\u2D28-\u2D2C\u2D2E\u2D2F\u2D68-\u2D6E\u2D71-\u2D7F\u2D97-\u2D9F\u2DA7\u2DAF\u2DB7\u2DBF\u2DC7\u2DCF\u2DD7\u2DDF-\u2DFF\u2E50\u2E51\u2E5E-\u2FFF\u3004\u3012\u3013\u3020\u302A-\u302F\u3036\u3037\u303E-\u3040\u3097-\u309C\u3100-\u3104\u3130\u318F-\u3191\u3196-\u319F\u31C0-\u31EF\u3200-\u321F\u322A-\u3247\u3250\u3260-\u327F\u328A-\u32B0\u32C0-\u33FF\u4DC0-\u4DFF\uA48D-\uA4CF\uA62C-\uA63F\uA66F-\uA672\uA674-\uA67D\uA69E\uA69F\uA6F0\uA6F1\uA6F8-\uA716\uA720\uA721\uA789\uA78A\uA7CE\uA7CF\uA7D2\uA7D4\uA7DD-\uA7F1\uA802\uA806\uA80B\uA823-\uA82F\uA836-\uA83F\uA878-\uA881\uA8B4-\uA8CD\uA8DA-\uA8F1\uA8FF\uA926-\uA92D\uA947-\uA95E\uA97D-\uA983\uA9B3-\uA9C0\uA9CE\uA9DA-\uA9DD\uA9E5\uA9FF\uAA29-\uAA3F\uAA43\uAA4C-\uAA4F\uAA5A\uAA5B\uAA77-\uAA79\uAA7B-\uAA7D\uAAB0\uAAB2-\uAAB4\uAAB7\uAAB8\uAABE\uAABF\uAAC1\uAAC3-\uAADA\uAAEB-\uAAEF\uAAF5-\uAB00\uAB07\uAB08\uAB0F\uAB10\uAB17-\uAB1F\uAB27\uAB2F\uAB5B\uAB6A-\uAB6F\uABE3-\uABEA\uABEC-\uABEF\uABFA-\uABFF\uD7A4-\uD7AF\uD7C7-\uD7CA\uD7FC-\uD7FF\uE000-\uF8FF\uFA6E\uFA6F\uFADA-\uFAFF\uFB07-\uFB12\uFB18-\uFB1C\uFB1E\uFB37\uFB3D\uFB3F\uFB42\uFB45\uFBB2-\uFBD2\uFD40-\uFD4F\uFD90\uFD91\uFDC8-\uFDEF\uFDFC-\uFE0F\uFE1A-\uFE2F\uFE53\uFE67\uFE69\uFE6C-\uFE6F\uFE75\uFEFD-\uFF00\uFF04\uFF3E\uFF40\uFFBF-\uFFC1\uFFC8\uFFC9\uFFD0\uFFD1\uFFD8\uFFD9\uFFDD-\uFFE1\uFFE3-\uFFE8\uFFED-\uFFFF]|\uD800[\uDC0C\uDC27\uDC3B\uDC3E\uDC4E\uDC4F\uDC5E-\uDC7F\uDCFB-\uDCFF\uDD03-\uDD06\uDD34-\uDD3F\uDD79-\uDD89\uDD8C-\uDE7F\uDE9D-\uDE9F\uDED1-\uDEE0\uDEFC-\uDEFF\uDF24-\uDF2C\uDF4B-\uDF4F\uDF76-\uDF7F\uDF9E\uDFC4-\uDFC7\uDFD6-\uDFFF]|\uD801[\uDC9E\uDC9F\uDCAA-\uDCAF\uDCD4-\uDCD7\uDCFC-\uDCFF\uDD28-\uDD2F\uDD64-\uDD6E\uDD7B\uDD8B\uDD93\uDD96\uDDA2\uDDB2\uDDBA\uDDBD-\uDDBF\uDDF4-\uDDFF\uDF37-\uDF3F\uDF56-\uDF5F\uDF68-\uDF7F\uDF86\uDFB1\uDFBB-\uDFFF]|\uD802[\uDC06\uDC07\uDC09\uDC36\uDC39-\uDC3B\uDC3D\uDC3E\uDC56\uDC77\uDC78\uDC9F-\uDCA6\uDCB0-\uDCDF\uDCF3\uDCF6-\uDCFA\uDD1C-\uDD1E\uDD3A-\uDD3E\uDD40-\uDD7F\uDDB8-\uDDBB\uDDD0\uDDD1\uDE01-\uDE0F\uDE14\uDE18\uDE36-\uDE3F\uDE49-\uDE4F\uDE59-\uDE5F\uDEA0-\uDEBF\uDEC8\uDEE5-\uDEEA\uDEF7-\uDEFF\uDF36-\uDF38\uDF56\uDF57\uDF73-\uDF77\uDF92-\uDF98\uDF9D-\uDFA8\uDFB0-\uDFFF]|\uD803[\uDC49-\uDC7F\uDCB3-\uDCBF\uDCF3-\uDCF9\uDD24-\uDD2F\uDD3A-\uDD3F\uDD66-\uDD6D\uDD86-\uDD8D\uDD90-\uDE5F\uDE7F\uDEAA-\uDEAC\uDEAE\uDEAF\uDEB2-\uDEC1\uDEC5-\uDEFF\uDF28-\uDF2F\uDF46-\uDF50\uDF5A-\uDF6F\uDF82-\uDF85\uDF8A-\uDFAF\uDFCC-\uDFDF\uDFF7-\uDFFF]|\uD804[\uDC00-\uDC02\uDC38-\uDC46\uDC4E-\uDC51\uDC70\uDC73\uDC74\uDC76-\uDC82\uDCB0-\uDCBA\uDCBD\uDCC2-\uDCCF\uDCE9-\uDCEF\uDCFA-\uDD02\uDD27-\uDD35\uDD45\uDD46\uDD48-\uDD4F\uDD73\uDD77-\uDD82\uDDB3-\uDDC0\uDDC9-\uDDCC\uDDCE\uDDCF\uDDE0\uDDF5-\uDDFF\uDE12\uDE2C-\uDE37\uDE3E\uDE41-\uDE7F\uDE87\uDE89\uDE8E\uDE9E\uDEAA-\uDEAF\uDEDF-\uDEEF\uDEFA-\uDF04\uDF0D\uDF0E\uDF11\uDF12\uDF29\uDF31\uDF34\uDF3A-\uDF3C\uDF3E-\uDF4F\uDF51-\uDF5C\uDF62-\uDF7F\uDF8A\uDF8C\uDF8D\uDF8F\uDFB6\uDFB8-\uDFD0\uDFD2\uDFD6\uDFD9-\uDFFF]|\uD805[\uDC35-\uDC46\uDC5C\uDC5E\uDC62-\uDC7F\uDCB0-\uDCC3\uDCC8-\uDCCF\uDCDA-\uDD7F\uDDAF-\uDDC0\uDDDC-\uDDFF\uDE30-\uDE40\uDE45-\uDE4F\uDE5A-\uDE5F\uDE6D-\uDE7F\uDEAB-\uDEB7\uDEBA-\uDEBF\uDECA-\uDECF\uDEE4-\uDEFF\uDF1B-\uDF2F\uDF3F\uDF47-\uDFFF]|\uD806[\uDC2C-\uDC3A\uDC3C-\uDC9F\uDCF3-\uDCFE\uDD07\uDD08\uDD0A\uDD0B\uDD14\uDD17\uDD30-\uDD3E\uDD40\uDD42\uDD43\uDD47-\uDD4F\uDD5A-\uDD9F\uDDA8\uDDA9\uDDD1-\uDDE0\uDDE4-\uDDFF\uDE01-\uDE0A\uDE33-\uDE39\uDE3B-\uDE3E\uDE47-\uDE4F\uDE51-\uDE5B\uDE8A-\uDE99\uDEA3-\uDEAF\uDEF9-\uDEFF\uDF0A-\uDFBF\uDFE2-\uDFEF\uDFFA-\uDFFF]|\uD807[\uDC09\uDC2F-\uDC3F\uDC46-\uDC4F\uDC6D-\uDC6F\uDC90-\uDCFF\uDD07\uDD0A\uDD31-\uDD45\uDD47-\uDD4F\uDD5A-\uDD5F\uDD66\uDD69\uDD8A-\uDD97\uDD99-\uDD9F\uDDAA-\uDEDF\uDEF3-\uDEF6\uDEF9-\uDF01\uDF03\uDF11\uDF34-\uDF42\uDF5A-\uDFAF\uDFB1-\uDFBF\uDFD5-\uDFFE]|\uD808[\uDF9A-\uDFFF]|\uD809[\uDC6F\uDC75-\uDC7F\uDD44-\uDFFF]|[\uD80A\uD812-\uD817\uD819\uD824-\uD82A\uD82D\uD82E\uD830-\uD832\uD83D\uD83F\uD87C\uD87D\uD87F\uD889-\uDBFF][\uDC00-\uDFFF]|\uD80B[\uDC00-\uDF8F\uDFF3-\uDFFF]|\uD80D[\uDC30-\uDC40\uDC47-\uDC5F]|\uD810[\uDFFB-\uDFFF]|\uD811[\uDE47-\uDFFF]|\uD818[\uDC00-\uDCFF\uDD1E-\uDD2F\uDD3A-\uDFFF]|\uD81A[\uDE39-\uDE3F\uDE5F\uDE6A-\uDE6D\uDEBF\uDECA-\uDECF\uDEEE-\uDEF4\uDEF6-\uDEFF\uDF30-\uDF36\uDF3C-\uDF3F\uDF45-\uDF4F\uDF5A\uDF62\uDF78-\uDF7C\uDF90-\uDFFF]|\uD81B[\uDC00-\uDD3F\uDD7A-\uDE3F\uDE9B-\uDEFF\uDF4B-\uDF4F\uDF51-\uDF92\uDFA0-\uDFDF\uDFE4-\uDFFF]|\uD821[\uDFF8-\uDFFF]|\uD823[\uDCD6-\uDCFE\uDD09-\uDFFF]|\uD82B[\uDC00-\uDFEF\uDFF4\uDFFC\uDFFF]|\uD82C[\uDD23-\uDD31\uDD33-\uDD4F\uDD53\uDD54\uDD56-\uDD63\uDD68-\uDD6F\uDEFC-\uDFFF]|\uD82F[\uDC6B-\uDC6F\uDC7D-\uDC7F\uDC89-\uDC8F\uDC9A-\uDC9E\uDCA0-\uDFFF]|\uD833[\uDC00-\uDCEF\uDCFA-\uDFFF]|\uD834[\uDC00-\uDEBF\uDED4-\uDEDF\uDEF4-\uDF5F\uDF79-\uDFFF]|\uD835[\uDC55\uDC9D\uDCA0\uDCA1\uDCA3\uDCA4\uDCA7\uDCA8\uDCAD\uDCBA\uDCBC\uDCC4\uDD06\uDD0B\uDD0C\uDD15\uDD1D\uDD3A\uDD3F\uDD45\uDD47-\uDD49\uDD51\uDEA6\uDEA7\uDFCC\uDFCD]|\uD836[\uDC00-\uDE86\uDE8C-\uDFFF]|\uD837[\uDC00-\uDEFF\uDF1F-\uDF24\uDF2B-\uDFFF]|\uD838[\uDC00-\uDC2F\uDC6E-\uDCFF\uDD2D-\uDD36\uDD3E\uDD3F\uDD4A-\uDD4D\uDD4F-\uDE8F\uDEAE-\uDEBF\uDEEC-\uDEEF\uDEFA-\uDFFF]|\uD839[\uDC00-\uDCCF\uDCEC-\uDCEF\uDCFA-\uDDCF\uDDEE\uDDEF\uDDFB-\uDDFE\uDE00-\uDFDF\uDFE7\uDFEC\uDFEF\uDFFF]|\uD83A[\uDCC5\uDCC6\uDCD0-\uDCFF\uDD44-\uDD4A\uDD4C-\uDD4F\uDD5A-\uDD5D\uDD60-\uDFFF]|\uD83B[\uDC00-\uDC70\uDCAC\uDCB0\uDCB5-\uDD00\uDD2E\uDD3E-\uDDFF\uDE04\uDE20\uDE23\uDE25\uDE26\uDE28\uDE33\uDE38\uDE3A\uDE3C-\uDE41\uDE43-\uDE46\uDE48\uDE4A\uDE4C\uDE50\uDE53\uDE55\uDE56\uDE58\uDE5A\uDE5C\uDE5E\uDE60\uDE63\uDE65\uDE66\uDE6B\uDE73\uDE78\uDE7D\uDE7F\uDE8A\uDE9C-\uDEA0\uDEA4\uDEAA\uDEBC-\uDEEF\uDEF2-\uDFFF]|\uD83C[\uDC00-\uDCFF\uDD0D-\uDFFF]|\uD83E[\uDC00-\uDFEF\uDFFA-\uDFFF]|\uD869[\uDEE0-\uDEFF]|\uD86D[\uDF3A-\uDF3F]|\uD86E[\uDC1E\uDC1F]|\uD873[\uDEA2-\uDEAF]|\uD87A[\uDFE1-\uDFEF]|\uD87B[\uDE5E-\uDFFF]|\uD87E[\uDE1E-\uDFFF]|\uD884[\uDF4B-\uDF4F]|\uD888[\uDFB0-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])/.test(str);
   }
   /**
    * 移除字符串中的特殊字符
@@ -1708,7 +1741,7 @@
     if (!str) {
       return '';
     }
-    return str.replace(/[^ \u4e00-\u9fa5a-zA-Z0-9，。、；：！π“”‘’（）【】《》？～·—…\.,;:!?"'()\[\]{}<>@#&%￥$_\+/*-]/g, '');
+    return str.replace(/(?:[\0-\x1F\$\^`\x7F-\x9F\xA2-\xA6\xA8\xA9\xAD-\xB0\xB4\xB8\u02C2-\u02C5\u02D2-\u02DF\u02E5-\u02EB\u02ED\u02EF-\u036F\u0375\u0378\u0379\u0380-\u0385\u038B\u038D\u03A2\u0482-\u0489\u0530\u0557\u0558\u058B-\u05BD\u05BF\u05C1\u05C2\u05C4\u05C5\u05C7-\u05CF\u05EB-\u05EE\u05F5-\u0605\u060B\u060E-\u061A\u061C\u064B-\u065F\u0670\u06D6-\u06E4\u06E7-\u06ED\u06FD\u06FE\u070E\u070F\u0711\u0730-\u074C\u07A6-\u07B0\u07B2-\u07BF\u07EB-\u07F3\u07F6\u07FB-\u07FF\u0816-\u0819\u081B-\u0823\u0825-\u0827\u0829-\u082F\u083F\u0859-\u085D\u085F\u086B-\u086F\u0888\u088F-\u089F\u08CA-\u0903\u093A-\u093C\u093E-\u094F\u0951-\u0957\u0962\u0963\u0981-\u0984\u098D\u098E\u0991\u0992\u09A9\u09B1\u09B3-\u09B5\u09BA-\u09BC\u09BE-\u09CD\u09CF-\u09DB\u09DE\u09E2-\u09E5\u09F2\u09F3\u09FA\u09FB\u09FE-\u0A04\u0A0B-\u0A0E\u0A11\u0A12\u0A29\u0A31\u0A34\u0A37\u0A3A-\u0A58\u0A5D\u0A5F-\u0A65\u0A70\u0A71\u0A75\u0A77-\u0A84\u0A8E\u0A92\u0AA9\u0AB1\u0AB4\u0ABA-\u0ABC\u0ABE-\u0ACF\u0AD1-\u0ADF\u0AE2-\u0AE5\u0AF1-\u0AF8\u0AFA-\u0B04\u0B0D\u0B0E\u0B11\u0B12\u0B29\u0B31\u0B34\u0B3A-\u0B3C\u0B3E-\u0B5B\u0B5E\u0B62-\u0B65\u0B70\u0B78-\u0B82\u0B84\u0B8B-\u0B8D\u0B91\u0B96-\u0B98\u0B9B\u0B9D\u0BA0-\u0BA2\u0BA5-\u0BA7\u0BAB-\u0BAD\u0BBA-\u0BCF\u0BD1-\u0BE5\u0BF3-\u0C04\u0C0D\u0C11\u0C29\u0C3A-\u0C3C\u0C3E-\u0C57\u0C5B\u0C5C\u0C5E\u0C5F\u0C62-\u0C65\u0C70-\u0C76\u0C7F\u0C81-\u0C83\u0C8D\u0C91\u0CA9\u0CB4\u0CBA-\u0CBC\u0CBE-\u0CDC\u0CDF\u0CE2-\u0CE5\u0CF0\u0CF3-\u0D03\u0D0D\u0D11\u0D3B\u0D3C\u0D3E-\u0D4D\u0D4F-\u0D53\u0D57\u0D62-\u0D65\u0D79\u0D80-\u0D84\u0D97-\u0D99\u0DB2\u0DBC\u0DBE\u0DBF\u0DC7-\u0DE5\u0DF0-\u0DF3\u0DF5-\u0E00\u0E31\u0E34-\u0E3F\u0E47-\u0E4E\u0E5C-\u0E80\u0E83\u0E85\u0E8B\u0EA4\u0EA6\u0EB1\u0EB4-\u0EBC\u0EBE\u0EBF\u0EC5\u0EC7-\u0ECF\u0EDA\u0EDB\u0EE0-\u0EFF\u0F01-\u0F03\u0F13\u0F15-\u0F1F\u0F34-\u0F39\u0F3E\u0F3F\u0F48\u0F6D-\u0F84\u0F86\u0F87\u0F8D-\u0FCF\u0FD5-\u0FD8\u0FDB-\u0FFF\u102B-\u103E\u1056-\u1059\u105E-\u1060\u1062-\u1064\u1067-\u106D\u1071-\u1074\u1082-\u108D\u108F\u109A-\u109F\u10C6\u10C8-\u10CC\u10CE\u10CF\u1249\u124E\u124F\u1257\u1259\u125E\u125F\u1289\u128E\u128F\u12B1\u12B6\u12B7\u12BF\u12C1\u12C6\u12C7\u12D7\u1311\u1316\u1317\u135B-\u135F\u137D-\u137F\u1390-\u139F\u13F6\u13F7\u13FE\u13FF\u166D\u169D-\u169F\u16F9-\u16FF\u1712-\u171E\u1732-\u1734\u1737-\u173F\u1752-\u175F\u176D\u1771-\u177F\u17B4-\u17D3\u17DB\u17DD-\u17DF\u17EA-\u17EF\u17FA-\u17FF\u180B-\u180F\u181A-\u181F\u1879-\u187F\u1885\u1886\u18A9\u18AB-\u18AF\u18F6-\u18FF\u191F-\u1943\u196E\u196F\u1975-\u197F\u19AC-\u19AF\u19CA-\u19CF\u19DB-\u19FF\u1A17-\u1A1D\u1A55-\u1A7F\u1A8A-\u1A8F\u1A9A-\u1A9F\u1AAE-\u1B04\u1B34-\u1B44\u1B4D\u1B61-\u1B7C\u1B80-\u1B82\u1BA1-\u1BAD\u1BE6-\u1BFB\u1C24-\u1C3A\u1C4A-\u1C4C\u1C8B-\u1C8F\u1CBB\u1CBC\u1CC8-\u1CD2\u1CD4-\u1CE8\u1CED\u1CF4\u1CF7-\u1CF9\u1CFB-\u1CFF\u1DC0-\u1DFF\u1F16\u1F17\u1F1E\u1F1F\u1F46\u1F47\u1F4E\u1F4F\u1F58\u1F5A\u1F5C\u1F5E\u1F7E\u1F7F\u1FB5\u1FBD\u1FBF-\u1FC1\u1FC5\u1FCD-\u1FCF\u1FD4\u1FD5\u1FDC-\u1FDF\u1FED-\u1FF1\u1FF5\u1FFD-\u1FFF\u200B-\u200F\u202A-\u202E\u2060-\u206F\u2072\u2073\u208F\u209D-\u2101\u2103-\u2106\u2108\u2109\u2114\u2116\u2117\u211E-\u2123\u2125\u2127\u2129\u212E\u213A\u213B\u214A\u214C\u214D\u214F\u218A-\u218F\u2195-\u2199\u219C-\u219F\u21A1\u21A2\u21A4\u21A5\u21A7-\u21AD\u21AF-\u21CD\u21D0\u21D1\u21D3\u21D5-\u21F3\u2300-\u2307\u230C-\u231F\u2322-\u2328\u232B-\u237B\u237D-\u239A\u23B4-\u23DB\u23E2-\u245F\u249C-\u24E9\u2500-\u25B6\u25B8-\u25C0\u25C2-\u25F7\u2600-\u266E\u2670-\u2767\u2794-\u27BF\u2800-\u28FF\u2B00-\u2B2F\u2B45\u2B46\u2B4D-\u2BFF\u2CE5-\u2CEA\u2CEF-\u2CF1\u2CF4-\u2CF8\u2D26\u2D28-\u2D2C\u2D2E\u2D2F\u2D68-\u2D6E\u2D71-\u2D7F\u2D97-\u2D9F\u2DA7\u2DAF\u2DB7\u2DBF\u2DC7\u2DCF\u2DD7\u2DDF-\u2DFF\u2E50\u2E51\u2E5E-\u2FFF\u3004\u3012\u3013\u3020\u302A-\u302F\u3036\u3037\u303E-\u3040\u3097-\u309C\u3100-\u3104\u3130\u318F-\u3191\u3196-\u319F\u31C0-\u31EF\u3200-\u321F\u322A-\u3247\u3250\u3260-\u327F\u328A-\u32B0\u32C0-\u33FF\u4DC0-\u4DFF\uA48D-\uA4CF\uA62C-\uA63F\uA66F-\uA672\uA674-\uA67D\uA69E\uA69F\uA6F0\uA6F1\uA6F8-\uA716\uA720\uA721\uA789\uA78A\uA7CE\uA7CF\uA7D2\uA7D4\uA7DD-\uA7F1\uA802\uA806\uA80B\uA823-\uA82F\uA836-\uA83F\uA878-\uA881\uA8B4-\uA8CD\uA8DA-\uA8F1\uA8FF\uA926-\uA92D\uA947-\uA95E\uA97D-\uA983\uA9B3-\uA9C0\uA9CE\uA9DA-\uA9DD\uA9E5\uA9FF\uAA29-\uAA3F\uAA43\uAA4C-\uAA4F\uAA5A\uAA5B\uAA77-\uAA79\uAA7B-\uAA7D\uAAB0\uAAB2-\uAAB4\uAAB7\uAAB8\uAABE\uAABF\uAAC1\uAAC3-\uAADA\uAAEB-\uAAEF\uAAF5-\uAB00\uAB07\uAB08\uAB0F\uAB10\uAB17-\uAB1F\uAB27\uAB2F\uAB5B\uAB6A-\uAB6F\uABE3-\uABEA\uABEC-\uABEF\uABFA-\uABFF\uD7A4-\uD7AF\uD7C7-\uD7CA\uD7FC-\uD7FF\uE000-\uF8FF\uFA6E\uFA6F\uFADA-\uFAFF\uFB07-\uFB12\uFB18-\uFB1C\uFB1E\uFB37\uFB3D\uFB3F\uFB42\uFB45\uFBB2-\uFBD2\uFD40-\uFD4F\uFD90\uFD91\uFDC8-\uFDEF\uFDFC-\uFE0F\uFE1A-\uFE2F\uFE53\uFE67\uFE69\uFE6C-\uFE6F\uFE75\uFEFD-\uFF00\uFF04\uFF3E\uFF40\uFFBF-\uFFC1\uFFC8\uFFC9\uFFD0\uFFD1\uFFD8\uFFD9\uFFDD-\uFFE1\uFFE3-\uFFE8\uFFED-\uFFFF]|\uD800[\uDC0C\uDC27\uDC3B\uDC3E\uDC4E\uDC4F\uDC5E-\uDC7F\uDCFB-\uDCFF\uDD03-\uDD06\uDD34-\uDD3F\uDD79-\uDD89\uDD8C-\uDE7F\uDE9D-\uDE9F\uDED1-\uDEE0\uDEFC-\uDEFF\uDF24-\uDF2C\uDF4B-\uDF4F\uDF76-\uDF7F\uDF9E\uDFC4-\uDFC7\uDFD6-\uDFFF]|\uD801[\uDC9E\uDC9F\uDCAA-\uDCAF\uDCD4-\uDCD7\uDCFC-\uDCFF\uDD28-\uDD2F\uDD64-\uDD6E\uDD7B\uDD8B\uDD93\uDD96\uDDA2\uDDB2\uDDBA\uDDBD-\uDDBF\uDDF4-\uDDFF\uDF37-\uDF3F\uDF56-\uDF5F\uDF68-\uDF7F\uDF86\uDFB1\uDFBB-\uDFFF]|\uD802[\uDC06\uDC07\uDC09\uDC36\uDC39-\uDC3B\uDC3D\uDC3E\uDC56\uDC77\uDC78\uDC9F-\uDCA6\uDCB0-\uDCDF\uDCF3\uDCF6-\uDCFA\uDD1C-\uDD1E\uDD3A-\uDD3E\uDD40-\uDD7F\uDDB8-\uDDBB\uDDD0\uDDD1\uDE01-\uDE0F\uDE14\uDE18\uDE36-\uDE3F\uDE49-\uDE4F\uDE59-\uDE5F\uDEA0-\uDEBF\uDEC8\uDEE5-\uDEEA\uDEF7-\uDEFF\uDF36-\uDF38\uDF56\uDF57\uDF73-\uDF77\uDF92-\uDF98\uDF9D-\uDFA8\uDFB0-\uDFFF]|\uD803[\uDC49-\uDC7F\uDCB3-\uDCBF\uDCF3-\uDCF9\uDD24-\uDD2F\uDD3A-\uDD3F\uDD66-\uDD6D\uDD86-\uDD8D\uDD90-\uDE5F\uDE7F\uDEAA-\uDEAC\uDEAE\uDEAF\uDEB2-\uDEC1\uDEC5-\uDEFF\uDF28-\uDF2F\uDF46-\uDF50\uDF5A-\uDF6F\uDF82-\uDF85\uDF8A-\uDFAF\uDFCC-\uDFDF\uDFF7-\uDFFF]|\uD804[\uDC00-\uDC02\uDC38-\uDC46\uDC4E-\uDC51\uDC70\uDC73\uDC74\uDC76-\uDC82\uDCB0-\uDCBA\uDCBD\uDCC2-\uDCCF\uDCE9-\uDCEF\uDCFA-\uDD02\uDD27-\uDD35\uDD45\uDD46\uDD48-\uDD4F\uDD73\uDD77-\uDD82\uDDB3-\uDDC0\uDDC9-\uDDCC\uDDCE\uDDCF\uDDE0\uDDF5-\uDDFF\uDE12\uDE2C-\uDE37\uDE3E\uDE41-\uDE7F\uDE87\uDE89\uDE8E\uDE9E\uDEAA-\uDEAF\uDEDF-\uDEEF\uDEFA-\uDF04\uDF0D\uDF0E\uDF11\uDF12\uDF29\uDF31\uDF34\uDF3A-\uDF3C\uDF3E-\uDF4F\uDF51-\uDF5C\uDF62-\uDF7F\uDF8A\uDF8C\uDF8D\uDF8F\uDFB6\uDFB8-\uDFD0\uDFD2\uDFD6\uDFD9-\uDFFF]|\uD805[\uDC35-\uDC46\uDC5C\uDC5E\uDC62-\uDC7F\uDCB0-\uDCC3\uDCC8-\uDCCF\uDCDA-\uDD7F\uDDAF-\uDDC0\uDDDC-\uDDFF\uDE30-\uDE40\uDE45-\uDE4F\uDE5A-\uDE5F\uDE6D-\uDE7F\uDEAB-\uDEB7\uDEBA-\uDEBF\uDECA-\uDECF\uDEE4-\uDEFF\uDF1B-\uDF2F\uDF3F\uDF47-\uDFFF]|\uD806[\uDC2C-\uDC3A\uDC3C-\uDC9F\uDCF3-\uDCFE\uDD07\uDD08\uDD0A\uDD0B\uDD14\uDD17\uDD30-\uDD3E\uDD40\uDD42\uDD43\uDD47-\uDD4F\uDD5A-\uDD9F\uDDA8\uDDA9\uDDD1-\uDDE0\uDDE4-\uDDFF\uDE01-\uDE0A\uDE33-\uDE39\uDE3B-\uDE3E\uDE47-\uDE4F\uDE51-\uDE5B\uDE8A-\uDE99\uDEA3-\uDEAF\uDEF9-\uDEFF\uDF0A-\uDFBF\uDFE2-\uDFEF\uDFFA-\uDFFF]|\uD807[\uDC09\uDC2F-\uDC3F\uDC46-\uDC4F\uDC6D-\uDC6F\uDC90-\uDCFF\uDD07\uDD0A\uDD31-\uDD45\uDD47-\uDD4F\uDD5A-\uDD5F\uDD66\uDD69\uDD8A-\uDD97\uDD99-\uDD9F\uDDAA-\uDEDF\uDEF3-\uDEF6\uDEF9-\uDF01\uDF03\uDF11\uDF34-\uDF42\uDF5A-\uDFAF\uDFB1-\uDFBF\uDFD5-\uDFFE]|\uD808[\uDF9A-\uDFFF]|\uD809[\uDC6F\uDC75-\uDC7F\uDD44-\uDFFF]|[\uD80A\uD812-\uD817\uD819\uD824-\uD82A\uD82D\uD82E\uD830-\uD832\uD83D\uD83F\uD87C\uD87D\uD87F\uD889-\uDBFF][\uDC00-\uDFFF]|\uD80B[\uDC00-\uDF8F\uDFF3-\uDFFF]|\uD80D[\uDC30-\uDC40\uDC47-\uDC5F]|\uD810[\uDFFB-\uDFFF]|\uD811[\uDE47-\uDFFF]|\uD818[\uDC00-\uDCFF\uDD1E-\uDD2F\uDD3A-\uDFFF]|\uD81A[\uDE39-\uDE3F\uDE5F\uDE6A-\uDE6D\uDEBF\uDECA-\uDECF\uDEEE-\uDEF4\uDEF6-\uDEFF\uDF30-\uDF36\uDF3C-\uDF3F\uDF45-\uDF4F\uDF5A\uDF62\uDF78-\uDF7C\uDF90-\uDFFF]|\uD81B[\uDC00-\uDD3F\uDD7A-\uDE3F\uDE9B-\uDEFF\uDF4B-\uDF4F\uDF51-\uDF92\uDFA0-\uDFDF\uDFE4-\uDFFF]|\uD821[\uDFF8-\uDFFF]|\uD823[\uDCD6-\uDCFE\uDD09-\uDFFF]|\uD82B[\uDC00-\uDFEF\uDFF4\uDFFC\uDFFF]|\uD82C[\uDD23-\uDD31\uDD33-\uDD4F\uDD53\uDD54\uDD56-\uDD63\uDD68-\uDD6F\uDEFC-\uDFFF]|\uD82F[\uDC6B-\uDC6F\uDC7D-\uDC7F\uDC89-\uDC8F\uDC9A-\uDC9E\uDCA0-\uDFFF]|\uD833[\uDC00-\uDCEF\uDCFA-\uDFFF]|\uD834[\uDC00-\uDEBF\uDED4-\uDEDF\uDEF4-\uDF5F\uDF79-\uDFFF]|\uD835[\uDC55\uDC9D\uDCA0\uDCA1\uDCA3\uDCA4\uDCA7\uDCA8\uDCAD\uDCBA\uDCBC\uDCC4\uDD06\uDD0B\uDD0C\uDD15\uDD1D\uDD3A\uDD3F\uDD45\uDD47-\uDD49\uDD51\uDEA6\uDEA7\uDFCC\uDFCD]|\uD836[\uDC00-\uDE86\uDE8C-\uDFFF]|\uD837[\uDC00-\uDEFF\uDF1F-\uDF24\uDF2B-\uDFFF]|\uD838[\uDC00-\uDC2F\uDC6E-\uDCFF\uDD2D-\uDD36\uDD3E\uDD3F\uDD4A-\uDD4D\uDD4F-\uDE8F\uDEAE-\uDEBF\uDEEC-\uDEEF\uDEFA-\uDFFF]|\uD839[\uDC00-\uDCCF\uDCEC-\uDCEF\uDCFA-\uDDCF\uDDEE\uDDEF\uDDFB-\uDDFE\uDE00-\uDFDF\uDFE7\uDFEC\uDFEF\uDFFF]|\uD83A[\uDCC5\uDCC6\uDCD0-\uDCFF\uDD44-\uDD4A\uDD4C-\uDD4F\uDD5A-\uDD5D\uDD60-\uDFFF]|\uD83B[\uDC00-\uDC70\uDCAC\uDCB0\uDCB5-\uDD00\uDD2E\uDD3E-\uDDFF\uDE04\uDE20\uDE23\uDE25\uDE26\uDE28\uDE33\uDE38\uDE3A\uDE3C-\uDE41\uDE43-\uDE46\uDE48\uDE4A\uDE4C\uDE50\uDE53\uDE55\uDE56\uDE58\uDE5A\uDE5C\uDE5E\uDE60\uDE63\uDE65\uDE66\uDE6B\uDE73\uDE78\uDE7D\uDE7F\uDE8A\uDE9C-\uDEA0\uDEA4\uDEAA\uDEBC-\uDEEF\uDEF2-\uDFFF]|\uD83C[\uDC00-\uDCFF\uDD0D-\uDFFF]|\uD83E[\uDC00-\uDFEF\uDFFA-\uDFFF]|\uD869[\uDEE0-\uDEFF]|\uD86D[\uDF3A-\uDF3F]|\uD86E[\uDC1E\uDC1F]|\uD873[\uDEA2-\uDEAF]|\uD87A[\uDFE1-\uDFEF]|\uD87B[\uDE5E-\uDFFF]|\uD87E[\uDE1E-\uDFFF]|\uD884[\uDF4B-\uDF4F]|\uD888[\uDFB0-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])/g, '');
   }
 
   function formatHourMinutes(value) {
@@ -1845,6 +1878,224 @@
     }
     // 这里留给以后加其他规则
     return false;
+  }
+
+  /**
+   * 将 HEX 颜色转换为 RGBA 对象
+   *
+   * @group Function
+   * @category Util
+   * @param color HEX 颜色值
+   * @returns RGBA 颜色对象
+   * @example
+   * hexToRgbaObject('#FF0000') // { red: 255, green: 0, blue: 0, alpha: 1 }
+   * hexToRgbaObject('#FF000000') // { red: 255, green: 0, blue: 0, alpha: 0 }
+   */
+  function hexToRgbaObject(color) {
+    // 移除 # 号
+    var hex = color.replace('#', '');
+    // 处理简写格式 (#rgb 或 #rgba)
+    if (hex.length === 3 || hex.length === 4) {
+      hex = hex.split('').map(function (_char) {
+        return _char + _char;
+      }).join('');
+    }
+    // 验证hex长度
+    if (hex.length !== 6 && hex.length !== 8) {
+      throw new Error('无效的HEX颜色格式');
+    }
+    var result = {
+      red: parseInt(hex.substring(0, 2), 16),
+      green: parseInt(hex.substring(2, 4), 16),
+      blue: parseInt(hex.substring(4, 6), 16),
+      alpha: 1
+    };
+    if (hex.length === 8) {
+      result.alpha = parseInt(hex.substring(6, 8), 16) / 255;
+    }
+    return result;
+  }
+  /**
+   * 将 HEX 颜色转换为 HSL 对象
+   *
+   * @group Function
+   * @category Util
+   * @param color HEX 颜色值
+   * @returns HSL 颜色对象
+   * @example
+   * hexToHslObject('#FF0000') // { hue: 0, saturation: 100, lightness: 50 }
+   */
+  function hexToHslObject(color) {
+    return rgbToHsl(hexToRgbaObject(color));
+  }
+  /**
+   * 将 HEX 颜色转换为 RGBA 字符串格式
+   *
+   * 使用场景是给颜色应用一个新的透明度
+   *
+   * @group Function
+   * @category Util
+   * @param color HEX 颜色值
+   * @param alpha 透明度，取值范围 [0, 1]
+   * @returns RGBA 颜色字符串
+   * @example
+   * hexToRgbaString('#FF0000', 0.5) // rgba(255,0,0,0.5)
+   */
+  function hexToRgbaString(color, alpha) {
+    var rgba = hexToRgbaObject(color);
+    return "rgba(".concat(rgba.red, ",").concat(rgba.green, ",").concat(rgba.blue, ",").concat(alpha, ")");
+  }
+  /**
+   * 加深颜色亮度
+   *
+   * @group Function
+   * @category Util
+   * @param color HEX 颜色值
+   * @param offset 加深幅度，取值范围 [0, 1]
+   * @returns 新的 hex 颜色
+   * @example
+   * darkenColor('#999999', 0.1) // #808080
+   * darkenColor('#999999', 0.2) // #666666
+   */
+  function darkenColor(color, offset) {
+    return adjustColorBrightness(color, -offset);
+  }
+  /**
+   * 减淡颜色亮度
+   *
+   * @group Function
+   * @category Util
+   * @param color HEX 颜色值
+   * @param offset 减淡幅度，取值范围 [0, 1]
+   * @returns 新的 hex 颜色
+   * @example
+   * lightenColor('#999999', 0.1) // #B3B3B3
+   * lightenColor('#999999', 0.2) // #CCCCCC
+   */
+  function lightenColor(color, offset) {
+    return adjustColorBrightness(color, offset);
+  }
+  /**
+   * 调整颜色亮度
+   *
+   * @param hex 原始颜色
+   * @param offset 取值范围 [0, 1]
+   * @returns 新的 hex 颜色字符串
+   */
+  function adjustColorBrightness(hex, offset) {
+    var rgba = hexToRgbaObject(hex);
+    var hsl = rgbToHsl(rgba);
+    // 调整亮度，限制在 0-100 之间
+    var newL = hsl.lightness + offset * 100;
+    hsl.lightness = Math.max(0, Math.min(100, newL));
+    var newRgb = hslToRgb(hsl);
+    // 如果原颜色有透明度，返回值保留该透明度
+    var result = "#".concat(toHex(newRgb.red)).concat(toHex(newRgb.green)).concat(toHex(newRgb.blue));
+    if (rgba.alpha < 1) {
+      result += toHex(rgba.alpha * 255);
+    }
+    return result;
+  }
+  /**
+   * 将 RGB 转换为 HSL
+   * r, g, b: 0-255
+   * 返回 h: 0-360, s: 0-100, l: 0-100
+   */
+  function rgbToHsl(rgb) {
+    var r = rgb.red / 255;
+    var g = rgb.green / 255;
+    var b = rgb.blue / 255;
+    var max = Math.max(r, g, b);
+    var min = Math.min(r, g, b);
+    var h = 0;
+    var s = 0;
+    var l = (max + min) / 2;
+    if (max !== min) {
+      var d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r:
+          h = (g - b) / d + (g < b ? 6 : 0);
+          break;
+        case g:
+          h = (b - r) / d + 2;
+          break;
+        case b:
+          h = (r - g) / d + 4;
+          break;
+      }
+      h *= 60;
+    }
+    return {
+      hue: h,
+      saturation: s * 100,
+      lightness: l * 100
+    };
+  }
+  /**
+   * 将 HSL 转换为 RGB
+   * 返回 r, g, b: 0-255
+   */
+  function hslToRgb(hsl) {
+    var h = hsl.hue / 360;
+    var s = hsl.saturation / 100;
+    var l = hsl.lightness / 100;
+    var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    var p = 2 * l - q;
+    var r = hue2rgb(p, q, h + 1 / 3);
+    var g = hue2rgb(p, q, h);
+    var b = hue2rgb(p, q, h - 1 / 3);
+    return {
+      red: Math.round(r * 255),
+      green: Math.round(g * 255),
+      blue: Math.round(b * 255),
+      alpha: 1
+    };
+  }
+  function hue2rgb(p, q, t) {
+    if (t < 0) {
+      t += 1;
+    }
+    if (t > 1) {
+      t -= 1;
+    }
+    if (t < 1 / 6) {
+      return p + (q - p) * 6 * t;
+    }
+    if (t < 1 / 2) {
+      return q;
+    }
+    if (t < 2 / 3) {
+      return p + (q - p) * (2 / 3 - t) * 6;
+    }
+    return p;
+  }
+  function toHex(color) {
+    return padStringStart(color.toString(16).toUpperCase(), 2);
+  }
+
+  /**
+   * 是否为十六进制颜色
+   *
+   * @group Function
+   * @category Is
+   * @param value 要校验的字符串
+   * @returns 是否为十六进制颜色
+   * @example
+   * isHexColor('#666') // true
+   * isHexColor('#666666') // true
+   * isHexColor('#66666666') // true 注意，这是一个 RGBA 颜色
+   */
+  function isHexColor(value) {
+    if (value.indexOf('#') !== 0) {
+      return false;
+    }
+    try {
+      hexToRgbaObject(value);
+      return true;
+    } catch (_unused) {
+      return false;
+    }
   }
 
   /**
@@ -2170,200 +2421,6 @@
       return AUTH_CODE_ALIPAY;
     }
     return -1;
-  }
-
-  /**
-   * 将 HEX 颜色转换为 RGBA 对象
-   *
-   * @group Function
-   * @category Util
-   * @param color HEX 颜色值
-   * @returns RGBA 颜色对象
-   * @example
-   * hexToRgbaObject('#FF0000') // { red: 255, green: 0, blue: 0, alpha: 1 }
-   * hexToRgbaObject('#FF000000') // { red: 255, green: 0, blue: 0, alpha: 0 }
-   */
-  function hexToRgbaObject(color) {
-    // 移除 # 号
-    var hex = color.replace('#', '');
-    // 处理简写格式 (#rgb 或 #rgba)
-    if (hex.length === 3 || hex.length === 4) {
-      hex = hex.split('').map(function (_char) {
-        return _char + _char;
-      }).join('');
-    }
-    // 验证hex长度
-    if (hex.length !== 6 && hex.length !== 8) {
-      throw new Error('无效的HEX颜色格式');
-    }
-    var result = {
-      red: parseInt(hex.substring(0, 2), 16),
-      green: parseInt(hex.substring(2, 4), 16),
-      blue: parseInt(hex.substring(4, 6), 16),
-      alpha: 1
-    };
-    if (hex.length === 8) {
-      result.alpha = parseInt(hex.substring(6, 8), 16) / 255;
-    }
-    return result;
-  }
-  /**
-   * 将 HEX 颜色转换为 HSL 对象
-   *
-   * @group Function
-   * @category Util
-   * @param color HEX 颜色值
-   * @returns HSL 颜色对象
-   * @example
-   * hexToHslObject('#FF0000') // { hue: 0, saturation: 100, lightness: 50 }
-   */
-  function hexToHslObject(color) {
-    return rgbToHsl(hexToRgbaObject(color));
-  }
-  /**
-   * 将 HEX 颜色转换为 RGBA 字符串格式
-   *
-   * 使用场景是给颜色应用一个新的透明度
-   *
-   * @group Function
-   * @category Util
-   * @param color HEX 颜色值
-   * @param alpha 透明度，取值范围 [0, 1]
-   * @returns RGBA 颜色字符串
-   * @example
-   * hexToRgbaString('#FF0000', 0.5) // rgba(255,0,0,0.5)
-   */
-  function hexToRgbaString(color, alpha) {
-    var rgba = hexToRgbaObject(color);
-    return "rgba(".concat(rgba.red, ",").concat(rgba.green, ",").concat(rgba.blue, ",").concat(alpha, ")");
-  }
-  /**
-   * 加深颜色亮度
-   *
-   * @group Function
-   * @category Util
-   * @param color HEX 颜色值
-   * @param offset 加深幅度，取值范围 [0, 1]
-   * @returns 新的 hex 颜色
-   * @example
-   * darkenColor('#999999', 0.1) // #808080
-   * darkenColor('#999999', 0.2) // #666666
-   */
-  function darkenColor(color, offset) {
-    return adjustColorBrightness(color, -offset);
-  }
-  /**
-   * 减淡颜色亮度
-   *
-   * @group Function
-   * @category Util
-   * @param color HEX 颜色值
-   * @param offset 减淡幅度，取值范围 [0, 1]
-   * @returns 新的 hex 颜色
-   * @example
-   * lightenColor('#999999', 0.1) // #B3B3B3
-   * lightenColor('#999999', 0.2) // #CCCCCC
-   */
-  function lightenColor(color, offset) {
-    return adjustColorBrightness(color, offset);
-  }
-  /**
-   * 调整颜色亮度
-   *
-   * @param hex 原始颜色
-   * @param offset 取值范围 [0, 1]
-   * @returns 新的 hex 颜色字符串
-   */
-  function adjustColorBrightness(hex, offset) {
-    var rgba = hexToRgbaObject(hex);
-    var hsl = rgbToHsl(rgba);
-    // 调整亮度，限制在 0-100 之间
-    var newL = hsl.lightness + offset * 100;
-    hsl.lightness = Math.max(0, Math.min(100, newL));
-    var newRgb = hslToRgb(hsl);
-    // 如果原颜色有透明度，返回值保留该透明度
-    var result = "#".concat(toHex(newRgb.red)).concat(toHex(newRgb.green)).concat(toHex(newRgb.blue));
-    if (rgba.alpha < 1) {
-      result += toHex(rgba.alpha * 255);
-    }
-    return result;
-  }
-  /**
-   * 将 RGB 转换为 HSL
-   * r, g, b: 0-255
-   * 返回 h: 0-360, s: 0-100, l: 0-100
-   */
-  function rgbToHsl(rgb) {
-    var r = rgb.red / 255;
-    var g = rgb.green / 255;
-    var b = rgb.blue / 255;
-    var max = Math.max(r, g, b);
-    var min = Math.min(r, g, b);
-    var h = 0;
-    var s = 0;
-    var l = (max + min) / 2;
-    if (max !== min) {
-      var d = max - min;
-      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-      switch (max) {
-        case r:
-          h = (g - b) / d + (g < b ? 6 : 0);
-          break;
-        case g:
-          h = (b - r) / d + 2;
-          break;
-        case b:
-          h = (r - g) / d + 4;
-          break;
-      }
-      h *= 60;
-    }
-    return {
-      hue: h,
-      saturation: s * 100,
-      lightness: l * 100
-    };
-  }
-  /**
-   * 将 HSL 转换为 RGB
-   * 返回 r, g, b: 0-255
-   */
-  function hslToRgb(hsl) {
-    var h = hsl.hue / 360;
-    var s = hsl.saturation / 100;
-    var l = hsl.lightness / 100;
-    var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-    var p = 2 * l - q;
-    var r = hue2rgb(p, q, h + 1 / 3);
-    var g = hue2rgb(p, q, h);
-    var b = hue2rgb(p, q, h - 1 / 3);
-    return {
-      red: Math.round(r * 255),
-      green: Math.round(g * 255),
-      blue: Math.round(b * 255),
-      alpha: 1
-    };
-  }
-  function hue2rgb(p, q, t) {
-    if (t < 0) {
-      t += 1;
-    }
-    if (t > 1) {
-      t -= 1;
-    }
-    if (t < 1 / 6) {
-      return p + (q - p) * 6 * t;
-    }
-    if (t < 1 / 2) {
-      return q;
-    }
-    if (t < 2 / 3) {
-      return p + (q - p) * (2 / 3 - t) * 6;
-    }
-    return p;
-  }
-  function toHex(color) {
-    return padStringStart(color.toString(16).toUpperCase(), 2);
   }
 
   // 定义地球半径（单位：米）
@@ -2783,6 +2840,126 @@
     return date.getTime();
   }
   /**
+   * 获取某年的开始时间
+   *
+   * @group Function
+   * @category Util
+   * @param timestamp 毫秒时间戳
+   * @returns 毫秒时间戳
+   */
+  function startOfYear(timestamp) {
+    var date = new Date(timestamp);
+    date.setMonth(0, 1); // 1 月 1 日
+    date.setHours(0, 0, 0, 0);
+    return date.getTime();
+  }
+  /**
+   * 获取前一年的开始时间
+   *
+   * @group Function
+   * @category Util
+   * @param timestamp 毫秒时间戳
+   * @returns 毫秒时间戳
+   */
+  function startOfPrevYear(timestamp) {
+    var date = new Date(timestamp);
+    date.setFullYear(date.getFullYear() - 1, 0, 1); // 去年 1 月 1 日
+    date.setHours(0, 0, 0, 0);
+    return date.getTime();
+  }
+  /**
+   * 获取下一年的开始时间
+   *
+   * @group Function
+   * @category Util
+   * @param timestamp 毫秒时间戳
+   * @returns 毫秒时间戳
+   */
+  function startOfNextYear(timestamp) {
+    var date = new Date(timestamp);
+    date.setFullYear(date.getFullYear() + 1, 0, 1); // 明年 1 月 1 日
+    date.setHours(0, 0, 0, 0);
+    return date.getTime();
+  }
+  /**
+   * 获取某年的结束时间
+   *
+   * @group Function
+   * @category Util
+   * @param timestamp 毫秒时间戳
+   * @returns 毫秒时间戳
+   */
+  function endOfYear(timestamp) {
+    var date = new Date(timestamp);
+    date.setMonth(11, 31); // 12 月 31 日
+    date.setHours(23, 59, 59, 999);
+    return date.getTime();
+  }
+  /**
+   * 获取昨天的同时刻
+   *
+   * @group Function
+   * @category Util
+   * @param timestamp 毫秒时间戳
+   * @returns 毫秒时间戳
+   */
+  function sameOfPrevDay(timestamp) {
+    return timestamp - MS_DAY;
+  }
+  /**
+   * 获取前一周的同时刻
+   *
+   * @group Function
+   * @category Util
+   * @param timestamp 毫秒时间戳
+   * @returns 毫秒时间戳
+   */
+  function sameOfPrevWeek(timestamp) {
+    return timestamp - MS_WEEK;
+  }
+  /**
+   * 获取上个月的同时刻
+   * 如果传入的时间戳大于上个月的最后一天，则返回上个月的最后时间
+   *
+   * @group Function
+   * @category Util
+   * @param timestamp 毫秒时间戳
+   * @returns 毫秒时间戳
+   */
+  function sameOfPrevMonth(timestamp) {
+    var date = new Date(timestamp);
+    var year = date.getFullYear();
+    var month = date.getMonth();
+    var day = date.getDate();
+    var prevMonthStart = new Date(year, month - 1, 1, 0, 0, 0, 0);
+    var prevMonthEnd = new Date(year, month, 0, 23, 59, 59, 999);
+    if (day > prevMonthEnd.getDate()) {
+      return prevMonthEnd.getTime();
+    }
+    date.setFullYear(prevMonthStart.getFullYear(), prevMonthStart.getMonth(), day);
+    return date.getTime();
+  }
+  /**
+   * 获取去年的同时刻
+   * 如果传入的时间戳大于去年该月的最后一天，则返回去年该月的最后时间
+   *
+   * @group Function
+   * @category Util
+   * @param timestamp 毫秒时间戳
+   * @returns 毫秒时间戳
+   */
+  function sameOfPrevYear(timestamp) {
+    var date = new Date(timestamp);
+    var month = date.getMonth();
+    var day = date.getDate();
+    var prevYearMonthEnd = new Date(date.getFullYear() - 1, month + 1, 0, 23, 59, 59, 999);
+    if (day > prevYearMonthEnd.getDate()) {
+      return prevYearMonthEnd.getTime();
+    }
+    date.setFullYear(date.getFullYear() - 1, month, day);
+    return date.getTime();
+  }
+  /**
   * 优化时间范围，尽量归一到某个类型下，无法归一时，才用范围
   *
   * 后端常用，前端几乎用不上
@@ -2942,6 +3119,8 @@
   exports.SIZE_GB = SIZE_GB;
   exports.SIZE_KB = SIZE_KB;
   exports.SIZE_MB = SIZE_MB;
+  exports.TIME_DEFAULT = TIME_DEFAULT;
+  exports.TIME_HOUR_MINUTE = TIME_HOUR_MINUTE;
   exports.YEAR_CHINESE = YEAR_CHINESE;
   exports.YEAR_DEFAULT = YEAR_DEFAULT;
   exports.applyRateCeil = applyRateCeil;
@@ -2961,6 +3140,7 @@
   exports.endOfHour = endOfHour;
   exports.endOfMonth = endOfMonth;
   exports.endOfWeek = endOfWeek;
+  exports.endOfYear = endOfYear;
   exports.formatAmount = formatAmount;
   exports.formatAmountShortly = formatAmountShortly;
   exports.formatArea = formatArea;
@@ -2985,6 +3165,7 @@
   exports.formatRatePercent = formatRatePercent;
   exports.formatShelfLife = formatShelfLife;
   exports.formatSize = formatSize;
+  exports.formatTime = formatTime;
   exports.formatWeek = formatWeek;
   exports.formatYear = formatYear;
   exports.getStringLength = getStringLength;
@@ -2998,6 +3179,7 @@
   exports.isCorporateAccountNumber = isCorporateAccountNumber;
   exports.isCustomBarcode = isCustomBarcode;
   exports.isEmail = isEmail;
+  exports.isHexColor = isHexColor;
   exports.isIdentityCardNumber = isIdentityCardNumber;
   exports.isLocationInChina = isLocationInChina;
   exports.isMobile = isMobile;
@@ -3031,6 +3213,10 @@
   exports.rateToDisplay = rateToDisplay;
   exports.removeSpecialCharacter = removeSpecialCharacter;
   exports.renderStringTemplate = renderStringTemplate;
+  exports.sameOfPrevDay = sameOfPrevDay;
+  exports.sameOfPrevMonth = sameOfPrevMonth;
+  exports.sameOfPrevWeek = sameOfPrevWeek;
+  exports.sameOfPrevYear = sameOfPrevYear;
   exports.sliceString = sliceString;
   exports.startOfDay = startOfDay;
   exports.startOfHour = startOfHour;
@@ -3039,11 +3225,14 @@
   exports.startOfNextHour = startOfNextHour;
   exports.startOfNextMonth = startOfNextMonth;
   exports.startOfNextWeek = startOfNextWeek;
+  exports.startOfNextYear = startOfNextYear;
   exports.startOfPrevDay = startOfPrevDay;
   exports.startOfPrevHour = startOfPrevHour;
   exports.startOfPrevMonth = startOfPrevMonth;
   exports.startOfPrevWeek = startOfPrevWeek;
+  exports.startOfPrevYear = startOfPrevYear;
   exports.startOfWeek = startOfWeek;
+  exports.startOfYear = startOfYear;
   exports.timeFieldToTime = timeFieldToTime;
   exports.timeToTimeField = timeToTimeField;
   exports.timeToTimestamp = timeToTimestamp;

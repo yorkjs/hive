@@ -154,6 +154,80 @@ export declare function startOfNextMonth(timestamp: number): number;
 * @returns 毫秒时间戳
 */
 export declare function endOfMonth(timestamp: number): number;
+/**
+ * 获取某年的开始时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export declare function startOfYear(timestamp: number): number;
+/**
+ * 获取前一年的开始时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export declare function startOfPrevYear(timestamp: number): number;
+/**
+ * 获取下一年的开始时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export declare function startOfNextYear(timestamp: number): number;
+/**
+ * 获取某年的结束时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export declare function endOfYear(timestamp: number): number;
+/**
+ * 获取昨天的同时刻
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export declare function sameOfPrevDay(timestamp: number): number;
+/**
+ * 获取前一周的同时刻
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export declare function sameOfPrevWeek(timestamp: number): number;
+/**
+ * 获取上个月的同时刻
+ * 如果传入的时间戳大于上个月的最后一天，则返回上个月的最后时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export declare function sameOfPrevMonth(timestamp: number): number;
+/**
+ * 获取去年的同时刻
+ * 如果传入的时间戳大于去年该月的最后一天，则返回去年该月的最后时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export declare function sameOfPrevYear(timestamp: number): number;
 interface ITimeRangeOptimizer {
     isHour?: (hour: number) => void;
     isDay?: (day: number) => void;
