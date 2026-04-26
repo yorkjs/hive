@@ -60,7 +60,7 @@ export const DATE_MONTH_DATE_DOT = 'MM.DD'
  * @type {string}
  * @category Date
  * @group Constant
- * @remarks 示D日'
+ * @remarks 示例：2020年10月1日
  */
 export const DATE_YEAR_MONTH_DATE_CHINESE = 'YYYY年M月D日'
 

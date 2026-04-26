@@ -393,8 +393,7 @@ export function sameOfPrevYear(timestamp: number): number {
   const month = date.getMonth()
   const day = date.getDate()
 
-  const prevYearMonthStart = new Date(date.getFullYear() - 1, month, 1, 0, 0, 0, 0)
-  const prevYearMonthEnd = new Date(prevYearMonthStart.getFullYear(), month + 1, 0, 23, 59, 59, 999)
+  const prevYearMonthEnd = new Date(date.getFullYear() - 1, month + 1, 0, 23, 59, 59, 999)
 
   if (day > prevYearMonthEnd.getDate()) {
     return prevYearMonthEnd.getTime()
