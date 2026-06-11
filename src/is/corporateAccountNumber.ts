@@ -10,5 +10,5 @@
  * isCorporateAccountNumber('abcd123123') // false
  */
 export function isCorporateAccountNumber(value: string) {
-  return /^\d{9,22}$/.test(value)
+  return /^\d{9,32}$/.test(value)
 }

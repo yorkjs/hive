@@ -1,5 +1,5 @@
 /**
- * hive.js v0.5.3
+ * hive.js v0.5.4
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -2028,7 +2028,7 @@ function isHexColor(value) {
  * isCorporateAccountNumber('abcd123123') // false
  */
 function isCorporateAccountNumber(value) {
-    return /^\d{9,22}$/.test(value);
+    return /^\d{9,32}$/.test(value);
 }
 
 /**
