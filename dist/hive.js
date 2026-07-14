@@ -1,5 +1,5 @@
 /**
- * hive.js v0.5.4
+ * hive.js v0.5.5
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -480,6 +480,63 @@
    * @default 1024 * SIZE_MB
    */
   var SIZE_GB = 1024 * SIZE_MB;
+
+  /**
+   * 周日
+   * @type {number}
+   * @group Constant
+   * @category Week
+   * @default 0
+   */
+  var WEEK_SUNDAY = 0;
+  /**
+   * 周一
+   * @type {number}
+   * @group Constant
+   * @category Week
+   * @default 1
+   */
+  var WEEK_MONDAY = 1;
+  /**
+   * 周二
+   * @type {number}
+   * @group Constant
+   * @category Week
+   * @default 2
+   */
+  var WEEK_TUESDAY = 2;
+  /**
+   * 周三
+   * @type {number}
+   * @group Constant
+   * @category Week
+   * @default 3
+   */
+  var WEEK_WEDNESDAY = 3;
+  /**
+   * 周四
+   * @type {number}
+   * @group Constant
+   * @category Week
+   * @default 4
+   */
+  var WEEK_THURSDAY = 4;
+  /**
+   * 周五
+   * @type {number}
+   * @group Constant
+   * @category Week
+   * @default 5
+   */
+  var WEEK_FRIDAY = 5;
+  /**
+   * 周六
+   * @type {number}
+   * @group Constant
+   * @category Week
+   * @default 6
+   */
+  var WEEK_SATURDAY = 6;
 
   function _arrayLikeToArray(r, a) {
     (null == a || a > r.length) && (a = r.length);
@@ -3121,6 +3178,13 @@
   exports.SIZE_MB = SIZE_MB;
   exports.TIME_DEFAULT = TIME_DEFAULT;
   exports.TIME_HOUR_MINUTE = TIME_HOUR_MINUTE;
+  exports.WEEK_FRIDAY = WEEK_FRIDAY;
+  exports.WEEK_MONDAY = WEEK_MONDAY;
+  exports.WEEK_SATURDAY = WEEK_SATURDAY;
+  exports.WEEK_SUNDAY = WEEK_SUNDAY;
+  exports.WEEK_THURSDAY = WEEK_THURSDAY;
+  exports.WEEK_TUESDAY = WEEK_TUESDAY;
+  exports.WEEK_WEDNESDAY = WEEK_WEDNESDAY;
   exports.YEAR_CHINESE = YEAR_CHINESE;
   exports.YEAR_DEFAULT = YEAR_DEFAULT;
   exports.applyRateCeil = applyRateCeil;

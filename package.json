@@ -1,6 +1,6 @@
 {
   "name": "@yorkjs/hive",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "util function",
   "main": "dist/hive.js",
   "module": "dist/hive.esm.js",
@@ -11,6 +11,7 @@
   ],
   "scripts": {
     "test": "jest",
+    "doc": "npx typedoc",
     "source": "cross-env NODE_ENV=development NODE_FORMAT=es node_modules/.bin/rollup -c ./rollup.config.js && cross-env NODE_ENV=development node_modules/.bin/rollup -c ./rollup.config.js",
     "min": "cross-env NODE_ENV=production NODE_MINIFY=true NODE_FORMAT=es node_modules/.bin/rollup -c ./rollup.config.js && cross-env NODE_ENV=production NODE_MINIFY=true node_modules/.bin/rollup -c ./rollup.config.js",
     "build": "npm run source && npm run min"

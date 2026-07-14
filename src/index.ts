@@ -10,6 +10,7 @@ export * from './constant/phoneNumber'
 export * from './constant/randomCharset'
 export * from './constant/shelfLife'
 export * from './constant/size'
+export * from './constant/week'
 
 export * from './convert/discount'
 export * from './convert/distance'
