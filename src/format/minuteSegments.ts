@@ -1,6 +1,6 @@
 import { padStringStart } from '../util/string'
 
-function formatHourMinutes(value: number): string {
+function formatMinuteSegment(value: number): string {
 
   const hours = Math.floor(value / 60)
   const minutes = value % 60
@@ -10,16 +10,17 @@ function formatHourMinutes(value: number): string {
 }
 
 /**
- * 格式化营业时间
+ * 格式化分钟段
  *
  * @group Function
  * @category Format
- * @param value 营业时间时段范围为 [0, 2880] 可跨天, 0-1440 为当天，1440-2880 为次日
+ * @param value 分钟段范围为 [0, 2880] 可跨天, 0-1440 为当日，1440-2880 为次日
+ * @param separator 分隔符，默认是 、
  * @returns 格式化后的字符串
  * @example
- * formatBusinessTimes([0, 1440]) // 全天
+ * formatMinuteSegments([0, 1440]) // 全天
  */
-export function formatBusinessTimes(value: number[]): string {
+export function formatMinuteSegments(value: number[], separator = '、'): string {
   const len = value.length
   if (len === 0 || len % 2 !== 0) {
     return ''
@@ -38,12 +39,12 @@ export function formatBusinessTimes(value: number[]): string {
       continue
     }
 
-    let startTimeStr = formatHourMinutes(startTime)
+    let startTimeStr = formatMinuteSegment(startTime)
     if (start > 1440) {
       startTimeStr = `次日${startTimeStr}`
     }
 
-    let endTimeStr = formatHourMinutes(endTime)
+    let endTimeStr = formatMinuteSegment(endTime)
     if (end > 1440) {
       endTimeStr = `次日${endTimeStr}`
     }
@@ -51,5 +52,5 @@ export function formatBusinessTimes(value: number[]): string {
     timeRanges.push(`${startTimeStr}-${endTimeStr}`)
   }
 
-  return timeRanges.join('、')
+  return timeRanges.join(separator)
 }

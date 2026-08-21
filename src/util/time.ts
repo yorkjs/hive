@@ -1,6 +1,7 @@
 import { MS_HOUR, MS_DAY, MS_WEEK } from '../constant/millisecond'
 import { DATE_YEAR_MONTH_DATE, DATE_YEAR_MONTH_DATE_DOT, DATE_YEAR_MONTH_DATE_SLASH } from '../constant/date'
 import { DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH } from '../constant/dateTime'
+import { timeToMinuteSegment } from '../convert/time'
 
 /**
  * 解析时间字符串
@@ -368,7 +369,7 @@ export function sameOfPrevMonth(timestamp: number): number {
   const day = date.getDate()
 
   const prevMonthStart = new Date(year, month - 1, 1, 0, 0, 0, 0)
-  const prevMonthEnd = new Date(year, month, 0, 23, 59, 59, 999);
+  const prevMonthEnd = new Date(year, month, 0, 23, 59, 59, 999)
 
   if (day > prevMonthEnd.getDate()) {
     return prevMonthEnd.getTime()
@@ -404,7 +405,39 @@ export function sameOfPrevYear(timestamp: number): number {
   return date.getTime()
 }
 
+/**
+ * 判断目标时间是否落在给定的分钟段区间内（左闭右开）
+ *
+ * @group Function
+ * @category Util
+ * @param segments 分钟段数组，长度必须为偶数，每对 [start, end) 表示一个区间
+ * @param target 目标时间
+ * @returns 若目标时间落在任意区间内则返回 true，否则 false
+ */
+export function matchMinuteSegments(segments: number[], target: Date): boolean {
+  const length = segments.length
+  if (length === 0 || length % 2 !== 0) {
+    return false
+  }
 
+  // 当日分钟段
+  const firstValue = timeToMinuteSegment(target)
+  // 次日分钟段
+  const secondValue = firstValue + 24 * 60
+
+  for (let i = 0; i < length; i += 2) {
+    const startTime = segments[i]
+    const endTime = segments[i + 1]
+    if (firstValue >= startTime && firstValue < endTime) {
+      return true
+    }
+    if (secondValue >= startTime && secondValue < endTime) {
+      return true
+    }
+  }
+
+  return false
+}
 
 
 interface ITimeRangeOptimizer {

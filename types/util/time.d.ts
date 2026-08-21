@@ -228,6 +228,16 @@ export declare function sameOfPrevMonth(timestamp: number): number;
  * @returns 毫秒时间戳
  */
 export declare function sameOfPrevYear(timestamp: number): number;
+/**
+ * 判断目标时间是否落在给定的分钟段区间内（左闭右开）
+ *
+ * @group Function
+ * @category Util
+ * @param segments 分钟段数组，长度必须为偶数，每对 [start, end) 表示一个区间
+ * @param target 目标时间
+ * @returns 若目标时间落在任意区间内则返回 true，否则 false
+ */
+export declare function matchMinuteSegments(segments: number[], target: Date): boolean;
 interface ITimeRangeOptimizer {
     isHour?: (hour: number) => void;
     isDay?: (day: number) => void;

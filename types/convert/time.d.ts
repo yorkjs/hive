@@ -30,7 +30,7 @@ export declare function timeFieldToTime(t: ITimeField): Date;
  *
  * @group Function
  * @category Convert
- * @param time 时间对象
+ * @param t 时间对象
  * @returns 时间戳
  */
 export declare function timeToTimestamp(t: Date): number;
@@ -43,4 +43,13 @@ export declare function timeToTimestamp(t: Date): number;
  * @returns 时间对象
  */
 export declare function timestampToTime(timestamp: number): Date;
+/**
+ * 时间对象转成分钟段
+ *
+ * @group Function
+ * @category Convert
+ * @param t 时间对象
+ * @returns 分钟段
+ */
+export declare function timeToMinuteSegment(t: Date): number;
 export {};

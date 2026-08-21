@@ -38,7 +38,7 @@ export * from './format/rate'
 export * from './format/shelfLife'
 export * from './format/size'
 export * from './format/time'
-export * from './format/businessTimes'
+export * from './format/minuteSegments'
 
 export * from './is/bankCardNumber'
 export * from './is/barcode'

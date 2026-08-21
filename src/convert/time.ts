@@ -25,7 +25,7 @@ export function timeToTimeField(t: Date): ITimeField {
     minute: t.getMinutes(),
     second: t.getSeconds(),
     millisecond: t.getMilliseconds(),
-  };
+  }
 }
 
 /**
@@ -45,7 +45,7 @@ export function timeFieldToTime(t: ITimeField): Date {
     t.minute,
     t.second,
     t.millisecond
-  );
+  )
 }
 
 /**
@@ -53,7 +53,7 @@ export function timeFieldToTime(t: ITimeField): Date {
  *
  * @group Function
  * @category Convert
- * @param time 时间对象
+ * @param t 时间对象
  * @returns 时间戳
  */
 export function timeToTimestamp(t: Date) {
@@ -71,4 +71,18 @@ export function timeToTimestamp(t: Date) {
  */
 export function timestampToTime(timestamp: number) {
   return new Date(timestamp)
+}
+
+/**
+ * 时间对象转成分钟段
+ *
+ * @group Function
+ * @category Convert
+ * @param t 时间对象
+ * @returns 分钟段
+ */
+export function timeToMinuteSegment(t: Date) {
+  const hours = t.getHours()
+  const minutes = t.getMinutes()
+  return hours * 60 + minutes
 }

@@ -35,6 +35,8 @@ import {
   sameOfPrevMonth,
   sameOfPrevYear,
 
+  matchMinuteSegments,
+
   optimizeTimeRange,
   parseTime,
   formatDateTime,
@@ -231,6 +233,23 @@ test('time_same', () => {
 
 })
 
+
+
+test('minute_segments', () => {
+
+  let date = new Date('2025-10-10 10:01:01')
+
+  expect(matchMinuteSegments([500, 650], date)).toBe(true)
+  expect(matchMinuteSegments([500, 550], date)).toBe(false)
+  expect(matchMinuteSegments([650, 700], date)).toBe(false)
+
+  date = new Date('2025-03-31 01:01:01')
+
+  expect(matchMinuteSegments([1320, 1560], date)).toBe(true)
+  expect(matchMinuteSegments([1320, 1440], date)).toBe(false)
+  expect(matchMinuteSegments([1560, 1600], date)).toBe(false)
+
+})
 
 test('time_range_optimize', () => {
 
