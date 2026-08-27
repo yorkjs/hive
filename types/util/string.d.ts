@@ -58,10 +58,10 @@ export declare function truncateString(str: string, maxLength: number): string;
  * @group Function
  * @category Util
  * @param str 字符串模板，例如：'你好，${name}'
- * @param data 数据对象，例如：{ name: '张三' }
+ * @param replace 替换函数，例如：(key, match) => data[key]
  * @returns 渲染后的字符串，例如：'你好，张三'
  */
-export declare function renderStringTemplate(str: string, data: Record<string, any>): string;
+export declare function renderStringTemplate(str: string, replace: (key: string, match: string) => string): string;
 /**
  * 补全字符串开头，不足 length 个字符用 0 填充
  *

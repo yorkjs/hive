@@ -1,5 +1,5 @@
 /**
- * hive.js v0.5.6
+ * hive.js v0.5.7
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -1606,7 +1606,7 @@ function formatTime(timestamp, format = TIME_DEFAULT) {
  * @returns 字符串字符数量
  */
 function getStringLength(str) {
-    return str.length;
+    return Array.from(str).length;
 }
 /**
  * 获取字符串宽度，此函数常用于排版辅助计算
@@ -1681,15 +1681,13 @@ function truncateString(str, maxLength) {
  * @group Function
  * @category Util
  * @param str 字符串模板，例如：'你好，${name}'
- * @param data 数据对象，例如：{ name: '张三' }
+ * @param replace 替换函数，例如：(key, match) => data[key]
  * @returns 渲染后的字符串，例如：'你好，张三'
  */
-function renderStringTemplate(str, data) {
+function renderStringTemplate(str, replace) {
     return str.replace(/\${(.*?)}/g, function (match, key) {
         // 去除变量名两端的空白
-        const value = data[trimString(key)];
-        // 如果找不到对应的值，返回原字符串
-        return value !== undefined ? String(value) : match;
+        return replace(trimString(key), match);
     });
 }
 /**
@@ -2594,6 +2592,29 @@ function applyRateRound(value, rate) {
 }
 
 /**
+ * 计算短信的预估字符数和短信条数
+ *
+ * @group Function
+ * @category Util
+ * @param signatureName 签名内容（不含方括号）
+ * @param templateContent 模板正文
+ * @param perSmsCharCount 每条短信允许的最大字符数
+ * @returns [总字符数, 短信条数]
+ */
+function calculateSmsCount(signatureName, templateContent, perSmsCharCount) {
+    let charCount = getStringLength(templateContent);
+    if (signatureName !== '') {
+        // 【签名】
+        charCount += getStringLength(signatureName) + 2;
+    }
+    if (charCount === 0 || perSmsCharCount <= 0) {
+        return [charCount, 0];
+    }
+    const smsCount = Math.floor((charCount + perSmsCharCount - 1) / perSmsCharCount);
+    return [charCount, smsCount];
+}
+
+/**
  * 解析时间字符串
  *
  * @group Function
@@ -3097,5 +3118,5 @@ function toRelativeProtocolUrl(url) {
     return url;
 }
 
-export { AMOUNT_ONE_YUAN, AMOUNT_TEN_THOUSAND_YUAN, AUTH_CODE_ALIPAY, AUTH_CODE_WECHAT, DATE_MONTH_DATE, DATE_MONTH_DATE_CHINESE, DATE_MONTH_DATE_DOT, DATE_MONTH_DATE_SLASH, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_YEAR_MONTH_DATE, DATE_YEAR_MONTH_DATE_CHINESE, DATE_YEAR_MONTH_DATE_DOT, DATE_YEAR_MONTH_DATE_SLASH, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MONEY_YUAN_TO_PENNY, MONTH_CHINESE, MONTH_DEFAULT, MONTH_ONLY, MONTH_ONLY_CHINESE, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, PHONE_NUMBER_400, PHONE_NUMBER_LANDLINE, PHONE_NUMBER_MOBILE, RANDOM_CHARSET_ALPHA_LOWER, RANDOM_CHARSET_ALPHA_NUMERIC, RANDOM_CHARSET_ALPHA_UPPER, RANDOM_CHARSET_NUMERIC, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, TIME_DEFAULT, TIME_HOUR_MINUTE, WEEK_FRIDAY, WEEK_MONDAY, WEEK_SATURDAY, WEEK_SUNDAY, WEEK_THURSDAY, WEEK_TUESDAY, WEEK_WEDNESDAY, YEAR_CHINESE, YEAR_DEFAULT, applyRateCeil, applyRateFloor, applyRateRound, calculateDistance, calculateRate, darkenColor, decodeUriComponent, discountToBackend, discountToDisplay, distanceToBackend, distanceToDisplay, divideNumber, encodeUriComponent, endOfDay, endOfHour, endOfMonth, endOfWeek, endOfYear, formatAmount, formatAmountShortly, formatArea, formatBankCardNumber, formatBirthday, formatCategory, formatCount, formatCountShortly, formatDate, formatDateRange, formatDateShortly, formatDateTime, formatDateTimeRange, formatDateTimeShortly, formatDiscount, formatDistance, formatDuration, formatMinuteSegments, formatMonth, formatNumberWithComma, formatPenny, formatRatePercent, formatShelfLife, formatSize, formatTime, formatWeek, formatYear, getStringLength, getStringWidth, hasDecimal, hasSpecialCharacter, hexToHslObject, hexToRgbaObject, hexToRgbaString, isBankCardNumber, isCorporateAccountNumber, isCustomBarcode, isEmail, isHexColor, isIdentityCardNumber, isLocationInChina, isMobile, isPrice, isStandardBarcode, isUrl, isVerifyCode, lightenColor, maskEmail, maskMobile, maskName, matchMinuteSegments, minusNumber, moneyToBackend, moneyToDisplay, normalizeDuration, normalizeShelfLife, normalizeVersion, optimizeTimeRange, padStringStart, parseAuthCode, parseInteger, parseNumber, parsePhoneNumber, parseTime, plusNumber, randomIntegerByLength, randomIntegerByRange, randomStringByCurrentTime, randomStringByLength, rateToBackend, rateToDisplay, removeSpecialCharacter, renderStringTemplate, sameOfPrevDay, sameOfPrevMonth, sameOfPrevWeek, sameOfPrevYear, sliceString, startOfDay, startOfHour, startOfMonth, startOfNextDay, startOfNextHour, startOfNextMonth, startOfNextWeek, startOfNextYear, startOfPrevDay, startOfPrevHour, startOfPrevMonth, startOfPrevWeek, startOfPrevYear, startOfWeek, startOfYear, timeFieldToTime, timeToMinuteSegment, timeToTimeField, timeToTimestamp, timesNumber, timestampToTime, toHttpProtocolUrl, toRelativeProtocolUrl, trimString, truncateNumber, truncateString, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
+export { AMOUNT_ONE_YUAN, AMOUNT_TEN_THOUSAND_YUAN, AUTH_CODE_ALIPAY, AUTH_CODE_WECHAT, DATE_MONTH_DATE, DATE_MONTH_DATE_CHINESE, DATE_MONTH_DATE_DOT, DATE_MONTH_DATE_SLASH, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_YEAR_MONTH_DATE, DATE_YEAR_MONTH_DATE_CHINESE, DATE_YEAR_MONTH_DATE_DOT, DATE_YEAR_MONTH_DATE_SLASH, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MONEY_YUAN_TO_PENNY, MONTH_CHINESE, MONTH_DEFAULT, MONTH_ONLY, MONTH_ONLY_CHINESE, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, PHONE_NUMBER_400, PHONE_NUMBER_LANDLINE, PHONE_NUMBER_MOBILE, RANDOM_CHARSET_ALPHA_LOWER, RANDOM_CHARSET_ALPHA_NUMERIC, RANDOM_CHARSET_ALPHA_UPPER, RANDOM_CHARSET_NUMERIC, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, TIME_DEFAULT, TIME_HOUR_MINUTE, WEEK_FRIDAY, WEEK_MONDAY, WEEK_SATURDAY, WEEK_SUNDAY, WEEK_THURSDAY, WEEK_TUESDAY, WEEK_WEDNESDAY, YEAR_CHINESE, YEAR_DEFAULT, applyRateCeil, applyRateFloor, applyRateRound, calculateDistance, calculateRate, calculateSmsCount, darkenColor, decodeUriComponent, discountToBackend, discountToDisplay, distanceToBackend, distanceToDisplay, divideNumber, encodeUriComponent, endOfDay, endOfHour, endOfMonth, endOfWeek, endOfYear, formatAmount, formatAmountShortly, formatArea, formatBankCardNumber, formatBirthday, formatCategory, formatCount, formatCountShortly, formatDate, formatDateRange, formatDateShortly, formatDateTime, formatDateTimeRange, formatDateTimeShortly, formatDiscount, formatDistance, formatDuration, formatMinuteSegments, formatMonth, formatNumberWithComma, formatPenny, formatRatePercent, formatShelfLife, formatSize, formatTime, formatWeek, formatYear, getStringLength, getStringWidth, hasDecimal, hasSpecialCharacter, hexToHslObject, hexToRgbaObject, hexToRgbaString, isBankCardNumber, isCorporateAccountNumber, isCustomBarcode, isEmail, isHexColor, isIdentityCardNumber, isLocationInChina, isMobile, isPrice, isStandardBarcode, isUrl, isVerifyCode, lightenColor, maskEmail, maskMobile, maskName, matchMinuteSegments, minusNumber, moneyToBackend, moneyToDisplay, normalizeDuration, normalizeShelfLife, normalizeVersion, optimizeTimeRange, padStringStart, parseAuthCode, parseInteger, parseNumber, parsePhoneNumber, parseTime, plusNumber, randomIntegerByLength, randomIntegerByRange, randomStringByCurrentTime, randomStringByLength, rateToBackend, rateToDisplay, removeSpecialCharacter, renderStringTemplate, sameOfPrevDay, sameOfPrevMonth, sameOfPrevWeek, sameOfPrevYear, sliceString, startOfDay, startOfHour, startOfMonth, startOfNextDay, startOfNextHour, startOfNextMonth, startOfNextWeek, startOfNextYear, startOfPrevDay, startOfPrevHour, startOfPrevMonth, startOfPrevWeek, startOfPrevYear, startOfWeek, startOfYear, timeFieldToTime, timeToMinuteSegment, timeToTimeField, timeToTimestamp, timesNumber, timestampToTime, toHttpProtocolUrl, toRelativeProtocolUrl, trimString, truncateNumber, truncateString, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
 //# sourceMappingURL=hive.esm.js.map

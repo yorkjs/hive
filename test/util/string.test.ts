@@ -79,14 +79,21 @@ test('truncateString', () => {
 
 test('renderStringTemplate', () => {
 
-  expect(renderStringTemplate('你好，${name}', { name: '张三' })).toBe('你好，张三')
-  expect(renderStringTemplate('你好，${name1}，${name2}', { name1: '张三', name2: '李四' })).toBe('你好，张三，李四')
-  expect(renderStringTemplate('你好，${name1}，${name3}。', { name1: '张三' })).toBe('你好，张三，${name3}。')
-  expect(renderStringTemplate('你好，${value}。', { value: 10 })).toBe('你好，10。')
-  expect(renderStringTemplate('你好，${value}。', { value: 10.11 })).toBe('你好，10.11。')
-  expect(renderStringTemplate('你好，${value}。', { value: true })).toBe('你好，true。')
-  expect(renderStringTemplate('你好，${value}。', { value: false })).toBe('你好，false。')
-  expect(renderStringTemplate('你好，${value}。', { value: undefined })).toBe('你好，${value}。')
+  function withMap(map: Record<string, string | number | boolean | undefined>) {
+    return (key: string, match: string) => {
+      const val = map[key]
+      return val !== undefined ? String(val) : match
+    }
+  }
+
+  expect(renderStringTemplate('你好，${name}', withMap({ name: '张三' }))).toBe('你好，张三')
+  expect(renderStringTemplate('你好，${name1}，${name2}', withMap({ name1: '张三', name2: '李四' }))).toBe('你好，张三，李四')
+  expect(renderStringTemplate('你好，${name1}，${name3}。', withMap({ name1: '张三' }))).toBe('你好，张三，${name3}。')
+  expect(renderStringTemplate('你好，${value}。', withMap({ value: 10 }))).toBe('你好，10。')
+  expect(renderStringTemplate('你好，${value}。', withMap({ value: 10.11 }))).toBe('你好，10.11。')
+  expect(renderStringTemplate('你好，${value}。', withMap({ value: true }))).toBe('你好，true。')
+  expect(renderStringTemplate('你好，${value}。', withMap({ value: false }))).toBe('你好，false。')
+  expect(renderStringTemplate('你好，${value}。', withMap({ value: undefined }))).toBe('你好，${value}。')
 
 })
 

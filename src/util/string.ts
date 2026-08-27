@@ -9,7 +9,7 @@
  * @returns 字符串字符数量
  */
 export function getStringLength(str: string) {
-  return str.length
+  return Array.from(str).length
 }
 
 /**
@@ -94,15 +94,13 @@ export function truncateString(str: string, maxLength: number) {
  * @group Function
  * @category Util
  * @param str 字符串模板，例如：'你好，${name}'
- * @param data 数据对象，例如：{ name: '张三' }
+ * @param replace 替换函数，例如：(key, match) => data[key]
  * @returns 渲染后的字符串，例如：'你好，张三'
  */
-export function renderStringTemplate(str: string, data: Record<string, any>) {
+export function renderStringTemplate(str: string, replace: (key: string, match: string) => string) {
   return str.replace(/\${(.*?)}/g, function (match: string, key: string) {
     // 去除变量名两端的空白
-    const value = data[trimString(key)]
-    // 如果找不到对应的值，返回原字符串
-    return value !== undefined ? String(value) : match
+    return replace(trimString(key), match)
   })
 }
 

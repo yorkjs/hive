@@ -1,5 +1,5 @@
 /**
- * hive.js v0.5.6
+ * hive.js v0.5.7
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -1687,7 +1687,7 @@
    * @returns 字符串字符数量
    */
   function getStringLength(str) {
-    return str.length;
+    return Array.from(str).length;
   }
   /**
    * 获取字符串宽度，此函数常用于排版辅助计算
@@ -1762,15 +1762,13 @@
    * @group Function
    * @category Util
    * @param str 字符串模板，例如：'你好，${name}'
-   * @param data 数据对象，例如：{ name: '张三' }
+   * @param replace 替换函数，例如：(key, match) => data[key]
    * @returns 渲染后的字符串，例如：'你好，张三'
    */
-  function renderStringTemplate(str, data) {
+  function renderStringTemplate(str, replace) {
     return str.replace(/\${(.*?)}/g, function (match, key) {
       // 去除变量名两端的空白
-      var value = data[trimString(key)];
-      // 如果找不到对应的值，返回原字符串
-      return value !== undefined ? String(value) : match;
+      return replace(trimString(key), match);
     });
   }
   /**
@@ -2672,6 +2670,29 @@
   }
 
   /**
+   * 计算短信的预估字符数和短信条数
+   *
+   * @group Function
+   * @category Util
+   * @param signatureName 签名内容（不含方括号）
+   * @param templateContent 模板正文
+   * @param perSmsCharCount 每条短信允许的最大字符数
+   * @returns [总字符数, 短信条数]
+   */
+  function calculateSmsCount(signatureName, templateContent, perSmsCharCount) {
+    var charCount = getStringLength(templateContent);
+    if (signatureName !== '') {
+      // 【签名】
+      charCount += getStringLength(signatureName) + 2;
+    }
+    if (charCount === 0 || perSmsCharCount <= 0) {
+      return [charCount, 0];
+    }
+    var smsCount = Math.floor((charCount + perSmsCharCount - 1) / perSmsCharCount);
+    return [charCount, smsCount];
+  }
+
+  /**
    * 解析时间字符串
    *
    * @group Function
@@ -3237,6 +3258,7 @@
   exports.applyRateRound = applyRateRound;
   exports.calculateDistance = calculateDistance;
   exports.calculateRate = calculateRate;
+  exports.calculateSmsCount = calculateSmsCount;
   exports.darkenColor = darkenColor;
   exports.decodeUriComponent = decodeUriComponent;
   exports.discountToBackend = discountToBackend;
