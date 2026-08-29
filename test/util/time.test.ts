@@ -8,6 +8,10 @@ import {
   DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT,
   DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH,
   DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH,
+  startOfMinute,
+  startOfPrevMinute,
+  startOfNextMinute,
+  endOfMinute,
   startOfHour,
   endOfHour,
   startOfPrevHour,
@@ -70,6 +74,17 @@ test('time_parse', () => {
 
   time = parseTime('2020/10/01', DATE_YEAR_MONTH_DATE_SLASH)
   expect(formatDateTime((time as Date).getTime(), DATE_YEAR_MONTH_DATE)).toBe('2020-10-01')
+
+})
+
+test('time_minute', () => {
+
+  let date = new Date('2020-10-10 10:01:01')
+
+  expect(formatDateTime(startOfMinute(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2020-10-10 10:01:00')
+  expect(formatDateTime(startOfPrevMinute(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2020-10-10 10:00:00')
+  expect(formatDateTime(startOfNextMinute(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2020-10-10 10:02:00')
+  expect(formatDateTime(endOfMinute(date.getTime()), DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND)).toBe('2020-10-10 10:01:59')
 
 })
 

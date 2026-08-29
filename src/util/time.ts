@@ -1,4 +1,4 @@
-import { MS_HOUR, MS_DAY, MS_WEEK } from '../constant/millisecond'
+import { MS_WEEK, MS_DAY, MS_HOUR, MS_MINUTE } from '../constant/millisecond'
 import { DATE_YEAR_MONTH_DATE, DATE_YEAR_MONTH_DATE_DOT, DATE_YEAR_MONTH_DATE_SLASH } from '../constant/date'
 import { DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH } from '../constant/dateTime'
 import { timeToMinuteSegment } from '../convert/time'
@@ -39,6 +39,59 @@ export function parseTime(str: string, format: string) {
   }
 
   return new Date(str)
+}
+
+
+/**
+ * 获取某个分钟的开始时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export function startOfMinute(timestamp: number) {
+  const date = new Date(timestamp)
+  date.setSeconds(0, 0)
+  return date.getTime()
+}
+
+/**
+ * 获取前一分钟的开始时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export function startOfPrevMinute(timestamp: number) {
+  return startOfMinute(timestamp - MS_MINUTE)
+}
+
+/**
+ * 获取下一分钟的开始时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export function startOfNextMinute(timestamp: number) {
+  return startOfMinute(timestamp + MS_MINUTE)
+}
+
+/**
+ * 获取某个分钟的结束时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export function endOfMinute(timestamp: number) {
+  const date = new Date(timestamp)
+  date.setSeconds(59, 999)
+  return date.getTime()
 }
 
 /**
