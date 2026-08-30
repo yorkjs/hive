@@ -28,7 +28,11 @@ test('formatDateTime', () => {
 
   expect(formatDateTimeRange(
     new Date('2020-10-01 10:01:02').getTime(),
-    new Date('2020-10-01 10:03:02').getTime()
-  )).toBe('2020-10-01 10:01 至 2020-10-01 10:03')
+    new Date('2020-10-02 10:03:02').getTime()
+  )).toBe('2020-10-01 10:01 至 2020-10-02 10:03')
 
+  expect(formatDateTimeRange(
+    new Date('2020-10-01 10:01:02').getTime(),
+    new Date('2020-10-01 10:03:02').getTime()
+  )).toBe('2020-10-01 10:01 至 10:03')
 })

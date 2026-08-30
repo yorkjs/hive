@@ -1,5 +1,8 @@
 import dayjs from 'dayjs'
 import { DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE } from '../constant/dateTime'
+import { TIME_HOUR_MINUTE } from '../constant/time'
+import { formatDate } from './date'
+import { formatTime } from './time'
 
 /**
  * 把时间戳格式化为 2020-10-01 10:00 格式
@@ -24,6 +27,11 @@ export function formatDateTime(timestamp: number, format = DATE_TIME_YEAR_MONTH_
  * @returns
  */
 export function formatDateTimeRange(startTimestamp: number, endTimestamp: number) {
+  if (formatDate(startTimestamp) === formatDate(endTimestamp)) {
+    return formatDateTime(startTimestamp, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE)
+      + ' 至 '
+      + formatTime(endTimestamp, TIME_HOUR_MINUTE)
+  }
   return formatDateTime(startTimestamp) + ' 至 ' + formatDateTime(endTimestamp)
 }
 

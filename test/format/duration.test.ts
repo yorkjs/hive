@@ -8,8 +8,8 @@ test('formatDuration', () => {
 
   expect(formatDuration(0)).toBe('')
   expect(formatDuration(MS_SECOND)).toBe('1秒')
-  expect(formatDuration(MS_MINUTE)).toBe('1分钟')
-  expect(formatDuration(MS_HOUR)).toBe('1小时')
-  expect(formatDuration(MS_DAY)).toBe('1天')
+  expect(formatDuration(MS_MINUTE)).toBe('1分')
+  expect(formatDuration(MS_HOUR)).toBe('1时')
+  expect(formatDuration(MS_DAY)).toBe('1日')
 
 })

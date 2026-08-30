@@ -18,13 +18,13 @@ export function formatDuration(value: number) {
 
   const data = normalizeDuration(value)
   if (data.days > 0) {
-    result.push(`${data.days}天`)
+    result.push(`${data.days}日`)
   }
   if (data.hours > 0) {
-    result.push(`${data.hours}小时`)
+    result.push(`${data.hours}时`)
   }
   if (data.minutes > 0) {
-    result.push(`${data.minutes}分钟`)
+    result.push(`${data.minutes}分`)
   }
   if (data.seconds > 0) {
     result.push(`${data.seconds}秒`)
