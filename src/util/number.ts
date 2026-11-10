@@ -8,13 +8,22 @@ import * as NP from 'number-precision'
 * @group Function
 * @category Util
 * @param value1 第一个数值
-* @param value2 第二个数值
+* @param value2 第二个数值（支持传入更多参数，参考示例）
 * @returns 相加的结果
 * @example
 * plusNumber(3, 1) // 4
+* plusNumber(1, 2, 3, 4) // 10
 */
-export function plusNumber(value1: number, value2: number) {
-  return NP.plus(value1, value2)
+export function plusNumber(...values: number[]): number {
+  if (values.length < 2) {
+    throw new Error('plusNumber requires at least 2 argument')
+  }
+  return values.reduce(
+    function (a, b) {
+      return NP.plus(a, b)
+    },
+    0
+  )
 }
 
 /**
@@ -25,13 +34,24 @@ export function plusNumber(value1: number, value2: number) {
 * @group Function
 * @category Util
 * @param value1 第一个数值
-* @param value2 第二个数值
+* @param value2 第二个数值（支持传入更多参数，参考示例）
 * @returns 相减的结果
 * @example
 * minusNumber(3, 1) // 2
+* minusNumber(5, 1, 2) // 2
+* minusNumber(10, 3, 2, 1) // 4
 */
-export function minusNumber(value1: number, value2: number) {
-  return NP.minus(value1, value2)
+export function minusNumber(...values: number[]): number {
+  if (values.length < 2) {
+    throw new Error('minusNumber requires at least 2 argument')
+  }
+  const [first, ...rest] = values
+  return rest.reduce(
+    function (a, b) {
+      return NP.minus(a, b)
+    },
+    first
+  )
 }
 
 /**
@@ -42,13 +62,22 @@ export function minusNumber(value1: number, value2: number) {
  * @group Function
  * @category Util
  * @param value1 第一个数值
- * @param value2 第二个数值
+ * @param value2 第二个数值（支持传入更多参数，参考示例）
  * @returns 相乘结果
  * @example
  * timesNumber(3, 2) // 6
+ * timesNumber(3, 2, 2) // 12
  */
-export function timesNumber(value1: number, value2: number) {
-  return NP.times(value1, value2)
+export function timesNumber(...values: number[]): number {
+  if (values.length < 2) {
+    throw new Error('timesNumber requires at least 2 argument')
+  }
+  return values.reduce(
+    function (a, b) {
+      return NP.times(a, b)
+    },
+    1
+  )
 }
 
 /**
@@ -59,16 +88,26 @@ export function timesNumber(value1: number, value2: number) {
 * @group Function
 * @category Util
 * @param value1 被除数
-* @param value2 除数
+* @param value2 除数（支持传入更多参数，参考示例）
 * @returns 相除的结果
 * @example
 * divideNumber(6, 2) // 3
+* divideNumber(20, 2, 2) // 4
 */
-export function divideNumber(value1: number, value2: number) {
-  if (value2 === 0) {
-    throw new Error('Divisor cannot be zero')
+export function divideNumber(...values: number[]): number {
+  if (values.length < 2) {
+    throw new Error('divideNumber requires at least 2 argument')
   }
-  return NP.divide(value1, value2)
+  const [first, ...rest] = values
+  return rest.reduce(
+    function (a, b) {
+      if (b === 0) {
+        throw new Error('Divisor cannot be zero')
+      }
+      return NP.divide(a, b)
+    },
+    first
+  )
 }
 
 /**

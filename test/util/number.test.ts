@@ -18,6 +18,7 @@ test('plusNumber', () => {
   expect(plusNumber(1.121321, 2.3312213)).toBe(3.4525423)
   expect(plusNumber(1, -2)).toBe(-1)
   expect(plusNumber(-2, -3)).toBe(-5)
+  expect(plusNumber(1, 2, 3, 4)).toBe(10)
 
 })
 
@@ -29,6 +30,7 @@ test('minusNumber', () => {
   expect(minusNumber(4.978672, 2.131231)).toBe(2.847441)
   expect(minusNumber(3, -1)).toBe(4)
   expect(minusNumber(-2, -3)).toBe(1)
+  expect(minusNumber(10, 2, 3, 1)).toBe(4)
 
 })
 
@@ -49,6 +51,7 @@ test('timesNumber', () => {
   expect(timesNumber(3, -2)).toBe(-6)
   expect(timesNumber(-2, -3)).toBe(6)
   expect(timesNumber(-2.1, -3.2)).toBe(6.72)
+  expect(timesNumber(2, 3, 4, 5)).toBe(120)
 
 })
 
@@ -71,6 +74,7 @@ test('divideNumber', () => {
   expect(divideNumber(3, -2)).toBe(-1.5)
   expect(divideNumber(-6, -3)).toBe(2)
   expect(divideNumber(-4.4, -2.2)).toBe(2)
+  expect(divideNumber(100, 2, 2, 5)).toBe(5)
 
 })
 

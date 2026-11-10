@@ -11,6 +11,42 @@
  */
 export declare function parseTime(str: string, format: string): Error | Date;
 /**
+ * 获取某个分钟的开始时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export declare function startOfMinute(timestamp: number): number;
+/**
+ * 获取前一分钟的开始时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export declare function startOfPrevMinute(timestamp: number): number;
+/**
+ * 获取下一分钟的开始时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export declare function startOfNextMinute(timestamp: number): number;
+/**
+ * 获取某个分钟的结束时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+export declare function endOfMinute(timestamp: number): number;
+/**
  * 获取某个小时开始时间
  *
  * @group Function

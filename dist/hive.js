@@ -1,5 +1,5 @@
 /**
- * hive.js v0.5.7
+ * hive.js v0.5.8
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -592,13 +592,22 @@
   * @group Function
   * @category Util
   * @param value1 第一个数值
-  * @param value2 第二个数值
+  * @param value2 第二个数值（支持传入更多参数，参考示例）
   * @returns 相加的结果
   * @example
   * plusNumber(3, 1) // 4
+  * plusNumber(1, 2, 3, 4) // 10
   */
-  function plusNumber(value1, value2) {
-    return NP__namespace.plus(value1, value2);
+  function plusNumber() {
+    for (var _len = arguments.length, values = new Array(_len), _key = 0; _key < _len; _key++) {
+      values[_key] = arguments[_key];
+    }
+    if (values.length < 2) {
+      throw new Error('plusNumber requires at least 2 argument');
+    }
+    return values.reduce(function (a, b) {
+      return NP__namespace.plus(a, b);
+    }, 0);
   }
   /**
   * 精确减法
@@ -608,13 +617,25 @@
   * @group Function
   * @category Util
   * @param value1 第一个数值
-  * @param value2 第二个数值
+  * @param value2 第二个数值（支持传入更多参数，参考示例）
   * @returns 相减的结果
   * @example
   * minusNumber(3, 1) // 2
+  * minusNumber(5, 1, 2) // 2
+  * minusNumber(10, 3, 2, 1) // 4
   */
-  function minusNumber(value1, value2) {
-    return NP__namespace.minus(value1, value2);
+  function minusNumber() {
+    for (var _len2 = arguments.length, values = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      values[_key2] = arguments[_key2];
+    }
+    if (values.length < 2) {
+      throw new Error('minusNumber requires at least 2 argument');
+    }
+    var first = values[0],
+      rest = values.slice(1);
+    return rest.reduce(function (a, b) {
+      return NP__namespace.minus(a, b);
+    }, first);
   }
   /**
    * 精确乘法
@@ -624,13 +645,22 @@
    * @group Function
    * @category Util
    * @param value1 第一个数值
-   * @param value2 第二个数值
+   * @param value2 第二个数值（支持传入更多参数，参考示例）
    * @returns 相乘结果
    * @example
    * timesNumber(3, 2) // 6
+   * timesNumber(3, 2, 2) // 12
    */
-  function timesNumber(value1, value2) {
-    return NP__namespace.times(value1, value2);
+  function timesNumber() {
+    for (var _len3 = arguments.length, values = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+      values[_key3] = arguments[_key3];
+    }
+    if (values.length < 2) {
+      throw new Error('timesNumber requires at least 2 argument');
+    }
+    return values.reduce(function (a, b) {
+      return NP__namespace.times(a, b);
+    }, 1);
   }
   /**
   * 精确除法
@@ -640,16 +670,27 @@
   * @group Function
   * @category Util
   * @param value1 被除数
-  * @param value2 除数
+  * @param value2 除数（支持传入更多参数，参考示例）
   * @returns 相除的结果
   * @example
   * divideNumber(6, 2) // 3
+  * divideNumber(20, 2, 2) // 4
   */
-  function divideNumber(value1, value2) {
-    if (value2 === 0) {
-      throw new Error('Divisor cannot be zero');
+  function divideNumber() {
+    for (var _len4 = arguments.length, values = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+      values[_key4] = arguments[_key4];
     }
-    return NP__namespace.divide(value1, value2);
+    if (values.length < 2) {
+      throw new Error('divideNumber requires at least 2 argument');
+    }
+    var first = values[0],
+      rest = values.slice(1);
+    return rest.reduce(function (a, b) {
+      if (b === 0) {
+        throw new Error('Divisor cannot be zero');
+      }
+      return NP__namespace.divide(a, b);
+    }, first);
   }
   /**
    * 截断数字
@@ -1355,13 +1396,13 @@
     var result = [];
     var data = normalizeDuration(value);
     if (data.days > 0) {
-      result.push("".concat(data.days, "\u5929"));
+      result.push("".concat(data.days, "\u65E5"));
     }
     if (data.hours > 0) {
-      result.push("".concat(data.hours, "\u5C0F\u65F6"));
+      result.push("".concat(data.hours, "\u65F6"));
     }
     if (data.minutes > 0) {
-      result.push("".concat(data.minutes, "\u5206\u949F"));
+      result.push("".concat(data.minutes, "\u5206"));
     }
     if (data.seconds > 0) {
       result.push("".concat(data.seconds, "\u79D2"));
@@ -1412,6 +1453,22 @@
   }
 
   /**
+   * 把时间戳格式化为显示格式
+   *
+   * @group Function
+   * @category Format
+   * @param timestamp 毫秒时间戳
+   * @param format 格式，默认值为 TIME_DEFAULT
+   * @returns 格式化后的字符串
+   * @example
+   * formatTime(1773932460475) // 23:01:00
+   */
+  function formatTime(timestamp) {
+    var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : TIME_DEFAULT;
+    return dayjs__default.default(timestamp).format(format);
+  }
+
+  /**
    * 把时间戳格式化为 2020-10-01 10:00 格式
    *
    * @group Function
@@ -1434,6 +1491,9 @@
    * @returns
    */
   function formatDateTimeRange(startTimestamp, endTimestamp) {
+    if (formatDate(startTimestamp) === formatDate(endTimestamp)) {
+      return formatDateTime(startTimestamp, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE) + ' 至 ' + formatTime(endTimestamp, TIME_HOUR_MINUTE);
+    }
     return formatDateTime(startTimestamp) + ' 至 ' + formatDateTime(endTimestamp);
   }
   /**
@@ -1658,22 +1718,6 @@
       return "".concat(truncateNumber(_result2, hasDecimal(_result2) ? 2 : 0), "KB");
     }
     return "".concat(value, "B");
-  }
-
-  /**
-   * 把时间戳格式化为显示格式
-   *
-   * @group Function
-   * @category Format
-   * @param timestamp 毫秒时间戳
-   * @param format 格式，默认值为 TIME_DEFAULT
-   * @returns 格式化后的字符串
-   * @example
-   * formatTime(1773932460475) // 23:01:00
-   */
-  function formatTime(timestamp) {
-    var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : TIME_DEFAULT;
-    return dayjs__default.default(timestamp).format(format);
   }
 
   /**
@@ -2725,6 +2769,54 @@
     return new Date(str);
   }
   /**
+   * 获取某个分钟的开始时间
+   *
+   * @group Function
+   * @category Util
+   * @param timestamp 毫秒时间戳
+   * @returns 毫秒时间戳
+   */
+  function startOfMinute(timestamp) {
+    var date = new Date(timestamp);
+    date.setSeconds(0, 0);
+    return date.getTime();
+  }
+  /**
+   * 获取前一分钟的开始时间
+   *
+   * @group Function
+   * @category Util
+   * @param timestamp 毫秒时间戳
+   * @returns 毫秒时间戳
+   */
+  function startOfPrevMinute(timestamp) {
+    return startOfMinute(timestamp - MS_MINUTE);
+  }
+  /**
+   * 获取下一分钟的开始时间
+   *
+   * @group Function
+   * @category Util
+   * @param timestamp 毫秒时间戳
+   * @returns 毫秒时间戳
+   */
+  function startOfNextMinute(timestamp) {
+    return startOfMinute(timestamp + MS_MINUTE);
+  }
+  /**
+   * 获取某个分钟的结束时间
+   *
+   * @group Function
+   * @category Util
+   * @param timestamp 毫秒时间戳
+   * @returns 毫秒时间戳
+   */
+  function endOfMinute(timestamp) {
+    var date = new Date(timestamp);
+    date.setSeconds(59, 999);
+    return date.getTime();
+  }
+  /**
    * 获取某个小时开始时间
    *
    * @group Function
@@ -3269,6 +3361,7 @@
   exports.encodeUriComponent = encodeUriComponent;
   exports.endOfDay = endOfDay;
   exports.endOfHour = endOfHour;
+  exports.endOfMinute = endOfMinute;
   exports.endOfMonth = endOfMonth;
   exports.endOfWeek = endOfWeek;
   exports.endOfYear = endOfYear;
@@ -3352,14 +3445,17 @@
   exports.sliceString = sliceString;
   exports.startOfDay = startOfDay;
   exports.startOfHour = startOfHour;
+  exports.startOfMinute = startOfMinute;
   exports.startOfMonth = startOfMonth;
   exports.startOfNextDay = startOfNextDay;
   exports.startOfNextHour = startOfNextHour;
+  exports.startOfNextMinute = startOfNextMinute;
   exports.startOfNextMonth = startOfNextMonth;
   exports.startOfNextWeek = startOfNextWeek;
   exports.startOfNextYear = startOfNextYear;
   exports.startOfPrevDay = startOfPrevDay;
   exports.startOfPrevHour = startOfPrevHour;
+  exports.startOfPrevMinute = startOfPrevMinute;
   exports.startOfPrevMonth = startOfPrevMonth;
   exports.startOfPrevWeek = startOfPrevWeek;
   exports.startOfPrevYear = startOfPrevYear;

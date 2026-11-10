@@ -49,6 +49,44 @@ test('formatArea', () => {
     },
     province: {
       id: 0,
+      name: '湖南省'
+    },
+    city: {
+      id: 0,
+      name: '长沙市'
+    },
+    district: {
+      id: 0,
+      name: '长沙县'
+    }
+  }, { simplify: false })).toBe('湖南省长沙市长沙县')
+
+  expect(formatArea({
+    country: {
+      id: 0,
+      name: '中国'
+    },
+    province: {
+      id: 0,
+      name: '湖南省'
+    },
+    city: {
+      id: 0,
+      name: '长沙市'
+    },
+    district: {
+      id: 0,
+      name: '长沙县'
+    }
+  }, { simplify: true })).toBe('湖南 长沙 长沙县')
+
+  expect(formatArea({
+    country: {
+      id: 0,
+      name: '中国'
+    },
+    province: {
+      id: 0,
       name: '河南省'
     },
     city: {

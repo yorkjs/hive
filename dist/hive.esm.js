@@ -1,5 +1,5 @@
 /**
- * hive.js v0.5.7
+ * hive.js v0.5.8
  * (c) 2025-2026 yorkjs team
  * Released under the MIT License.
  */
@@ -520,13 +520,19 @@ const WEEK_SATURDAY = 6;
 * @group Function
 * @category Util
 * @param value1 第一个数值
-* @param value2 第二个数值
+* @param value2 第二个数值（支持传入更多参数，参考示例）
 * @returns 相加的结果
 * @example
 * plusNumber(3, 1) // 4
+* plusNumber(1, 2, 3, 4) // 10
 */
-function plusNumber(value1, value2) {
-    return NP.plus(value1, value2);
+function plusNumber(...values) {
+    if (values.length < 2) {
+        throw new Error('plusNumber requires at least 2 argument');
+    }
+    return values.reduce(function (a, b) {
+        return NP.plus(a, b);
+    }, 0);
 }
 /**
 * 精确减法
@@ -536,13 +542,21 @@ function plusNumber(value1, value2) {
 * @group Function
 * @category Util
 * @param value1 第一个数值
-* @param value2 第二个数值
+* @param value2 第二个数值（支持传入更多参数，参考示例）
 * @returns 相减的结果
 * @example
 * minusNumber(3, 1) // 2
+* minusNumber(5, 1, 2) // 2
+* minusNumber(10, 3, 2, 1) // 4
 */
-function minusNumber(value1, value2) {
-    return NP.minus(value1, value2);
+function minusNumber(...values) {
+    if (values.length < 2) {
+        throw new Error('minusNumber requires at least 2 argument');
+    }
+    const [first, ...rest] = values;
+    return rest.reduce(function (a, b) {
+        return NP.minus(a, b);
+    }, first);
 }
 /**
  * 精确乘法
@@ -552,13 +566,19 @@ function minusNumber(value1, value2) {
  * @group Function
  * @category Util
  * @param value1 第一个数值
- * @param value2 第二个数值
+ * @param value2 第二个数值（支持传入更多参数，参考示例）
  * @returns 相乘结果
  * @example
  * timesNumber(3, 2) // 6
+ * timesNumber(3, 2, 2) // 12
  */
-function timesNumber(value1, value2) {
-    return NP.times(value1, value2);
+function timesNumber(...values) {
+    if (values.length < 2) {
+        throw new Error('timesNumber requires at least 2 argument');
+    }
+    return values.reduce(function (a, b) {
+        return NP.times(a, b);
+    }, 1);
 }
 /**
 * 精确除法
@@ -568,16 +588,23 @@ function timesNumber(value1, value2) {
 * @group Function
 * @category Util
 * @param value1 被除数
-* @param value2 除数
+* @param value2 除数（支持传入更多参数，参考示例）
 * @returns 相除的结果
 * @example
 * divideNumber(6, 2) // 3
+* divideNumber(20, 2, 2) // 4
 */
-function divideNumber(value1, value2) {
-    if (value2 === 0) {
-        throw new Error('Divisor cannot be zero');
+function divideNumber(...values) {
+    if (values.length < 2) {
+        throw new Error('divideNumber requires at least 2 argument');
     }
-    return NP.divide(value1, value2);
+    const [first, ...rest] = values;
+    return rest.reduce(function (a, b) {
+        if (b === 0) {
+            throw new Error('Divisor cannot be zero');
+        }
+        return NP.divide(a, b);
+    }, first);
 }
 /**
  * 截断数字
@@ -1280,13 +1307,13 @@ function formatDuration(value) {
     const result = [];
     const data = normalizeDuration(value);
     if (data.days > 0) {
-        result.push(`${data.days}天`);
+        result.push(`${data.days}日`);
     }
     if (data.hours > 0) {
-        result.push(`${data.hours}小时`);
+        result.push(`${data.hours}时`);
     }
     if (data.minutes > 0) {
-        result.push(`${data.minutes}分钟`);
+        result.push(`${data.minutes}分`);
     }
     if (data.seconds > 0) {
         result.push(`${data.seconds}秒`);
@@ -1336,6 +1363,21 @@ function formatDateShortly(timestamp) {
 }
 
 /**
+ * 把时间戳格式化为显示格式
+ *
+ * @group Function
+ * @category Format
+ * @param timestamp 毫秒时间戳
+ * @param format 格式，默认值为 TIME_DEFAULT
+ * @returns 格式化后的字符串
+ * @example
+ * formatTime(1773932460475) // 23:01:00
+ */
+function formatTime(timestamp, format = TIME_DEFAULT) {
+    return dayjs(timestamp).format(format);
+}
+
+/**
  * 把时间戳格式化为 2020-10-01 10:00 格式
  *
  * @group Function
@@ -1357,6 +1399,11 @@ function formatDateTime(timestamp, format = DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUT
  * @returns
  */
 function formatDateTimeRange(startTimestamp, endTimestamp) {
+    if (formatDate(startTimestamp) === formatDate(endTimestamp)) {
+        return formatDateTime(startTimestamp, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE)
+            + ' 至 '
+            + formatTime(endTimestamp, TIME_HOUR_MINUTE);
+    }
     return formatDateTime(startTimestamp) + ' 至 ' + formatDateTime(endTimestamp);
 }
 /**
@@ -1578,21 +1625,6 @@ function formatSize(value) {
         return `${truncateNumber(result, hasDecimal(result) ? 2 : 0)}KB`;
     }
     return `${value}B`;
-}
-
-/**
- * 把时间戳格式化为显示格式
- *
- * @group Function
- * @category Format
- * @param timestamp 毫秒时间戳
- * @param format 格式，默认值为 TIME_DEFAULT
- * @returns 格式化后的字符串
- * @example
- * formatTime(1773932460475) // 23:01:00
- */
-function formatTime(timestamp, format = TIME_DEFAULT) {
-    return dayjs(timestamp).format(format);
 }
 
 /**
@@ -2647,6 +2679,54 @@ function parseTime(str, format) {
     return new Date(str);
 }
 /**
+ * 获取某个分钟的开始时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+function startOfMinute(timestamp) {
+    const date = new Date(timestamp);
+    date.setSeconds(0, 0);
+    return date.getTime();
+}
+/**
+ * 获取前一分钟的开始时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+function startOfPrevMinute(timestamp) {
+    return startOfMinute(timestamp - MS_MINUTE);
+}
+/**
+ * 获取下一分钟的开始时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+function startOfNextMinute(timestamp) {
+    return startOfMinute(timestamp + MS_MINUTE);
+}
+/**
+ * 获取某个分钟的结束时间
+ *
+ * @group Function
+ * @category Util
+ * @param timestamp 毫秒时间戳
+ * @returns 毫秒时间戳
+ */
+function endOfMinute(timestamp) {
+    const date = new Date(timestamp);
+    date.setSeconds(59, 999);
+    return date.getTime();
+}
+/**
  * 获取某个小时开始时间
  *
  * @group Function
@@ -3118,5 +3198,5 @@ function toRelativeProtocolUrl(url) {
     return url;
 }
 
-export { AMOUNT_ONE_YUAN, AMOUNT_TEN_THOUSAND_YUAN, AUTH_CODE_ALIPAY, AUTH_CODE_WECHAT, DATE_MONTH_DATE, DATE_MONTH_DATE_CHINESE, DATE_MONTH_DATE_DOT, DATE_MONTH_DATE_SLASH, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_YEAR_MONTH_DATE, DATE_YEAR_MONTH_DATE_CHINESE, DATE_YEAR_MONTH_DATE_DOT, DATE_YEAR_MONTH_DATE_SLASH, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MONEY_YUAN_TO_PENNY, MONTH_CHINESE, MONTH_DEFAULT, MONTH_ONLY, MONTH_ONLY_CHINESE, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, PHONE_NUMBER_400, PHONE_NUMBER_LANDLINE, PHONE_NUMBER_MOBILE, RANDOM_CHARSET_ALPHA_LOWER, RANDOM_CHARSET_ALPHA_NUMERIC, RANDOM_CHARSET_ALPHA_UPPER, RANDOM_CHARSET_NUMERIC, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, TIME_DEFAULT, TIME_HOUR_MINUTE, WEEK_FRIDAY, WEEK_MONDAY, WEEK_SATURDAY, WEEK_SUNDAY, WEEK_THURSDAY, WEEK_TUESDAY, WEEK_WEDNESDAY, YEAR_CHINESE, YEAR_DEFAULT, applyRateCeil, applyRateFloor, applyRateRound, calculateDistance, calculateRate, calculateSmsCount, darkenColor, decodeUriComponent, discountToBackend, discountToDisplay, distanceToBackend, distanceToDisplay, divideNumber, encodeUriComponent, endOfDay, endOfHour, endOfMonth, endOfWeek, endOfYear, formatAmount, formatAmountShortly, formatArea, formatBankCardNumber, formatBirthday, formatCategory, formatCount, formatCountShortly, formatDate, formatDateRange, formatDateShortly, formatDateTime, formatDateTimeRange, formatDateTimeShortly, formatDiscount, formatDistance, formatDuration, formatMinuteSegments, formatMonth, formatNumberWithComma, formatPenny, formatRatePercent, formatShelfLife, formatSize, formatTime, formatWeek, formatYear, getStringLength, getStringWidth, hasDecimal, hasSpecialCharacter, hexToHslObject, hexToRgbaObject, hexToRgbaString, isBankCardNumber, isCorporateAccountNumber, isCustomBarcode, isEmail, isHexColor, isIdentityCardNumber, isLocationInChina, isMobile, isPrice, isStandardBarcode, isUrl, isVerifyCode, lightenColor, maskEmail, maskMobile, maskName, matchMinuteSegments, minusNumber, moneyToBackend, moneyToDisplay, normalizeDuration, normalizeShelfLife, normalizeVersion, optimizeTimeRange, padStringStart, parseAuthCode, parseInteger, parseNumber, parsePhoneNumber, parseTime, plusNumber, randomIntegerByLength, randomIntegerByRange, randomStringByCurrentTime, randomStringByLength, rateToBackend, rateToDisplay, removeSpecialCharacter, renderStringTemplate, sameOfPrevDay, sameOfPrevMonth, sameOfPrevWeek, sameOfPrevYear, sliceString, startOfDay, startOfHour, startOfMonth, startOfNextDay, startOfNextHour, startOfNextMonth, startOfNextWeek, startOfNextYear, startOfPrevDay, startOfPrevHour, startOfPrevMonth, startOfPrevWeek, startOfPrevYear, startOfWeek, startOfYear, timeFieldToTime, timeToMinuteSegment, timeToTimeField, timeToTimestamp, timesNumber, timestampToTime, toHttpProtocolUrl, toRelativeProtocolUrl, trimString, truncateNumber, truncateString, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
+export { AMOUNT_ONE_YUAN, AMOUNT_TEN_THOUSAND_YUAN, AUTH_CODE_ALIPAY, AUTH_CODE_WECHAT, DATE_MONTH_DATE, DATE_MONTH_DATE_CHINESE, DATE_MONTH_DATE_DOT, DATE_MONTH_DATE_SLASH, DATE_TIME_MONTH_DATE_HOUR_MINUTE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_CHINESE, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_DOT, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SECOND_SLASH, DATE_TIME_YEAR_MONTH_DATE_HOUR_MINUTE_SLASH, DATE_YEAR_MONTH_DATE, DATE_YEAR_MONTH_DATE_CHINESE, DATE_YEAR_MONTH_DATE_DOT, DATE_YEAR_MONTH_DATE_SLASH, MONEY_TEN_THOUSAND_YUAN_TO_CENT, MONEY_YUAN_TO_CENT, MONEY_YUAN_TO_PENNY, MONTH_CHINESE, MONTH_DEFAULT, MONTH_ONLY, MONTH_ONLY_CHINESE, MS_DAY, MS_HOUR, MS_MINUTE, MS_SECOND, MS_WEEK, MS_YEAR, PHONE_NUMBER_400, PHONE_NUMBER_LANDLINE, PHONE_NUMBER_MOBILE, RANDOM_CHARSET_ALPHA_LOWER, RANDOM_CHARSET_ALPHA_NUMERIC, RANDOM_CHARSET_ALPHA_UPPER, RANDOM_CHARSET_NUMERIC, SHELF_LIFE_DAY, SHELF_LIFE_MONTH, SHELF_LIFE_YEAR, SIZE_GB, SIZE_KB, SIZE_MB, TIME_DEFAULT, TIME_HOUR_MINUTE, WEEK_FRIDAY, WEEK_MONDAY, WEEK_SATURDAY, WEEK_SUNDAY, WEEK_THURSDAY, WEEK_TUESDAY, WEEK_WEDNESDAY, YEAR_CHINESE, YEAR_DEFAULT, applyRateCeil, applyRateFloor, applyRateRound, calculateDistance, calculateRate, calculateSmsCount, darkenColor, decodeUriComponent, discountToBackend, discountToDisplay, distanceToBackend, distanceToDisplay, divideNumber, encodeUriComponent, endOfDay, endOfHour, endOfMinute, endOfMonth, endOfWeek, endOfYear, formatAmount, formatAmountShortly, formatArea, formatBankCardNumber, formatBirthday, formatCategory, formatCount, formatCountShortly, formatDate, formatDateRange, formatDateShortly, formatDateTime, formatDateTimeRange, formatDateTimeShortly, formatDiscount, formatDistance, formatDuration, formatMinuteSegments, formatMonth, formatNumberWithComma, formatPenny, formatRatePercent, formatShelfLife, formatSize, formatTime, formatWeek, formatYear, getStringLength, getStringWidth, hasDecimal, hasSpecialCharacter, hexToHslObject, hexToRgbaObject, hexToRgbaString, isBankCardNumber, isCorporateAccountNumber, isCustomBarcode, isEmail, isHexColor, isIdentityCardNumber, isLocationInChina, isMobile, isPrice, isStandardBarcode, isUrl, isVerifyCode, lightenColor, maskEmail, maskMobile, maskName, matchMinuteSegments, minusNumber, moneyToBackend, moneyToDisplay, normalizeDuration, normalizeShelfLife, normalizeVersion, optimizeTimeRange, padStringStart, parseAuthCode, parseInteger, parseNumber, parsePhoneNumber, parseTime, plusNumber, randomIntegerByLength, randomIntegerByRange, randomStringByCurrentTime, randomStringByLength, rateToBackend, rateToDisplay, removeSpecialCharacter, renderStringTemplate, sameOfPrevDay, sameOfPrevMonth, sameOfPrevWeek, sameOfPrevYear, sliceString, startOfDay, startOfHour, startOfMinute, startOfMonth, startOfNextDay, startOfNextHour, startOfNextMinute, startOfNextMonth, startOfNextWeek, startOfNextYear, startOfPrevDay, startOfPrevHour, startOfPrevMinute, startOfPrevMonth, startOfPrevWeek, startOfPrevYear, startOfWeek, startOfYear, timeFieldToTime, timeToMinuteSegment, timeToTimeField, timeToTimestamp, timesNumber, timestampToTime, toHttpProtocolUrl, toRelativeProtocolUrl, trimString, truncateNumber, truncateString, weightGToBackend, weightKGToBackend, weightToG, weightToKG };
 //# sourceMappingURL=hive.esm.js.map

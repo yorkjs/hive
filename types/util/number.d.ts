@@ -6,12 +6,13 @@
 * @group Function
 * @category Util
 * @param value1 第一个数值
-* @param value2 第二个数值
+* @param value2 第二个数值（支持传入更多参数，参考示例）
 * @returns 相加的结果
 * @example
 * plusNumber(3, 1) // 4
+* plusNumber(1, 2, 3, 4) // 10
 */
-export declare function plusNumber(value1: number, value2: number): number;
+export declare function plusNumber(...values: number[]): number;
 /**
 * 精确减法
 *
@@ -20,12 +21,14 @@ export declare function plusNumber(value1: number, value2: number): number;
 * @group Function
 * @category Util
 * @param value1 第一个数值
-* @param value2 第二个数值
+* @param value2 第二个数值（支持传入更多参数，参考示例）
 * @returns 相减的结果
 * @example
 * minusNumber(3, 1) // 2
+* minusNumber(5, 1, 2) // 2
+* minusNumber(10, 3, 2, 1) // 4
 */
-export declare function minusNumber(value1: number, value2: number): number;
+export declare function minusNumber(...values: number[]): number;
 /**
  * 精确乘法
  *
@@ -34,12 +37,13 @@ export declare function minusNumber(value1: number, value2: number): number;
  * @group Function
  * @category Util
  * @param value1 第一个数值
- * @param value2 第二个数值
+ * @param value2 第二个数值（支持传入更多参数，参考示例）
  * @returns 相乘结果
  * @example
  * timesNumber(3, 2) // 6
+ * timesNumber(3, 2, 2) // 12
  */
-export declare function timesNumber(value1: number, value2: number): number;
+export declare function timesNumber(...values: number[]): number;
 /**
 * 精确除法
 *
@@ -48,12 +52,13 @@ export declare function timesNumber(value1: number, value2: number): number;
 * @group Function
 * @category Util
 * @param value1 被除数
-* @param value2 除数
+* @param value2 除数（支持传入更多参数，参考示例）
 * @returns 相除的结果
 * @example
 * divideNumber(6, 2) // 3
+* divideNumber(20, 2, 2) // 4
 */
-export declare function divideNumber(value1: number, value2: number): number;
+export declare function divideNumber(...values: number[]): number;
 /**
  * 截断数字
  *
